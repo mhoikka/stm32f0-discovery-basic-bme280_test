@@ -57,8 +57,8 @@ int main(void)
 
 /* Includes ------------------------------------------------------------------*/
 #include <stdio.h>
-#include "stm32f0xx_nucleo.h"
 #include "stm32f0xx_conf.h"
+#include "main.h"
 
 /* Exported functions ------------------------------------------------------- */
 void TimingDelay_Decrement(void);
