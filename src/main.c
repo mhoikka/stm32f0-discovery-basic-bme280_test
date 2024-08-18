@@ -57,6 +57,13 @@ int main(void)
 
 /* Includes ------------------------------------------------------------------*/
 #include <stdio.h>
+#include "stm32f0xx_nucleo.h"
+#include "stm32f0xx_conf.h"
+
+/* Exported functions ------------------------------------------------------- */
+void TimingDelay_Decrement(void);
+void Delay(__IO uint32_t nTime);
+
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
