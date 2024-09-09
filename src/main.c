@@ -4,6 +4,7 @@
 #include "main.h"
 #include "bme280.h";
 #include "bme280_support.c";
+#include "stm32f0xx_hal.h";
 
 /* Exported functions ------------------------------------------------------- */
 void TimingDelay_Decrement(void);
