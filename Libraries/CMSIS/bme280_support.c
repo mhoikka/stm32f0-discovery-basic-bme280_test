@@ -74,70 +74,24 @@
  *	\param reg_data : This data read from the sensor, which is hold in an array
  *	\param cnt : The no of byte of data to be read
  */
-s8 NUM_REGISTERS_BME280 = 4;
-
-s8 BME280_I2C_bus_read(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt){
+s8 BME280_I2C_bus_read(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt);
  /*	\Brief: The function is used as I2C bus write
- *	\Return : Status of the I2C read
- *	\param dev_addr : The device address of the sensor
- *	\param reg_addr : Address of the first register, will data is going to be written
- *	\param reg_data : Array for data to be read into from the sensor data register
- *	\param cnt : The # of bytes of data to be read
- **/
-
-	//send the register address to the sensor
-	//This is essentially a partial write operation
-	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (1 << 16) | (I2C_CR2_AUTOEND);
-	I2C1->TXDR = reg_addr;
-	// Wait for TC
-	while (!(I2C1->ISR & I2C_ISR_TC));
-
-	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (cnt << 16) | (I2C_CR2_RD_WRN) | (I2C_CR2_AUTOEND);
-
-	// Transfer all the data
-    for (int i = 0; i < cnt; i++) {
-        // Wait for RXNE
-        while (!(I2C1->ISR & I2C_ISR_RXNE));
-        reg_data[i] = I2C1->RXDR;
-    }
-
-	// Wait for TC
-    while (!(I2C1->ISR & I2C_ISR_TC));
-	//return the status of the read operation
-	return 0;
-}
-
-s8 BME280_I2C_bus_write(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt){
-/*	\Brief: The function is used as I2C bus write
  *	\Return : Status of the I2C write
  *	\param dev_addr : The device address of the sensor
- *	\param reg_addr : Address of the first register, where data is going to be written
- *	\param reg_data : data to be written into the register
- *	\param cnt : The # of bytes of data to be written
+ *	\param reg_addr : Address of the first register, will data is going to be written
+ *	\param reg_data : It is a value hold in the array,
+ *		will be used for write the value into the register
+ *	\param cnt : The no of byte of data to be write
  */
-	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (cnt*2 << 16) | (I2C_CR2_AUTOEND);
-	// transfer cnt bytes of data one register data byte and register address byte pair at a time
-	// register address is not auto-incremented
-	if (cnt <= NUM_REGISTERS_BME280){
-		for(int i = 0; i < cnt; i++){
-			// send the register address as a the control byte and the register data as a data byte
-			I2C1->TXDR = reg_addr;
-			while(!(I2C1->ISR & I2C_ISR_TXE));
-			I2C1->TXDR = reg_data[i];
-			// increment register address manually
-			++reg_addr;
-			while(!(I2C1->ISR & I2C_ISR_TXE));
-		}
-	// Wait for TC
-    while (!(I2C1->ISR & I2C_ISR_TC));
-	return 0;
-	}
-	else{
-		return 1;
-		//TODO Create an error function here? Maybe?
-	}
-}
-
+s8 BME280_I2C_bus_write(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt);
+/*	\Brief: The function is used as SPI bus write
+ *	\Return : Status of the SPI write
+ *	\param dev_addr : The device address of the sensor
+ *	\param reg_addr : Address of the first register, will data is going to be written
+ *	\param reg_data : It is a value hold in the array,
+ *		will be used for write the value into the register
+ *	\param cnt : The no of byte of data to be write
+ */
 s8 BME280_SPI_bus_write(u8 dev_addr, u8 reg_addr, u8 *reg_data, u8 cnt);
 /*	\Brief: The function is used as SPI bus read
  *	\Return : Status of the SPI read

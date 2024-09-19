@@ -2,9 +2,9 @@
 #include <stdio.h>
 #include "stm32f0xx_conf.h"
 #include "main.h"
-#include "bme280.h";
-#include "bme280_support.c";
-#include "stm32f0xx_hal.h";
+//#include "bme280.h"
+//#include "bme280_support.c" I'll deal with that hal dependency later
+//#include "stm32f0xx_hal.h"
 
 /* Exported functions ------------------------------------------------------- */
 void TimingDelay_Decrement(void);
@@ -35,7 +35,7 @@ int main(void)
        system_stm32f0xx.c file
      */ 
   /* SysTick end of count event each 1ms */
-
+  send_string("Hello, World!\n");
   // SPI handle
   SPI_HandleTypeDef hspi2;
   
@@ -46,7 +46,26 @@ int main(void)
   MX_SPI2_Init();
 
   bme280_init(&bme280);
- 
+  
+  STM_EVAL_LEDInit(LED2);
+  STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);   
+  
+  BlinkSpeed = 0;
+
+  SystemInit();//ready
+  GPIO_init();//ready
+  I2C_init();//ready
+  UART_init();//ready
+
+  while (1)
+  {
+    STM_EVAL_LEDToggle(LED2);
+    // LED2 Toggle each 200ms 
+    Delay(2000);
+    send_string("Hello Again, World!\n");
+  }
+  
+/** 
   while (1) {
          // Read sensor data
          bme280_read_data(&bme280);
@@ -64,11 +83,94 @@ int main(void)
   while (1)
   {
     STM_EVAL_LEDToggle(LED2);
-    /*LED2 Toggle each 200ms */
-    Delay(200);
+    // LED2 Toggle each 200ms 
+    Delay(2000);
   }
+*/
 }
 
+/**
+* @brief  Initializes the GPIO pins for the I2C communication
+* @retval None
+*/
+void GPIO_init(){
+  // Enable peripheral clock
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2Cx, ENABLE);
+  //RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);//
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOx, ENABLE);
+  
+  // Use pins PA9 and PA10 for I2C (STM32F030R8)
+  GPIO_InitTypeDef GPIO_InitStruct;
+  GPIO_PinAFConfig(GPIOA, GPIO_PinSource9, GPIO_AF_1);//code checker is saying this is wrong, not sure why
+  GPIO_PinAFConfig(GPIOA, GPIO_PinSource10, GPIO_AF_1); //GPIO_AF_4
+  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_9 | GPIO_Pin_10;
+  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;
+  GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz; 
+  GPIO_InitStruct.GPIO_OType = GPIO_OType_OD;
+  GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;//do we need this
+  GPIO_Init(GPIOA, &GPIO_InitStruct);
+}
+
+/**
+ * @brief  Initializes the I2C3 communication
+ * @retval None
+ */
+void I2C_init(){
+  // I2C configuration
+  I2C_InitTypeDef I2C_InitStruct;
+  I2C_InitStruct.I2C_Mode = I2C_Mode_I2C;
+  I2C_InitStruct.I2C_AnalogFilter = I2C_AnalogFilter_Enable;
+  I2C_InitStruct.I2C_DigitalFilter = 0x00;
+  I2C_InitStruct.I2C_Timing = 0x00901D23; 
+  I2C_Init(I2C1, &I2C_InitStruct);
+  I2C_Cmd(I2C1, ENABLE);
+}
+
+void UART_init(){
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);
+
+  GPIO_PinAFConfig(GPIOB, GPIO_PinSource6, GPIO_AF_0);
+  GPIO_PinAFConfig(GPIOB, GPIO_PinSource7, GPIO_AF_0);
+
+  GPIO_InitTypeDef GPIO_InitStruct;
+
+  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_7;
+  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;
+  GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz; // Is this speed right?
+  GPIO_InitStruct.GPIO_OType = GPIO_OType_PP; // No open drain I think
+  GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL; // No pull up or pull down
+  GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+
+  USART_InitTypeDef USART_InitStruct;
+  USART_InitStruct.USART_BaudRate = 52;
+  USART_InitStruct.USART_WordLength = USART_WordLength_8b;
+  USART_InitStruct.USART_StopBits = USART_StopBits_1;
+  USART_InitStruct.USART_Parity = USART_Parity_No;
+  USART_InitStruct.USART_Mode = USART_Mode_Tx;
+  USART_InitStruct.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+  USART_Init(USART1, &USART_InitStruct);
+  //No synchronous mode yet
+  USART_Cmd(USART1, ENABLE);
+}
+/**
+ * @brief  Initializes the STM32F030R8 clock
+ * @retval None
+ */
+void System_init(){
+  RCC_GetClocksFreq(&RCC_Clocks);
+  SysTick_Config(RCC_Clocks.HCLK_Frequency / 1000);
+}
+
+/**
+ * @brief  Initializes the USART connection
+ * @retval None
+ */
+void USART_init(){
+
+
+}
 
 /**
 * @brief  Inserts a delay time.
@@ -95,6 +197,70 @@ void TimingDelay_Decrement(void)
   }
 }
 
+// Iterative function to implement itoa() function in C
+char* itoa(int value, char* buffer, int base)
+{
+	// invalid input
+	if (base < 2 || base > 32)
+		return buffer; // Why? Don't want to make an exception function I assume?
+
+	// Get absolute value of number
+	int n = value;
+    if (n < 0) n *= -1;
+
+	int i = 0;
+	while (n)
+	{
+		int r = n % base;
+
+		if (r >= 10) // Is this for hex conversions?
+			buffer[i++] = 65 + (r - 10);
+		else
+			buffer[i++] = 48 + r;
+
+		n = n / base;
+	}
+
+	// if number is 0
+	if (i == 0)
+		buffer[i++] = '0';
+
+	// If base is 10 and value is negative, the resulting string 
+	// is preceded with a minus sign (-)
+	// With any other base, value is always considered unsigned
+	if (value < 0 && base == 10)
+		buffer[i++] = '-';
+
+	buffer[i] = '\0'; // null terminate string
+
+	// reverse the string and return it
+	return reverse(buffer, 0, i - 1);
+}
+
+// function to reverse buffer[i..j]
+char* reverse(char *buffer, int i, int j)
+{
+	while (i < j)
+		swap(&buffer[i++], &buffer[j--]); 
+
+	return buffer;
+}
+
+// inline function to swap two numbers
+inline void swap(char *x, char *y) {
+	char t = *x; *x = *y; *y = t;
+}
+
+// We're just going to block for now.
+// This is probably never going to DMA
+void send_string(char *string)
+{
+    while (*string != 0)
+    {
+        while (USART_GetFlagStatus(USART1,USART_FLAG_TXE) == 0);
+        USART_SendData(USART1, (uint16_t) *string++);
+    }
+}
 
 static void MX_SPI3_Init(void) {
     hspi2.Instance = SPI2;
