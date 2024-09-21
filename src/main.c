@@ -35,7 +35,8 @@ int main(void)
        system_stm32f0xx.c file
      */ 
   /* SysTick end of count event each 1ms */
-  send_string("Hello, World!\n");
+  char greeting[15] = "Hello, World!\n";
+  send_string(greeting);
 	
   // BME280 handle
   //BME280_HandleTypedef bme280;
@@ -56,7 +57,7 @@ int main(void)
     STM_EVAL_LEDToggle(LED2);
     // LED2 Toggle each 200ms 
     Delay(200);
-    send_string("Hello Again, World!\n");
+    send_string(greeting);
   }
   
 /** 
