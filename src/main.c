@@ -184,11 +184,6 @@ void TimingDelay_Decrement(void)
   }
 }
 
-// inline function to swap two numbers
-inline void swap(char *x, char *y) {
-	char t = *x; *x = *y; *y = t;
-}
-
 // function to reverse buffer[i..j]
 char* reverse(char *buffer, int i, int j)
 {
