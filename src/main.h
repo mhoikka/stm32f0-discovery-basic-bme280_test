@@ -39,6 +39,13 @@
 /* Exported functions ------------------------------------------------------- */
 void TimingDelay_Decrement(void);
 void Delay(__IO uint32_t nTime);
+void I2C_Settings_Init();
+void  UART_Settings_Init();
+void System_Clock_Init();
+inline void swap(char *x, char *y);
+char* reverse(char *buffer, int i, int j);
+char* itoa(int value, char* buffer, int base);
+void send_string(char *string);
 #endif /* __MAIN_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

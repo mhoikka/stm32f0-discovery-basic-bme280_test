@@ -38,7 +38,7 @@ int main(void)
   send_string("Hello, World!\n");
 	
   // BME280 handle
-  BME280_HandleTypedef bme280;
+  //BME280_HandleTypedef bme280;
 
   //bme280_init(&bme280);
   
@@ -47,9 +47,9 @@ int main(void)
   
   BlinkSpeed = 0;
 
-  SystemInit();//ready
-  I2C_init();//ready
-  UART_init();//ready
+  System_Clock_Init();
+  I2C_Settings_Init();
+  UART_Settings_Init();
 
   while (1)
   {
@@ -87,7 +87,7 @@ int main(void)
  * @brief  Initializes the I2C3 communication
  * @retval None
  */
-void I2C_init(){
+void I2C_Settings_Init(){
 
   // Enable peripheral clock
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1, ENABLE);
@@ -115,7 +115,7 @@ void I2C_init(){
   I2C_Cmd(I2C1, ENABLE);
 }
 
-void UART_init(){
+void  UART_Settings_Init(){
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);
 
@@ -147,7 +147,7 @@ void UART_init(){
  * @brief  Initializes the STM32F030R8 clock
  * @retval None
  */
-void System_init(){
+void System_Clock_Init(){
   RCC_GetClocksFreq(&RCC_Clocks);
   SysTick_Config(RCC_Clocks.HCLK_Frequency / 1000);
 }
