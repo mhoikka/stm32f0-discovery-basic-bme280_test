@@ -116,7 +116,7 @@ void I2C_Settings_Init(){
 }
 
 void  UART_Settings_Init(){
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART2, ENABLE);
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
 
   GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_0);
@@ -124,7 +124,7 @@ void  UART_Settings_Init(){
 
   GPIO_InitTypeDef GPIO_InitStruct;
 
-  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_7;
+  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_2 | GPIO_Pin_3;
   GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;
   GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz; // Is this speed right?
   GPIO_InitStruct.GPIO_OType = GPIO_OType_PP; // No open drain I think
@@ -133,15 +133,15 @@ void  UART_Settings_Init(){
 
 
   USART_InitTypeDef USART_InitStruct;
-  USART_InitStruct.USART_BaudRate = 9600;
+  USART_InitStruct.USART_BaudRate = 9600; //115200
   USART_InitStruct.USART_WordLength = USART_WordLength_8b;
   USART_InitStruct.USART_StopBits = USART_StopBits_1;
   USART_InitStruct.USART_Parity = USART_Parity_No;
   USART_InitStruct.USART_Mode = USART_Mode_Tx | USART_Mode_Rx;
   USART_InitStruct.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-  USART_Init(USART2, &USART_InitStruct);
+  USART_Init(USART1, &USART_InitStruct);
   //No synchronous mode yet
-  USART_Cmd(USART2, ENABLE);
+  USART_Cmd(USART1, ENABLE);
 }
 /**
  * @brief  Initializes the STM32F030R8 clock
