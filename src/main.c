@@ -48,7 +48,6 @@ int main(void)
   BlinkSpeed = 0;
 
   SystemInit();//ready
-  GPIO_init();//ready
   I2C_init();//ready
   UART_init();//ready
 
