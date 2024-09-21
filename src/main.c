@@ -119,8 +119,8 @@ void  UART_Settings_Init(){
   RCC_APB2PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
 
-  GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_0);
-  GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_0);
+  GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_1);
+  GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_1);
 
   GPIO_InitTypeDef GPIO_InitStruct;
 
