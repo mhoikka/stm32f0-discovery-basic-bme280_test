@@ -36,16 +36,11 @@ int main(void)
      */ 
   /* SysTick end of count event each 1ms */
   send_string("Hello, World!\n");
-  // SPI handle
-  SPI_HandleTypeDef hspi2;
-  
+	
   // BME280 handle
   BME280_HandleTypedef bme280;
 
-  //Initialize SPI3 setup
-  MX_SPI2_Init();
-
-  bme280_init(&bme280);
+  //bme280_init(&bme280);
   
   STM_EVAL_LEDInit(LED2);
   STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);   
@@ -90,14 +85,15 @@ int main(void)
 }
 
 /**
-* @brief  Initializes the GPIO pins for the I2C communication
-* @retval None
-*/
-void GPIO_init(){
+ * @brief  Initializes the I2C3 communication
+ * @retval None
+ */
+void I2C_init(){
+
   // Enable peripheral clock
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2Cx, ENABLE);
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1, ENABLE);
   //RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);//
-  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOx, ENABLE);
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
   
   // Use pins PA9 and PA10 for I2C (STM32F030R8)
   GPIO_InitTypeDef GPIO_InitStruct;
@@ -109,13 +105,7 @@ void GPIO_init(){
   GPIO_InitStruct.GPIO_OType = GPIO_OType_OD;
   GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;//do we need this
   GPIO_Init(GPIOA, &GPIO_InitStruct);
-}
-
-/**
- * @brief  Initializes the I2C3 communication
- * @retval None
- */
-void I2C_init(){
+	
   // I2C configuration
   I2C_InitTypeDef I2C_InitStruct;
   I2C_InitStruct.I2C_Mode = I2C_Mode_I2C;
@@ -167,10 +157,8 @@ void System_init(){
  * @brief  Initializes the USART connection
  * @retval None
  */
-void USART_init(){
-
-
-}
+/** void USART_init(){
+}*/
 
 /**
 * @brief  Inserts a delay time.
@@ -195,6 +183,19 @@ void TimingDelay_Decrement(void)
   { 
     TimingDelay--;
   }
+}
+
+// inline function to swap two numbers
+inline void swap(char *x, char *y) {
+	char t = *x; *x = *y; *y = t;
+}
+
+// function to reverse buffer[i..j]
+char* reverse(char *buffer, int i, int j)
+{
+	while (i < j)
+		swap(&buffer[i++], &buffer[j--]); 
+	return buffer;
 }
 
 // Iterative function to implement itoa() function in C
@@ -237,20 +238,6 @@ char* itoa(int value, char* buffer, int base)
 	return reverse(buffer, 0, i - 1);
 }
 
-// function to reverse buffer[i..j]
-char* reverse(char *buffer, int i, int j)
-{
-	while (i < j)
-		swap(&buffer[i++], &buffer[j--]); 
-
-	return buffer;
-}
-
-// inline function to swap two numbers
-inline void swap(char *x, char *y) {
-	char t = *x; *x = *y; *y = t;
-}
-
 // We're just going to block for now.
 // This is probably never going to DMA
 void send_string(char *string)
@@ -262,6 +249,7 @@ void send_string(char *string)
     }
 }
 
+/**
 static void MX_SPI3_Init(void) {
     hspi2.Instance = SPI2;
     hspi2.Init.Mode = SPI_MODE_MASTER;
@@ -279,7 +267,7 @@ static void MX_SPI3_Init(void) {
         // Initialization Error
         Error_Handler();
     }
-}
+}*/
 
 #ifdef  USE_FULL_ASSERT
 
