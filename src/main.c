@@ -35,7 +35,7 @@ int main(void)
        system_stm32f0xx.c file
      */ 
   /* SysTick end of count event each 1ms */
-  char greeting[15] = "Hello, World!\n";
+  char greeting[] = "Hello, World!\n";
   send_string(greeting);
 	
   // BME280 handle
