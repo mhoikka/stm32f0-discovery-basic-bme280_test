@@ -36,7 +36,6 @@ int main(void)
      */ 
   /* SysTick end of count event each 1ms */
   char greeting[] = "Hello, World!\n";
-  send_string(greeting);
 	
   // BME280 handle
   //BME280_HandleTypedef bme280;
