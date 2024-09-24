@@ -1,9 +1,5 @@
 /* Includes ------------------------------------------------------------------*/
-#include <stdio.h>
-#include "stm32f0xx_conf.h"
-#include "main.h"
-#include "bme280.h"
-#include "bme280_defs.h"
+
 //#include "bme280_support.c" I'll deal with that hal dependency later
 //#include "stm32f0xx_hal.h"
 

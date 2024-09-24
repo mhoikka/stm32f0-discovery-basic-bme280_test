@@ -31,7 +31,11 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx_nucleo.h"
-
+#include <stdio.h>
+#include "stm32f0xx_conf.h"
+#include "main.h"
+#include "bme280.h"
+#include "bme280_defs.h"
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
@@ -49,6 +53,7 @@ inline void swap(char *x, char *y) {
 char* reverse(char *buffer, int i, int j);
 char* itoa(int value, char* buffer, int base);
 void send_string(char *string);
+void send_stringln(char *string);
 #endif /* __MAIN_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

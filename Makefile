@@ -1,5 +1,5 @@
 # put your *.o targets here, make should handle the rest!
-SRCS = main.c system_stm32f0xx.c stm32f0xx_nucleo.c stm32f0xx_it.c bme280_defs.h bme280.h bme280.c
+SRCS = main.c system_stm32f0xx.c stm32f0xx_nucleo.c stm32f0xx_it.c bme280.h bme280.c
 
 # all the files will be generated with this name (main.elf, main.bin, main.hex, etc)
 PROJ_NAME=main
