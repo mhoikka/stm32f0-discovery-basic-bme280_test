@@ -43,9 +43,8 @@ int main(void)
 
   System_Clock_Init();
   I2C_Settings_Init();
-  /*
   UART_Settings_Init();
-
+  /*
   Delay(1000);
   send_string("Start");
   struct bme280_dev bme280_initparam;
