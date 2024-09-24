@@ -192,7 +192,7 @@ void I2C_Settings_Init(){
 }
 
 void  UART_Settings_Init(){
-  RCC_APB2PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
 
   GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_1);
