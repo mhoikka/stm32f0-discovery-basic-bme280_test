@@ -43,8 +43,9 @@ int main(void)
 
   System_Clock_Init();
   I2C_Settings_Init();
+  /*
   UART_Settings_Init();
-  
+
   Delay(1000);
   send_string("Start");
   struct bme280_dev bme280_initparam;
@@ -64,7 +65,7 @@ int main(void)
 
   bme280_init(&bme280_initparam);
   send_string("6");
-
+  */
   STM_EVAL_LEDInit(LED2);
   STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);   
   
@@ -75,7 +76,7 @@ int main(void)
     STM_EVAL_LEDToggle(LED2);
     // LED2 Toggle each 200ms 
     Delay(2000);
-    send_string("Hello Again, World!\n");
+    //send_string("Hello Again, World!\n");
   }
 }
 
