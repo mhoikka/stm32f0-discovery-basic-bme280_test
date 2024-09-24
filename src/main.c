@@ -4,7 +4,6 @@
 #include "main.h"
 #include "bme280.h"
 #include "bme280_defs.h"
-//#include "bme280_support.c" I'll deal with that hal dependency later
 
 /* Exported functions ------------------------------------------------------- */
 void TimingDelay_Decrement(void);
@@ -42,6 +41,10 @@ int main(void)
       num_buf[i] = 0;
   }
 
+  System_Clock_Init();
+  I2C_Settings_Init();
+  UART_Settings_Init();
+  
   Delay(1000);
   send_string("Start");
   struct bme280_dev bme280_initparam;
@@ -66,10 +69,6 @@ int main(void)
   STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);   
   
   BlinkSpeed = 0;
-
-  System_Clock_Init();
-  I2C_Settings_Init();
-  UART_Settings_Init();
 
   while (1)
   {
