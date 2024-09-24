@@ -44,7 +44,7 @@ int main(void)
       num_buf[i] = 0;
   }
 
-  send_string("Hello, World!\n");
+  //send_string("Hello, World!\n");
 
   //create bme280_dev struct
   struct bme280_dev bme280_initparam;
@@ -72,7 +72,7 @@ int main(void)
   {
     STM_EVAL_LEDToggle(LED2);
     // LED2 Toggle each 200ms 
-    Delay(200);
+    Delay(2000);
     send_string("Hello Again, World!\n");
   }
   
@@ -245,13 +245,6 @@ void System_Clock_Init(){
   RCC_GetClocksFreq(&RCC_Clocks);
   SysTick_Config(RCC_Clocks.HCLK_Frequency / 1000);
 }
-
-/**
- * @brief  Initializes the USART connection
- * @retval None
- */
-/** void USART_init(){
-}*/
 
 /**
 * @brief  Inserts a delay time.
