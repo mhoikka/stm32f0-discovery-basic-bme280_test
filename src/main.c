@@ -37,7 +37,6 @@ int main(void)
   /* SysTick end of count event each 1ms */
 
   char num_buf[15];
-  char greeting[15] = "Hello, World!\n";
   for(int i = 0; i < sizeof(num_buf)/sizeof(num_buf[0]); i++)
   {
       num_buf[i] = 0;
@@ -79,7 +78,7 @@ int main(void)
 
 uint8_t NUM_REGISTERS_BME280 = 4;
 
-int8_t BME280_I2C_bus_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt){
+int8_t BME280_I2C_bus_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, void *intf_ptr){
  /*	\Brief: The function is used as I2C bus write
  *	\Return : Status of the I2C read
  *	\param dev_addr : The device address of the sensor
@@ -105,12 +104,12 @@ int8_t BME280_I2C_bus_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data
     }
 
 	// Wait for TC
-    while (!(I2C1->ISR & I2C_ISR_TC));
+  while (!(I2C1->ISR & I2C_ISR_TC));
 	//return the status of the read operation
 	return 0;
 }
 
-int8_t BME280_I2C_bus_write(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt){
+int8_t BME280_I2C_bus_write(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, void *intf_ptr){
 /*	\Brief: The function is used as I2C bus write
  *	\Return : Status of the I2C write
  *	\param dev_addr : The device address of the sensor
@@ -132,7 +131,7 @@ int8_t BME280_I2C_bus_write(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_dat
 			while(!(I2C1->ISR & I2C_ISR_TXE));
 		}
 	// Wait for TC
-    while (!(I2C1->ISR & I2C_ISR_TC));
+  while (!(I2C1->ISR & I2C_ISR_TC));
 	return 0;
 	}
 	else{
@@ -146,7 +145,7 @@ int8_t BME280_I2C_bus_write(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_dat
  * @param  usec: specifies the delay time length, in 1 microsecond.
  * @retval None
  */
-void bme280_delay_microseconds(uint32_t usec){
+void bme280_delay_microseconds(uint32_t usec, void *intf_ptr){
   for(volatile uint32_t counter = 0; counter < usec; counter++){
     //do nothing NOP instructions
     __NOP();
@@ -311,26 +310,6 @@ void send_stringln(char *string)
     send_string(string);
     send_string("\n");
 }
-
-/**
-static void MX_SPI3_Init(void) {
-    hspi2.Instance = SPI2;
-    hspi2.Init.Mode = SPI_MODE_MASTER;
-    hspi2.Init.Direction = SPI_DIRECTION_2LINES;
-    hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
-    hspi2.Init.CLKPolarity = SPI_POLARITY_HIGH;
-    hspi2.Init.CLKPhase = SPI_PHASE_2EDGE;
-    hspi2.Init.NSS = SPI_NSS_SOFT;
-    hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
-    hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
-    hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
-    hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-    hspi2.Init.CRCPolynomial = 10;
-    if (HAL_SPI_Init(&hspi2) != HAL_OK) {
-        // Initialization Error
-        Error_Handler();
-    }
-}*/
 
 #ifdef  USE_FULL_ASSERT
 
