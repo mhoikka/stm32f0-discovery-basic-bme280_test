@@ -46,7 +46,7 @@ int main(void)
   UART_Settings_Init();
   
   Delay(1000);
-  send_string("Start");
+  send_stringln("Start");
   /*
   struct bme280_dev bme280_initparam;
   send_string("1");
@@ -76,7 +76,7 @@ int main(void)
     STM_EVAL_LEDToggle(LED2);
     // LED2 Toggle each 200ms 
     Delay(2000);
-    send_stringln("Hello, World!\r");
+    send_stringln("Hello, World!");
   }
 }
 
