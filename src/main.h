@@ -31,20 +31,18 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx_nucleo.h"
-#include <stdio.h>
-#include "stm32f0xx_conf.h"
-#include "main.h"
-#include "bme280.h"
-#include "bme280_defs.h"
-
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
+int8_t BME280_I2C_bus_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt);
+int8_t BME280_I2C_bus_write(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt);
+void bme280_delay_microseconds(uint32_t usec);
+
 void TimingDelay_Decrement(void);
 void Delay(__IO uint32_t nTime);
 void I2C_Settings_Init();
-void  UART_Settings_Init();
+void UART_Settings_Init();
 void System_Clock_Init();
 // inline function to swap two numbers
 inline void swap(char *x, char *y) {

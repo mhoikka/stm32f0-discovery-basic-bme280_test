@@ -1,7 +1,10 @@
 /* Includes ------------------------------------------------------------------*/
-
+#include <stdio.h>
+#include "stm32f0xx_conf.h"
+#include "main.h"
+#include "bme280.h"
+#include "bme280_defs.h"
 //#include "bme280_support.c" I'll deal with that hal dependency later
-//#include "stm32f0xx_hal.h"
 
 /* Exported functions ------------------------------------------------------- */
 void TimingDelay_Decrement(void);
@@ -71,29 +74,6 @@ int main(void)
     Delay(2000);
     send_string("Hello Again, World!\n");
   }
-  
-/** 
-  while (1) {
-         // Read sensor data
-         bme280_read_data(&bme280);
-         HAL_Delay(1000);
-     }
- 
-  
-  RCC_GetClocksFreq(&RCC_Clocks);
-  SysTick_Config(RCC_Clocks.HCLK_Frequency / 1000);
-  
-  STM_EVAL_LEDInit(LED2);
-  STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);   
-  
-  BlinkSpeed = 0;
-  while (1)
-  {
-    STM_EVAL_LEDToggle(LED2);
-    // LED2 Toggle each 200ms 
-    Delay(2000);
-  }
-*/
 }
 
 
