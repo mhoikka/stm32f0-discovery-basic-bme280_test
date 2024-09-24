@@ -76,7 +76,7 @@ int main(void)
     STM_EVAL_LEDToggle(LED2);
     // LED2 Toggle each 200ms 
     Delay(2000);
-    send_stringln("Hello, World!");
+    send_stringln("Hello, World!\r");
   }
 }
 
