@@ -78,7 +78,7 @@ int main(void)
 
 uint8_t NUM_REGISTERS_BME280 = 4;
 
-int8_t BME280_I2C_bus_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, void *intf_ptr){
+int8_t BME280_I2C_bus_read(uint8_t reg_addr, const uint8_t *reg_data, uint32_t cnt, void *intf_ptr){
  /*	\Brief: The function is used as I2C bus write
  *	\Return : Status of the I2C read
  *  \param *intf_ptr : Pointer to the interface pointer
@@ -110,7 +110,7 @@ int8_t BME280_I2C_bus_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, vo
 	return 0;
 }
 
-int8_t BME280_I2C_bus_write(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, void *intf_ptr){
+int8_t BME280_I2C_bus_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t cnt, void *intf_ptr){
 /*	\Brief: The function is used as I2C bus write
  *	\Return : Status of the I2C write
  *  \param *intf_ptr : Pointer to the interface pointer
