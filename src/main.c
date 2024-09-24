@@ -2,7 +2,8 @@
 #include <stdio.h>
 #include "stm32f0xx_conf.h"
 #include "main.h"
-//#include "bme280.h"
+#include "bme280.h"
+#include "bme280_defs.h"
 //#include "bme280_support.c" I'll deal with that hal dependency later
 //#include "stm32f0xx_hal.h"
 
@@ -35,12 +36,28 @@ int main(void)
        system_stm32f0xx.c file
      */ 
   /* SysTick end of count event each 1ms */
-  char greeting[] = "Hello, World!\n";
-	
-  // BME280 handle
-  //BME280_HandleTypedef bme280;
 
-  //bme280_init(&bme280);
+  char num_buf[15];
+  char greeting[15] = "Hello, World!\n";
+  for(int i = 0; i < sizeof(num_buf)/sizeof(num_buf[0]); i++)
+  {
+      num_buf[i] = 0;
+  }
+
+  send_string("Hello, World!\n");
+
+  //create bme280_dev struct
+  struct bme280_dev bme280_initparam;
+  bme280_initparam.chip_id = BME280_CHIP_ID; //
+  bme280_initparam.intf = BME280_I2C_INTF; 
+  //bme280_initparam.intf_ptr = &bme280_initparam; figure this out later
+  //bme280_initparam.intf_rslt = BME280_INTF_RET_SUCCESS; don't think this needs to be set
+  bme280_initparam.read = BME280_I2C_bus_read;//do these need a dereference?
+  bme280_initparam.write = BME280_I2C_bus_write;
+  bme280_initparam.delay_us = bme280_delay_microseconds;
+  //bme280_initparam.calib_data = BME280_CALIB_DATA_ADDR; don't manualy calibrate here
+
+  bme280_init(&bme280_initparam);
   
   STM_EVAL_LEDInit(LED2);
   STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);   
@@ -56,7 +73,7 @@ int main(void)
     STM_EVAL_LEDToggle(LED2);
     // LED2 Toggle each 200ms 
     Delay(200);
-    send_string(greeting);
+    send_string("Hello Again, World!\n");
   }
   
 /** 
@@ -81,6 +98,83 @@ int main(void)
     Delay(2000);
   }
 */
+}
+
+
+uint8_t NUM_REGISTERS_BME280 = 4;
+
+int8_t BME280_I2C_bus_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt){
+ /*	\Brief: The function is used as I2C bus write
+ *	\Return : Status of the I2C read
+ *	\param dev_addr : The device address of the sensor
+ *	\param reg_addr : Address of the first register, will data is going to be written
+ *	\param reg_data : Array for data to be read into from the sensor data register
+ *	\param cnt : The # of bytes of data to be read
+ **/
+
+	//send the register address to the sensor
+	//This is essentially a partial write operation
+	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (1 << 16) | (I2C_CR2_AUTOEND);
+	I2C1->TXDR = reg_addr;
+	// Wait for TC
+	while (!(I2C1->ISR & I2C_ISR_TC));
+
+	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (cnt << 16) | (I2C_CR2_RD_WRN) | (I2C_CR2_AUTOEND);
+
+	// Transfer all the data
+    for (int i = 0; i < cnt; i++) {
+        // Wait for RXNE
+        while (!(I2C1->ISR & I2C_ISR_RXNE));
+        reg_data[i] = I2C1->RXDR;
+    }
+
+	// Wait for TC
+    while (!(I2C1->ISR & I2C_ISR_TC));
+	//return the status of the read operation
+	return 0;
+}
+
+int8_t BME280_I2C_bus_write(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt){
+/*	\Brief: The function is used as I2C bus write
+ *	\Return : Status of the I2C write
+ *	\param dev_addr : The device address of the sensor
+ *	\param reg_addr : Address of the first register, where data is going to be written
+ *	\param reg_data : data to be written into the register
+ *	\param cnt : The # of bytes of data to be written
+ */
+	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (cnt*2 << 16) | (I2C_CR2_AUTOEND);
+	// transfer cnt bytes of data one register data byte and register address byte pair at a time
+	// register address is not auto-incremented
+	if (cnt <= NUM_REGISTERS_BME280){
+		for(int i = 0; i < cnt; i++){
+			// send the register address as a the control byte and the register data as a data byte
+			I2C1->TXDR = reg_addr;
+			while(!(I2C1->ISR & I2C_ISR_TXE));
+			I2C1->TXDR = reg_data[i];
+			// increment register address manually
+			++reg_addr;
+			while(!(I2C1->ISR & I2C_ISR_TXE));
+		}
+	// Wait for TC
+    while (!(I2C1->ISR & I2C_ISR_TC));
+	return 0;
+	}
+	else{
+		return 1;
+		//TODO Create an error function here? Maybe?
+	}
+}
+
+/**
+ * @brief  Delay function for BME280 drivers.
+ * @param  usec: specifies the delay time length, in 1 microsecond.
+ * @retval None
+ */
+void bme280_delay_microseconds(uint32_t usec){
+  for(volatile uint32_t counter = 0; counter < usec; counter++){
+    //do nothing NOP instructions
+    __NOP();
+  }
 }
 
 /**
@@ -116,32 +210,32 @@ void I2C_Settings_Init(){
 }
 
 void  UART_Settings_Init(){
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
-  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);
 
-  GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_1);
-  GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_1);
+  GPIO_PinAFConfig(GPIOB, GPIO_PinSource6, GPIO_AF_0);
+  GPIO_PinAFConfig(GPIOB, GPIO_PinSource7, GPIO_AF_0);
 
   GPIO_InitTypeDef GPIO_InitStruct;
 
-  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_2 | GPIO_Pin_3;
+  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_7;
   GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;
   GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz; // Is this speed right?
   GPIO_InitStruct.GPIO_OType = GPIO_OType_PP; // No open drain I think
   GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL; // No pull up or pull down
-  GPIO_Init(GPIOA, &GPIO_InitStruct);
+  GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 
   USART_InitTypeDef USART_InitStruct;
-  USART_InitStruct.USART_BaudRate = 9600; //115200
+  USART_InitStruct.USART_BaudRate = 52;
   USART_InitStruct.USART_WordLength = USART_WordLength_8b;
   USART_InitStruct.USART_StopBits = USART_StopBits_1;
   USART_InitStruct.USART_Parity = USART_Parity_No;
-  USART_InitStruct.USART_Mode = USART_Mode_Tx | USART_Mode_Rx;
+  USART_InitStruct.USART_Mode = USART_Mode_Tx;
   USART_InitStruct.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-  USART_Init(USART2, &USART_InitStruct);
+  USART_Init(USART1, &USART_InitStruct);
   //No synchronous mode yet
-  USART_Cmd(USART2, ENABLE);
+  USART_Cmd(USART1, ENABLE);
 }
 /**
  * @brief  Initializes the STM32F030R8 clock
@@ -238,9 +332,15 @@ void send_string(char *string)
 {
     while (*string != 0)
     {
-        while (USART_GetFlagStatus(USART2,USART_FLAG_TXE) == 0);
-        USART_SendData(USART2, (uint16_t) *string++);
+        while (USART_GetFlagStatus(USART1,USART_FLAG_TXE) == 0);
+        USART_SendData(USART1, (uint16_t) *string++);
     }
+}
+
+void send_stringln(char *string)
+{
+    send_string(string);
+    send_string("\n");
 }
 
 /**
