@@ -81,7 +81,7 @@ uint8_t NUM_REGISTERS_BME280 = 4;
 int8_t BME280_I2C_bus_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, void *intf_ptr){
  /*	\Brief: The function is used as I2C bus write
  *	\Return : Status of the I2C read
- *	\param dev_addr : The device address of the sensor
+ *  \param *intf_ptr : Pointer to the interface pointer
  *	\param reg_addr : Address of the first register, will data is going to be written
  *	\param reg_data : Array for data to be read into from the sensor data register
  *	\param cnt : The # of bytes of data to be read
@@ -89,6 +89,7 @@ int8_t BME280_I2C_bus_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, vo
 
 	//send the register address to the sensor
 	//This is essentially a partial write operation
+  uint32_t dev_addr = BME280_I2C_ADDR_PRIM;
 	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (1 << 16) | (I2C_CR2_AUTOEND);
 	I2C1->TXDR = reg_addr;
 	// Wait for TC
@@ -112,11 +113,12 @@ int8_t BME280_I2C_bus_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, vo
 int8_t BME280_I2C_bus_write(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, void *intf_ptr){
 /*	\Brief: The function is used as I2C bus write
  *	\Return : Status of the I2C write
- *	\param dev_addr : The device address of the sensor
+ *  \param *intf_ptr : Pointer to the interface pointer
  *	\param reg_addr : Address of the first register, where data is going to be written
  *	\param reg_data : data to be written into the register
  *	\param cnt : The # of bytes of data to be written
  */
+  uint32_t dev_addr = BME280_I2C_ADDR_PRIM;
 	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (cnt*2 << 16) | (I2C_CR2_AUTOEND);
 	// transfer cnt bytes of data one register data byte and register address byte pair at a time
 	// register address is not auto-incremented
