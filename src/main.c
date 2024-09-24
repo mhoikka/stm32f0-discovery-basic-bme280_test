@@ -42,20 +42,24 @@ int main(void)
       num_buf[i] = 0;
   }
 
-  //send_string("Hello, World!\n");
-
-  //create bme280_dev struct
+  Delay(10000);
   struct bme280_dev bme280_initparam;
+  send_string("1");
   bme280_initparam.chip_id = BME280_CHIP_ID; //
+  send_string("2");
   bme280_initparam.intf = BME280_I2C_INTF; 
+  send_string("3");
   //bme280_initparam.intf_ptr = &bme280_initparam; figure this out later
   //bme280_initparam.intf_rslt = BME280_INTF_RET_SUCCESS; don't think this needs to be set
   bme280_initparam.read = BME280_I2C_bus_read;//do these need a dereference?
+  send_string("4");
   bme280_initparam.write = BME280_I2C_bus_write;
+  send_string("5");
   bme280_initparam.delay_us = bme280_delay_microseconds;
-  //bme280_initparam.calib_data = BME280_CALIB_DATA_ADDR; don't manualy calibrate here
+  //bme280_initparam.calib_data = BME280_CALIB_DATA_ADDR; don't manually calibrate here
 
   bme280_init(&bme280_initparam);
+  send_string("6");
   
   STM_EVAL_LEDInit(LED2);
   STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);   
