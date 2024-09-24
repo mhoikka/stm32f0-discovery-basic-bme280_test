@@ -42,7 +42,8 @@ int main(void)
       num_buf[i] = 0;
   }
 
-  Delay(10000);
+  Delay(1000);
+  send_string("Start");
   struct bme280_dev bme280_initparam;
   send_string("1");
   bme280_initparam.chip_id = BME280_CHIP_ID; //
@@ -60,7 +61,7 @@ int main(void)
 
   bme280_init(&bme280_initparam);
   send_string("6");
-  
+
   STM_EVAL_LEDInit(LED2);
   STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);   
   
