@@ -11,6 +11,12 @@ void Delay(__IO uint32_t nTime);
 
 
 /* Private typedef -----------------------------------------------------------*/
+typedef struct my_device_context {
+    I2C_InitTypeDef *I2C_InitStruct; // Pointer to the I2C handle
+    uint16_t i2c_address;     // I2C address of the BME280
+} my_device_context;
+struct my_device_context ctx = {};
+
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -50,16 +56,15 @@ int main(void)
   struct bme280_dev bme280_initparam;
   bme280_initparam.chip_id = BME280_CHIP_ID; //
   bme280_initparam.intf = BME280_I2C_INTF; 
-  //bme280_initparam.intf_ptr = &bme280_initparam; figure this out later
+  bme280_initparam.intf_ptr = &ctx; // Did I figure this out later?
   //bme280_initparam.intf_rslt = BME280_INTF_RET_SUCCESS; don't think this needs to be set
   bme280_initparam.read = BME280_I2C_bus_read;//do these need a dereference?
   bme280_initparam.write = BME280_I2C_bus_write;
-  send_stringln("1");
   bme280_initparam.delay_us = bme280_delay_microseconds;
   //bme280_initparam.calib_data = BME280_CALIB_DATA_ADDR; don't manually calibrate here
-  send_stringln("2");
+  send_stringln("1");
   bme280_init(&bme280_initparam);
-  send_stringln("3");
+  send_stringln("2");
 
   STM_EVAL_LEDInit(LED2);
   STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);   
@@ -184,6 +189,10 @@ void I2C_Settings_Init(){
   I2C_InitStruct.I2C_Timing = 0x00901D23; 
   I2C_Init(I2C1, &I2C_InitStruct);
   I2C_Cmd(I2C1, ENABLE);
+  //why isn't my struct being recognized here?
+
+  ctx.I2C_InitStruct = &I2C_InitStruct;
+  ctx.i2c_address = BME280_I2C_ADDR_PRIM; // Set the primary I2C address
 }
 
 void  UART_Settings_Init(){
