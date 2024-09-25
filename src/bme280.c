@@ -40,6 +40,7 @@
  * @brief Sensor driver for BME280 sensor
  */
 #include "bme280.h"
+#include "stm32f0xx_i2c.h"
 
 /**\name Internal macros */
 /* To identify osr settings selected by user */
@@ -406,12 +407,21 @@ static uint32_t compensate_humidity(const struct bme280_uncomp_data *uncomp_data
 
 /****************** Global Function Definitions *******************************/
 
+typedef struct my_device_context {
+    I2C_InitTypeDef *I2C_InitStruct; // Pointer to the I2C handle
+    uint16_t i2c_address;     // I2C address of the BME280
+} my_device_context;
+
 /*!
  *  @brief This API is the entry point.
  *  It reads the chip-id and calibration data from the sensor.
  */
 int8_t bme280_init(struct bme280_dev *dev)
 {
+    struct my_device_context *context = (my_device_context *)(dev->intf_ptr);
+    I2C_InitTypeDef *I2C_InitStruct = context->I2C_InitStruct;
+    uint16_t i2c_address = context->i2c_address;
+
     int8_t rslt;
     uint8_t chip_id = 0;
     send_stringln("1.1");
