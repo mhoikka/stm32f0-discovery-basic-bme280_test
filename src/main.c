@@ -51,7 +51,7 @@ int main(void)
   System_Clock_Init();
   I2C_Settings_Init();
   UART_Settings_Init();
-  /*
+
   send_stringln("Start");
   struct bme280_dev bme280_initparam;
   bme280_initparam.chip_id = BME280_CHIP_ID; //
@@ -63,7 +63,7 @@ int main(void)
   bme280_initparam.delay_us = bme280_delay_microseconds;
   //bme280_initparam.calib_data = BME280_CALIB_DATA_ADDR; don't manually calibrate here
   bme280_init(&bme280_initparam);
-  */
+
   STM_EVAL_LEDInit(LED2);
   STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);   
   
