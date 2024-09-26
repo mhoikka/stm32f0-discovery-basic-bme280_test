@@ -51,7 +51,7 @@ int main(void)
   System_Clock_Init();
   I2C_Settings_Init();
   UART_Settings_Init();
-  
+  /*
   send_stringln("Start");
   struct bme280_dev bme280_initparam;
   bme280_initparam.chip_id = BME280_CHIP_ID; //
@@ -63,7 +63,7 @@ int main(void)
   bme280_initparam.delay_us = bme280_delay_microseconds;
   //bme280_initparam.calib_data = BME280_CALIB_DATA_ADDR; don't manually calibrate here
   bme280_init(&bme280_initparam);
-
+  */
   STM_EVAL_LEDInit(LED2);
   STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);   
   
@@ -92,7 +92,7 @@ int8_t BME280_I2C_bus_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, vo
 
 	//send the register address to the sensor
 	//This is essentially a partial write operation
-  uint32_t dev_addr = BME280_I2C_ADDR_PRIM;
+  uint32_t dev_addr = BME280_I2C_ADDR_SEC;
 	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (1 << 16) | (I2C_CR2_AUTOEND);
 	I2C1->TXDR = reg_addr;
 	// Wait for TC
@@ -121,7 +121,7 @@ int8_t BME280_I2C_bus_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t 
  *	\param reg_data : data to be written into the register
  *	\param cnt : The # of bytes of data to be written
  */
-  uint32_t dev_addr = BME280_I2C_ADDR_PRIM;
+  uint32_t dev_addr = BME280_I2C_ADDR_SEC;
 	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (cnt*2 << 16) | (I2C_CR2_AUTOEND);
 	// transfer cnt bytes of data one register data byte and register address byte pair at a time
 	// register address is not auto-incremented
@@ -189,7 +189,7 @@ void I2C_Settings_Init(){
   I2C_Cmd(I2C1, ENABLE);
 
   ctx.I2C_InitStruct = &I2C_InitStruct;
-  ctx.i2c_address = BME280_I2C_ADDR_PRIM; // Set the primary I2C address
+  ctx.i2c_address = BME280_I2C_ADDR_SEC; // Set the primary I2C address
 }
 
 void  UART_Settings_Init(){
