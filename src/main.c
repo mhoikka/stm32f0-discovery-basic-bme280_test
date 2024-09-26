@@ -57,8 +57,8 @@ int main(void)
   bme280_initparam.chip_id = BME280_CHIP_ID; //
   bme280_initparam.intf = BME280_I2C_INTF; 
   bme280_initparam.intf_ptr = (void *)&ctx; // Did I figure this out later?
-  bme280_initparam.intf_rslt = BME280_INTF_RET_SUCCESS; //don't think this needs to be set
-  bme280_initparam.read = BME280_I2C_bus_read;//do these need a dereference?
+  bme280_initparam.intf_rslt = BME280_INTF_RET_SUCCESS; 
+  bme280_initparam.read = BME280_I2C_bus_read;
   bme280_initparam.write = BME280_I2C_bus_write;
   bme280_initparam.delay_us = bme280_delay_microseconds;
   //bme280_initparam.calib_data = BME280_CALIB_DATA_ADDR; don't manually calibrate here
@@ -99,6 +99,7 @@ int8_t BME280_I2C_bus_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, vo
 	I2C1->TXDR = reg_addr;
   //send_stringln("2.4");
   // Wait for not busy
+  while (!(I2C1->ISR & I2C_ISR_BUSY));
 	while ((I2C1->ISR & I2C_ISR_BUSY));
   //send_stringln("2.5");
 	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (cnt << 16) | (I2C_CR2_RD_WRN) | (I2C_CR2_AUTOEND);
@@ -112,7 +113,8 @@ int8_t BME280_I2C_bus_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, vo
     //send_stringln("2.7");
 
 	// Wait for not busy
-  while ((I2C1->ISR & I2C_ISR_BUSY));
+  while (!(I2C1->ISR & I2C_ISR_BUSY));
+	while ((I2C1->ISR & I2C_ISR_BUSY));
 	//return the status of the read operation
   //send_stringln("2.8");
 	return 0; //BME OK
@@ -141,7 +143,8 @@ int8_t BME280_I2C_bus_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t 
 			while(!(I2C1->ISR & I2C_ISR_TXE));
 		}
 	// Wait for not busy
-  while ((I2C1->ISR & I2C_ISR_BUSY));
+  while (!(I2C1->ISR & I2C_ISR_BUSY));
+	while ((I2C1->ISR & I2C_ISR_BUSY));
 	return 0;
 	}
 	else{
