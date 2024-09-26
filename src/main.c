@@ -161,9 +161,9 @@ int8_t BME280_I2C_bus_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t 
 void __attribute__((optimize("O0"))) bme280_delay_microseconds(uint32_t usec, void *intf_ptr){
   for(volatile uint32_t counter = 0; counter < usec; counter++){
     //do nothing NOP instructions
-    __NOP();
-    __NOP();
-    __NOP();
+    __NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
+    __NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
+    __NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
   }
 }
 
