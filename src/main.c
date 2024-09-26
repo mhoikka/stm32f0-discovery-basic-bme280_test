@@ -95,8 +95,8 @@ int8_t BME280_I2C_bus_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, vo
   uint32_t dev_addr = BME280_I2C_ADDR_SEC;
 	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (1 << 16) | (I2C_CR2_AUTOEND);
 	I2C1->TXDR = reg_addr;
-	// Wait for TC
-	while (!(I2C1->ISR & I2C_ISR_TC));
+  // Wait for not busy
+	while ((I2C1->ISR & I2C_ISR_BUSY));
 
 	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (cnt << 16) | (I2C_CR2_RD_WRN) | (I2C_CR2_AUTOEND);
 
@@ -107,10 +107,10 @@ int8_t BME280_I2C_bus_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, vo
         reg_data[i] = I2C1->RXDR;
     }
 
-	// Wait for TC
-  while (!(I2C1->ISR & I2C_ISR_TC));
+	// Wait for not busy
+  while ((I2C1->ISR & I2C_ISR_BUSY));
 	//return the status of the read operation
-	return 0;
+	return 0; //BME OK
 }
 
 int8_t BME280_I2C_bus_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t cnt, void *intf_ptr){
@@ -135,8 +135,8 @@ int8_t BME280_I2C_bus_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t 
 			++reg_addr;
 			while(!(I2C1->ISR & I2C_ISR_TXE));
 		}
-	// Wait for TC
-  while (!(I2C1->ISR & I2C_ISR_TC));
+	// Wait for not busy
+  while ((I2C1->ISR & I2C_ISR_BUSY));
 	return 0;
 	}
 	else{
