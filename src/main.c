@@ -93,23 +93,28 @@ int8_t BME280_I2C_bus_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, vo
 	//send the register address to the sensor
 	//This is essentially a partial write operation
   uint32_t dev_addr = BME280_I2C_ADDR_SEC;
+  send_stringln("2.1");
 	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (1 << 16) | (I2C_CR2_AUTOEND);
+  send_stringln("2.3");
 	I2C1->TXDR = reg_addr;
+  send_stringln("2.4");
   // Wait for not busy
 	while ((I2C1->ISR & I2C_ISR_BUSY));
-
+  send_stringln("2.5");
 	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (cnt << 16) | (I2C_CR2_RD_WRN) | (I2C_CR2_AUTOEND);
-
+  send_stringln("2.6");
 	// Transfer all the data
     for (int i = 0; i < cnt; i++) {
         // Wait for RXNE
         while (!(I2C1->ISR & I2C_ISR_RXNE));
         reg_data[i] = I2C1->RXDR;
     }
+    send_stringln("2.7");
 
 	// Wait for not busy
   while ((I2C1->ISR & I2C_ISR_BUSY));
 	//return the status of the read operation
+  send_stringln("2.8");
 	return 0; //BME OK
 }
 
