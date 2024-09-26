@@ -57,7 +57,7 @@ int main(void)
   bme280_initparam.chip_id = BME280_CHIP_ID; //
   bme280_initparam.intf = BME280_I2C_INTF; 
   bme280_initparam.intf_ptr = (void *)&ctx; // Did I figure this out later?
-  //bme280_initparam.intf_rslt = BME280_INTF_RET_SUCCESS; don't think this needs to be set
+  bme280_initparam.intf_rslt = BME280_INTF_RET_SUCCESS; //don't think this needs to be set
   bme280_initparam.read = BME280_I2C_bus_read;//do these need a dereference?
   bme280_initparam.write = BME280_I2C_bus_write;
   bme280_initparam.delay_us = bme280_delay_microseconds;
@@ -166,18 +166,18 @@ void I2C_Settings_Init(){
   // Enable peripheral clock
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1, ENABLE);
   //RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);//
-  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);
   
-  // Use pins PA9 and PA10 for I2C (STM32F030R8)
-  GPIO_InitTypeDef GPIO_InitStruct;
-  GPIO_PinAFConfig(GPIOA, GPIO_PinSource9, GPIO_AF_1);//code checker is saying this is wrong, not sure why
-  GPIO_PinAFConfig(GPIOA, GPIO_PinSource10, GPIO_AF_1); //GPIO_AF_4
-  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_9 | GPIO_Pin_10;
+  // Use pins PB6 and PB7 for I2C (STM32F030R8)
+  GPIO_InitTypeDef GPIO_InitStruct; 
+  GPIO_PinAFConfig(GPIOB, GPIO_PinSource6, GPIO_AF_1);//code checker is saying this is wrong, not sure why
+  GPIO_PinAFConfig(GPIOB, GPIO_PinSource7, GPIO_AF_1); 
+  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_7;
   GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;
   GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz; 
   GPIO_InitStruct.GPIO_OType = GPIO_OType_OD;
   GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;//do we need this
-  GPIO_Init(GPIOA, &GPIO_InitStruct);
+  GPIO_Init(GPIOB, &GPIO_InitStruct);
 	
   // I2C configuration
   I2C_InitTypeDef I2C_InitStruct;
@@ -187,7 +187,6 @@ void I2C_Settings_Init(){
   I2C_InitStruct.I2C_Timing = 0x00901D23; 
   I2C_Init(I2C1, &I2C_InitStruct);
   I2C_Cmd(I2C1, ENABLE);
-  //why isn't my struct being recognized here?
 
   ctx.I2C_InitStruct = &I2C_InitStruct;
   ctx.i2c_address = BME280_I2C_ADDR_PRIM; // Set the primary I2C address

@@ -418,10 +418,6 @@ typedef struct my_device_context {
  */
 int8_t bme280_init(struct bme280_dev *dev)
 {
-    struct my_device_context *context = (my_device_context *)(dev->intf_ptr);
-    I2C_InitTypeDef *I2C_InitStruct = context->I2C_InitStruct;
-    uint16_t i2c_address = context->i2c_address;
-
     int8_t rslt;
     uint8_t chip_id = 0;
     send_stringln("1.1");
