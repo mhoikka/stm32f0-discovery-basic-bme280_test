@@ -73,8 +73,8 @@ int main(void)
   {
     STM_EVAL_LEDToggle(LED2);
     // LED2 Toggle each 200ms 
-    Delay(2000);
-    send_stringln("Hello, World!");
+    bme280_delay_microseconds((2000*1000), NULL);
+    //send_stringln("Hello, World!");
   }
 }
 
@@ -158,7 +158,7 @@ int8_t BME280_I2C_bus_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t 
  * @param  usec: specifies the delay time length, in 1 microsecond.
  * @retval None
  */
-void bme280_delay_microseconds(uint32_t usec, void *intf_ptr){
+void __attribute__((optimize("O0"))) bme280_delay_microseconds(uint32_t usec, void *intf_ptr){
   for(volatile uint32_t counter = 0; counter < usec; counter++){
     //do nothing NOP instructions
     __NOP();
