@@ -163,7 +163,7 @@ void __attribute__((optimize("O0"))) bme280_delay_microseconds(uint32_t usec, vo
     //do nothing NOP instructions
     __NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
     __NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
-    __NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
+    __NOP();__NOP();__NOP();__NOP();__NOP();
   }
 }
 
