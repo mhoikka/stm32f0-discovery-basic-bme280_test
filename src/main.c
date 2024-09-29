@@ -333,13 +333,13 @@ void send_string(char *string)
         USART_SendData(USART2, (uint16_t) *string++);
     }
     while (USART_GetFlagStatus(USART2,USART_FLAG_TXE) == 0);
-    USART_SendData(USART2, '\r');
 }
 
 void send_stringln(char *string)
 {
-    send_string(string);
-    send_string("\n");
+  USART_SendData(USART2, '\r');
+  send_string(string);
+  send_string("\n");
 }
 
 #ifdef  USE_FULL_ASSERT
