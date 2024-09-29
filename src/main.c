@@ -73,6 +73,8 @@ int main(void)
   bme_settings.standby_time = BME280_STANDBY_TIME_62_5_MS; // Standby time
 
   bme280_set_sensor_settings(BME280_SEL_FILTER | BME280_SEL_OSR_HUM | BME280_SEL_OSR_PRESS | BME280_SEL_OSR_TEMP, &bme_settings, &bme280_initparam);
+  bme280_set_sensor_mode(BME280_POWERMODE_FORCED, &bme280_initparam);
+  
   Delay (100);
   
   itoa(bme280_get_sensor_data(BME280_ALL, &bme280_datastruct, &bme280_initparam), num_buf, 10);
