@@ -66,14 +66,14 @@ int main(void)
 
   struct bme280_data bme280_datastruct;
   itoa(bme280_get_sensor_data(BME280_ALL, &bme280_datastruct, &bme280_initparam), num_buf, 10);
-  send_string(itoa((int)(bme280_datastruct.temperature), num_buf, 10));
+  send_string(itoa((int)(bme280_datastruct.temperature*1), num_buf, 10));
   send_stringln(" degrees C");
   send_stringln("Start1");
-  send_string(itoa((int)(bme280_datastruct.pressure), num_buf, 10));
+  send_string(itoa((int)(bme280_datastruct.pressure*1), num_buf, 10));
   send_stringln("Start2");
   send_stringln(" Pa");
   send_stringln("Start3");
-  send_string(itoa((int)(bme280_datastruct.humidity), num_buf, 10));
+  send_string(itoa((int)(bme280_datastruct.humidity*1), num_buf, 10));
   send_stringln("Start4");
   send_stringln(" %");
   send_stringln("Start5");
