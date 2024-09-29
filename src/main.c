@@ -337,9 +337,8 @@ void send_string(char *string)
 
 void send_stringln(char *string)
 {
-  USART_SendData(USART2, '\r');
   send_string(string);
-  send_string("\n");
+  send_string("\r\n");
 }
 
 #ifdef  USE_FULL_ASSERT
