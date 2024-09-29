@@ -57,17 +57,24 @@ int main(void)
   struct bme280_dev bme280_initparam;
   bme280_initparam.chip_id = BME280_CHIP_ID; 
   bme280_initparam.intf = BME280_I2C_INTF; 
-  bme280_initparam.intf_ptr = (void *)&ctx; // Did I figure this out later?
+  bme280_initparam.intf_ptr = (void *)&ctx; 
   bme280_initparam.intf_rslt = BME280_INTF_RET_SUCCESS; 
   bme280_initparam.read = BME280_I2C_bus_read;
   bme280_initparam.write = BME280_I2C_bus_write;
   bme280_initparam.delay_us = bme280_delay_microseconds;
   bme280_init(&bme280_initparam);
+  struct bme280_settings bme_settings;
+  bme_settings.filter = BME280_FILTER_COEFF_16; // Adjust as needed
+  bme_settings.osr_h = BME280_OVERSAMPLING_16X ;       // Humidity oversampling
+  bme_settings.osr_p = BME280_OVERSAMPLING_16X ;       // Pressure oversampling
+  bme_settings.osr_t = BME280_OVERSAMPLING_16X ;       // Temperature oversampling
+
+  bme280_set_sensor_settings(BME280_SEL_FILTER | BME280_SEL_OSR_HUM | BME280_SEL_OSR_PRESS | BME280_SEL_OSR_TEMP, &bme_settings, &bme280_initparam);
 
   struct bme280_data bme280_datastruct;
   itoa(bme280_get_sensor_data(BME280_ALL, &bme280_datastruct, &bme280_initparam), num_buf, 10);
   send_string(itoa((int)(bme280_datastruct.temperature), num_buf, 10));
-  send_stringln(" degrees C");
+  send_stringln(" C");
   send_string(itoa((int)(bme280_datastruct.pressure), num_buf, 10));
   send_stringln(" Pa");
   send_string(itoa((int)(bme280_datastruct.humidity), num_buf, 10));
