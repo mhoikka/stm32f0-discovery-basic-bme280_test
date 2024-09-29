@@ -68,9 +68,7 @@ int main(void)
   bme280_get_sensor_data(BME280_ALL, &bme280_datastruct, &bme280_initparam);
   send_stringln("Temperature: ");
   send_string(itoa((int)(bme280_datastruct.temperature*100), num_buf, 10));
-  send_stringln((char)bme280_datastruct.temperature);
-
-  send_stringln(itoa(1234, num_buf, 10));
+  //send_stringln((char)bme280_datastruct.temperature);
 
 
   STM_EVAL_LEDInit(LED2);
