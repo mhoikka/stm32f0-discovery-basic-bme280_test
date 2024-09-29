@@ -68,7 +68,7 @@ int main(void)
   bme280_get_sensor_data(BME280_ALL, &bme280_datastruct, &bme280_initparam);
   send_stringln("Temperature: ");
   send_string(itoa((int)(bme280_datastruct.temperature), num_buf, 10));
-  char *temp = ['d','C','\\0'];
+  char *temp = {'d','C','\\0'};
   send_stringln(temp);
   send_stringln(reverse(temp,0,1));
 
