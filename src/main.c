@@ -64,19 +64,11 @@ int main(void)
   bme280_initparam.delay_us = bme280_delay_microseconds;
   bme280_init(&bme280_initparam);
 
-  send_stringln("1.1");
   struct bme280_data bme280_datastruct;
-  send_stringln("1.2");
   bme280_get_sensor_data(BME280_ALL, &bme280_datastruct, &bme280_initparam);
-  send_stringln("1.3");
-  itoa((int)(bme280_datastruct.temperature), num_buf, 10);
-  send_stringln("1.4");
   send_stringln("Temperature: ");
-  send_stringln("1.5");
-  send_string(num_buf);
-  send_stringln("1.6");
+  send_string(itoa((int)(bme280_datastruct.temperature), num_buf, 10));
   send_stringln(" C");
-  send_stringln("1.7");
 
   STM_EVAL_LEDInit(LED2);
   STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);   
