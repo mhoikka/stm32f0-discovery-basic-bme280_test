@@ -73,7 +73,7 @@ int main(void)
   send_stringln("1.4");
   send_stringln("Temperature: ");
   send_stringln("1.5");
-  sendstring(num_buf);
+  send_string(num_buf);
   send_stringln("1.6");
   send_stringln(" C");
   send_stringln("1.7");
