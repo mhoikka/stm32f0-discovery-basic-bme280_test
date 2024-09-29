@@ -42,11 +42,12 @@ int main(void)
      */ 
   /* SysTick end of count event each 1ms */
 
-  char num_buf[15];
+  char num_buf[65];
+  /*
   for(int i = 0; i < sizeof(num_buf)/sizeof(num_buf[0]); i++)
   {
       num_buf[i] = 0;
-  }
+  }*/
 
   System_Clock_Init();
   I2C_Settings_Init();
@@ -54,15 +55,22 @@ int main(void)
 
   send_stringln("Start");
   struct bme280_dev bme280_initparam;
-  bme280_initparam.chip_id = BME280_CHIP_ID; //
+  bme280_initparam.chip_id = BME280_CHIP_ID; 
   bme280_initparam.intf = BME280_I2C_INTF; 
   bme280_initparam.intf_ptr = (void *)&ctx; // Did I figure this out later?
   bme280_initparam.intf_rslt = BME280_INTF_RET_SUCCESS; 
   bme280_initparam.read = BME280_I2C_bus_read;
   bme280_initparam.write = BME280_I2C_bus_write;
   bme280_initparam.delay_us = bme280_delay_microseconds;
-  //bme280_initparam.calib_data = BME280_CALIB_DATA_ADDR; don't manually calibrate here
   bme280_init(&bme280_initparam);
+
+  struct bme280_data bme280_datastruct;
+
+  bme280_get_sensor_data(BME280_ALL, &bme280_datastruct, &bme280_initparam);
+  itoa((int)(bme280_datastruct.temperature), num_buf, 10);
+  send_stringln("Temperature: ");
+  sendstring(num_buf);
+  send_stringln(" C");
 
   STM_EVAL_LEDInit(LED2);
   STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);   
@@ -73,7 +81,7 @@ int main(void)
   {
     STM_EVAL_LEDToggle(LED2);
     // LED2 Toggle each 200ms 
-    bme280_delay_microseconds((2000*1000), NULL);
+    Delay((1000));
     //send_stringln("Hello, World!");
   }
 }
@@ -277,7 +285,7 @@ char* itoa(int value, char* buffer, int base)
 {
 	// invalid input
 	if (base < 2 || base > 32)
-		return buffer; // Why? Don't want to make an exception function I assume?
+		return buffer; 
 
 	// Get absolute value of number
 	int n = value;
@@ -288,7 +296,7 @@ char* itoa(int value, char* buffer, int base)
 	{
 		int r = n % base;
 
-		if (r >= 10) // Is this for hex conversions?
+		if (r >= 10) 
 			buffer[i++] = 65 + (r - 10);
 		else
 			buffer[i++] = 48 + r;
