@@ -70,6 +70,9 @@ int main(void)
   send_string(itoa((int)(bme280_datastruct.temperature), num_buf, 10));
   send_stringln((char)bme280_datastruct.temperature);
 
+  send_stringln(itoa(1234, num_buf, 10));
+
+
   STM_EVAL_LEDInit(LED2);
   STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);   
   
