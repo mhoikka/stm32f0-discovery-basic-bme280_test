@@ -67,9 +67,12 @@ int main(void)
   struct bme280_data bme280_datastruct;
   send_stringln(itoa(bme280_get_sensor_data(BME280_ALL, &bme280_datastruct, &bme280_initparam), num_buf, 10));
   send_string(itoa((int)(bme280_datastruct.temperature), num_buf, 10));
-  //send_string(itoa((int)(bme280_datastruct.temperature*100), num_buf, 10));
-  //send_string(itoa((int)(bme280_datastruct.temperature*1), num_buf, 10));
-  //send_stringln((char)bme280_datastruct.temperature);
+  send_stringln(" degrees C");
+  send_string(itoa((int)(bme280_datastruct.pressure), num_buf, 10));
+  send_stringln(" Pa");
+  send_string(itoa((int)(bme280_datastruct.humidity), num_buf, 10));
+  send_stringln(" %");
+
 
 
   STM_EVAL_LEDInit(LED2);
