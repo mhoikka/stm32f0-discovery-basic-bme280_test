@@ -70,7 +70,7 @@ int main(void)
   bme_settings.osr_t = BME280_OVERSAMPLING_16X ;       // Temperature oversampling
 
   bme280_set_sensor_settings(BME280_SEL_FILTER | BME280_SEL_OSR_HUM | BME280_SEL_OSR_PRESS | BME280_SEL_OSR_TEMP, &bme_settings, &bme280_initparam);
-  Delay (10000);
+  //Delay (10000);
   struct bme280_data bme280_datastruct;
   itoa(bme280_get_sensor_data(BME280_ALL, &bme280_datastruct, &bme280_initparam), num_buf, 10);
   send_string(itoa((int)(bme280_datastruct.temperature), num_buf, 10));
