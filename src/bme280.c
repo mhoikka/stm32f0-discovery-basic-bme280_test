@@ -420,38 +420,28 @@ int8_t bme280_init(struct bme280_dev *dev)
 {
     int8_t rslt;
     uint8_t chip_id = 0;
-    send_stringln("1.1");
     /* Read the chip-id of bme280 sensor */
     rslt = bme280_get_regs(BME280_REG_CHIP_ID, &chip_id, 1, dev);
-    send_stringln("1.2");
     /* Check for chip id validity */
     if (rslt == BME280_OK)
     {
-        send_stringln("1.3");
         if (chip_id == BME280_CHIP_ID)
         {
-            send_stringln("1.4");
             dev->chip_id = chip_id;
-            send_stringln("1.5");
             /* Reset the sensor */
             rslt = bme280_soft_reset(dev);
-            send_stringln("1.6");
 
             if (rslt == BME280_OK)
             {
-                send_stringln("1.7");
                 /* Read the calibration data */
                 rslt = get_calib_data(dev);
-                send_stringln("1.8");
             }
         }
         else
         {
             rslt = BME280_E_DEV_NOT_FOUND;
-            send_stringln("1.9");
         }
     }
-send_stringln("1.95");
     return rslt;
 }
 
