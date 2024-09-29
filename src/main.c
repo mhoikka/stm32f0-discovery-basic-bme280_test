@@ -17,7 +17,6 @@ typedef struct my_device_context {
     uint16_t i2c_address;     // I2C address of the BME280
 } my_device_context;
 struct my_device_context ctx = {};
-struct bme280_calib_data calib_data; // Calibration data structure
 struct bme280_data bme280_datastruct;
 
 /* Private define ------------------------------------------------------------*/
@@ -72,7 +71,7 @@ int main(void)
   bme_settings.osr_p = BME280_OVERSAMPLING_16X ;       // Pressure oversampling
   bme_settings.osr_t = BME280_OVERSAMPLING_16X ;       // Temperature oversampling
   bme_settings.standby_time = BME280_STANDBY_TIME_62_5_MS; // Standby time
-  
+
   bme280_set_sensor_settings(BME280_SEL_FILTER | BME280_SEL_OSR_HUM | BME280_SEL_OSR_PRESS | BME280_SEL_OSR_TEMP, &bme_settings, &bme280_initparam);
   Delay (100);
   
@@ -83,11 +82,6 @@ int main(void)
   send_stringln(" Pa");
   send_string(itoa((int)(bme280_datastruct.humidity), num_buf, 10));
   send_stringln(" %");
-
-  bme280_compensate_data(uint8_t sensor_comp,
-                              const struct bme280_uncomp_data *uncomp_data,
-                              struct bme280_data *comp_data,
-                              struct bme280_calib_data *calib_data);
 
   STM_EVAL_LEDInit(LED2);
   STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);   
