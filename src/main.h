@@ -31,14 +31,27 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx_nucleo.h"
-
-
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
+int8_t BME280_I2C_bus_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, void *intf_ptr);
+int8_t BME280_I2C_bus_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t cnt, void *intf_ptr);
+void bme280_delay_microseconds(uint32_t usec, void *intf_ptr);
+
 void TimingDelay_Decrement(void);
 void Delay(__IO uint32_t nTime);
+void I2C_Settings_Init();
+void UART_Settings_Init();
+void System_Clock_Init();
+// inline function to swap two numbers
+inline void swap(char *x, char *y) {
+	char t = *x; *x = *y; *y = t;
+}
+char* reverse(char *buffer, int i, int j);
+char* itoa(int value, char* buffer, int base);
+void send_string(char *string);
+void send_stringln(char *string);
 #endif /* __MAIN_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

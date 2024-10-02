@@ -54,6 +54,46 @@ int main(void)
   I2C_Settings_Init();
   UART_Settings_Init();
 
+<<<<<<< HEAD
+  bme280_init(&bme280);
+ 
+  // Enable peripheral clock
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2Cx, ENABLE);
+  //RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);//
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOx, ENABLE);
+  
+  // Use pins PA9 and PA10 for I2C (STM32F030R8)
+  GPIO_InitTypeDef GPIO_InitStruct;
+  GPIO_PinAFConfig(GPIOA, GPIO_PinSource9, GPIO_AF_1);//code checker is saying this is wrong, not sure why
+  GPIO_PinAFConfig(GPIOA, GPIO_PinSource10, GPIO_AF_1); //GPIO_AF_4
+  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_9 | GPIO_Pin_10;
+  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;
+  GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz; 
+  GPIO_InitStruct.GPIO_OType = GPIO_OType_OD;
+  GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;//do we need this
+  GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  // I2C configuration
+  I2C_InitTypeDef I2C_InitStruct;
+  I2C_InitStruct.I2C_Mode = I2C_Mode_I2C;
+  I2C_InitStruct.I2C_AnalogFilter = I2C_AnalogFilter_Enable;
+  I2C_InitStruct.I2C_DigitalFilter = 0x00;
+  I2C_InitStruct.I2C_OwnAddress1 = 0x77;
+  I2C_InitStruct.I2C_Ack = I2C_Ack_Enable;
+  I2C_InitStruct.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
+  I2C_InitStruct.I2C_Timing = 0x00901D23; //0x10805E89;
+  I2C_Init(I2C1, &I2C_InitStruct);
+  I2C_Cmd(I2C1, ENABLE);
+
+
+
+  while (1) {
+         // Read sensor data
+         bme280_read_data(&bme280);
+         HAL_Delay(1000);
+     }
+ 
+=======
   send_stringln("Start");
   struct bme280_dev bme280_initparam;
   bme280_initparam.chip_id = BME280_CHIP_ID; 
@@ -74,6 +114,7 @@ int main(void)
 
   bme280_set_sensor_settings(BME280_SEL_FILTER | BME280_SEL_OSR_HUM | BME280_SEL_OSR_PRESS | BME280_SEL_OSR_TEMP, &bme_settings, &bme280_initparam);
   bme280_set_sensor_mode(BME280_POWERMODE_FORCED, &bme280_initparam);
+>>>>>>> 4a29ba64667711b675dee03f78e6655a497cf397
   
   Delay (100);
   
