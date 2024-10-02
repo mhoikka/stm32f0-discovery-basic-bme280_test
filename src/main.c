@@ -47,6 +47,36 @@ int main(void)
 
   bme280_init(&bme280);
  
+  // Enable peripheral clock
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2Cx, ENABLE);
+  //RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);//
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOx, ENABLE);
+  
+  // Use pins PA9 and PA10 for I2C (STM32F030R8)
+  GPIO_InitTypeDef GPIO_InitStruct;
+  GPIO_PinAFConfig(GPIOA, GPIO_PinSource9, GPIO_AF_1);//code checker is saying this is wrong, not sure why
+  GPIO_PinAFConfig(GPIOA, GPIO_PinSource10, GPIO_AF_1); //GPIO_AF_4
+  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_9 | GPIO_Pin_10;
+  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;
+  GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz; 
+  GPIO_InitStruct.GPIO_OType = GPIO_OType_OD;
+  GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;//do we need this
+  GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  // I2C configuration
+  I2C_InitTypeDef I2C_InitStruct;
+  I2C_InitStruct.I2C_Mode = I2C_Mode_I2C;
+  I2C_InitStruct.I2C_AnalogFilter = I2C_AnalogFilter_Enable;
+  I2C_InitStruct.I2C_DigitalFilter = 0x00;
+  I2C_InitStruct.I2C_OwnAddress1 = 0x77;
+  I2C_InitStruct.I2C_Ack = I2C_Ack_Enable;
+  I2C_InitStruct.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
+  I2C_InitStruct.I2C_Timing = 0x00901D23; //0x10805E89;
+  I2C_Init(I2C1, &I2C_InitStruct);
+  I2C_Cmd(I2C1, ENABLE);
+
+
+
   while (1) {
          // Read sensor data
          bme280_read_data(&bme280);
