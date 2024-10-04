@@ -187,7 +187,7 @@ void __attribute__((optimize("O0"))) bme280_delay_microseconds(uint32_t usec, vo
  * @brief Initializes the SPI connection for the STM32F030R8
  * @retval None
  */
-void SPI_Init(){
+void MySPI_Init(){
   //Set up the SPI peripheral
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE); //CHECK IF THIS IS ALREADY ENABLED
@@ -229,7 +229,7 @@ void SPI_Init(){
 */  //None of this code is checked. It is a direct copy from Copilot
 void NRF24L01_Init(){
   //Set up the SPI peripheral
-  SPI_Init();
+  MySPI_Init();
   //Set up the GPIO pins
   GPIO_InitTypeDef GPIO_InitStruct;
   //Set up the CE pin
