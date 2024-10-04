@@ -61,23 +61,14 @@ int main(void)
   BME_Init();
   //bme280_set_sensor_mode(BME280_POWERMODE_FORCED, &bme280_initparam);
   //instead of forced, let's try normal mode
-  bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam);
-
-  Delay (100);
-  
-  itoa(bme280_get_sensor_data(BME280_ALL, &bme280_datastruct, &bme280_initparam), num_buf, 10);
-  send_string(itoa((int)(bme280_datastruct.temperature), num_buf, 10));
-  send_stringln(" C");
-  send_string(itoa((int)(bme280_datastruct.pressure), num_buf, 10));
-  send_stringln(" Pa");
-  send_string(itoa((int)(bme280_datastruct.humidity), num_buf, 10));
-
-  STM_EVAL_LEDInit(LED2);
-  STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);   
+  bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam);  
   
   BlinkSpeed = 0;
 
-  while(1){
+  while (1)
+  {
+    STM_EVAL_LEDToggle(LED2);
+
     itoa(bme280_get_sensor_data(BME280_ALL, &bme280_datastruct, &bme280_initparam), num_buf, 10);
     send_string(itoa((int)(bme280_datastruct.temperature), num_buf, 10));
     send_stringln(" C");
@@ -85,13 +76,8 @@ int main(void)
     send_stringln(" Pa");
     send_string(itoa((int)(bme280_datastruct.humidity), num_buf, 10));
     send_stringln(" %");
-    Delay(1000);
-    //Delay(63);
-  }
-  while (1)
-  {
-    STM_EVAL_LEDToggle(LED2);
-    // LED2 Toggle each 200ms 
+
+    // New sensor readings and LED2 Toggle each 1000ms 
     Delay(1000);
   }
 }
