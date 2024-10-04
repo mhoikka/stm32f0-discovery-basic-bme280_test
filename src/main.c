@@ -61,7 +61,8 @@ int main(void)
   //instead of forced, let's try normal mode
   bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam);  
   
-  display_sensor_reading(&num_buf);
+  display_sensor_reading();
+  NRF24L01_Init();
 
 
 
