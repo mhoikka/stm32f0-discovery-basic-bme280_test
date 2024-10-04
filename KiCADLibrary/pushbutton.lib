@@ -1,0 +1,22 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#
+# Pushbutton
+#
+DEF Pushbutton U 0 40 Y Y 1 F N
+F0 "U" 0 120 60 H V C CNN
+F1 "Pushbutton" 0 200 60 H V C CNN
+F2 "" 0 120 60 H I C CNN
+F3 "" 0 120 60 H I C CNN
+DRAW
+C -60 0 20 0 1 0 N
+C 60 0 20 0 1 0 N
+P 2 0 1 0 -30 70 30 70 N
+P 2 0 1 0 0 40 0 70 N
+P 2 0 1 0 80 40 -80 40 N
+X ~ 1 150 0 71 L 50 50 1 1 I
+X ~ 2 -150 0 71 R 50 50 1 1 I
+ENDDRAW
+ENDDEF
+#
+#End Library
