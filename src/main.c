@@ -71,13 +71,12 @@ int main(void)
   send_string(itoa((int)(bme280_datastruct.pressure), num_buf, 10));
   send_stringln(" Pa");
   send_string(itoa((int)(bme280_datastruct.humidity), num_buf, 10));
- // I am changing somehting here
-  send_stringln(" %");
+
   STM_EVAL_LEDInit(LED2);
   STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);   
   
   BlinkSpeed = 0;
-  send_stringln(" %");
+
   while(1){
     itoa(bme280_get_sensor_data(BME280_ALL, &bme280_datastruct, &bme280_initparam), num_buf, 10);
     send_string(itoa((int)(bme280_datastruct.temperature), num_buf, 10));
@@ -94,7 +93,6 @@ int main(void)
     STM_EVAL_LEDToggle(LED2);
     // LED2 Toggle each 200ms 
     Delay(1000);
-    //send_stringln("Hello, World!");
   }
 }
 
@@ -203,7 +201,7 @@ void __attribute__((optimize("O0"))) bme280_delay_microseconds(uint32_t usec, vo
 /**
  * @brief Initializes the SPI connection for the STM32F030R8
  * @retval None
- */
+ 
 void SPI_Init(){
   //Set up the SPI peripheral
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
@@ -243,7 +241,7 @@ void SPI_Init(){
 /** 
  * @brief Initialize the NRF24L01+ module
  * @retval None
- */ //None of this code is checked. It is a direct copy from Copilot
+  //None of this code is checked. It is a direct copy from Copilot
 void NRF24L01_Init(){
   //Set up the SPI peripheral
   SPI_Init();
@@ -265,7 +263,7 @@ void NRF24L01_Init(){
   GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;
   GPIO_Init(GPIOA, &GPIO_InitStruct);
 }
-
+*/
 /**
  * @brief Initializes the BME 280 sensor
  * @retval None
