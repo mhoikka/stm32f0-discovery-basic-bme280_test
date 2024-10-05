@@ -41,6 +41,11 @@ void bme280_delay_microseconds(uint32_t usec, void *intf_ptr);
 
 void TimingDelay_Decrement(void);
 void Delay(__IO uint32_t nTime);
+
+void nrf24_SPI(uint8_t input);
+
+void set_nrf24_SPI_CSN(uint8_t input);
+void set_nrf24_SPI_CE(uint8_t input);
 void MySPI_Init();
 void NRF24L01p_Init();
 void I2C_Settings_Init();

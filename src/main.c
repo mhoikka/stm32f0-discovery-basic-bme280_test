@@ -62,7 +62,13 @@ int main(void)
   bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam);  
   
   display_sensor_reading();
+
+  //  Initialize NRF24L01+ module
   NRF24L01_Init();
+  //Set CSN and CE pins low
+  set_nrf24_SPI_CSN(0);
+  set_nrf24_SPI_CE(0);
+
 
   STM_EVAL_LEDInit(LED2);
   STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);  
@@ -179,6 +185,32 @@ void __attribute__((optimize("O0"))) bme280_delay_microseconds(uint32_t usec, vo
     __NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
     __NOP();__NOP();__NOP();__NOP();__NOP();
     //lol this is nearly perfect timing
+  }
+}
+
+/**
+ * @brief  Enables the CSN pin for the NRF24LO1+ module. Active low
+ * @retval None
+ */
+void set_nrf24_SPI_CSN(uint8_t input){
+  if(input == 1){
+    GPIO_SetBits(GPIOA, GPIO_Pin_15);
+  }
+  else{
+    GPIO_ResetBits(GPIOA, GPIO_Pin_15);
+  }
+}
+
+/**
+ * @brief  Enables the CE pin for the NRF24LO1+ module. Active low
+ * @retval None
+ */
+void set_nrf24_SPI_CE(uint8_t input){
+  if(input == 1){
+    GPIO_SetBits(GPIOA, GPIO_Pin_1);
+  }
+  else{
+    GPIO_ResetBits(GPIOA, GPIO_Pin_1);
   }
 }
 
