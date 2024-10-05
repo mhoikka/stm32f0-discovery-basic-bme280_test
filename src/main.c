@@ -64,9 +64,12 @@ int main(void)
   display_sensor_reading();
 
   //  Initialize NRF24L01+ module
-  NRF24L01_Init();
+  NRF24L01p_Init();
   //Set CSN and CE pins low
   set_nrf24_SPI_CSN(1);//
+  set_nrf24_SPI_CSN(0);//
+  set_nrf24_SPI_CSN(1);//
+  set_nrf24_SPI_CSN(0);//
   set_nrf24_SPI_CE(0);
 
 
