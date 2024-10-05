@@ -64,7 +64,18 @@ int main(void)
   display_sensor_reading();
 
   //  Initialize NRF24L01+ module
-  NRF24L01p_Init();
+  //NRF24L01p_Init();
+
+  //Set up the GPIO pins
+  GPIO_InitTypeDef GPIO_InitStruct_1;
+  //Set up the CE and CSN pins
+  GPIO_InitStruct_1.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_15;
+  GPIO_InitStruct_1.GPIO_Mode = GPIO_Mode_OUT;
+  GPIO_InitStruct_1.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStruct_1.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStruct_1.GPIO_PuPd = GPIO_PuPd_UP; //Check if this is correct
+  GPIO_Init(GPIOA, &GPIO_InitStruct_1);
+
   //Set CSN and CE pins low
   set_nrf24_SPI_CSN(1);//
   set_nrf24_SPI_CSN(0);//
