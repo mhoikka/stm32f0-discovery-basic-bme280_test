@@ -77,10 +77,15 @@ int main(void)
   GPIO_Init(GPIOA, &GPIO_InitStruct_1);
 
   //Set CSN and CE pins low
+  set_nrf24_SPI_CE(1);
   set_nrf24_SPI_CSN(1);//
+  Delay(1);
   set_nrf24_SPI_CSN(0);//
+  Delay(1);
   set_nrf24_SPI_CSN(1);//
+  Delay(1);
   set_nrf24_SPI_CSN(0);//
+  Delay(1);
   set_nrf24_SPI_CE(0);
 
 
