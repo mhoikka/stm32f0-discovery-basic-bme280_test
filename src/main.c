@@ -64,8 +64,6 @@ int main(void)
   display_sensor_reading();
   NRF24L01_Init();
 
-
-
   STM_EVAL_LEDInit(LED2);
   STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);  
 
@@ -198,10 +196,9 @@ void MySPI_Init(){
   GPIO_PinAFConfig(GPIOA, GPIO_PinSource5, GPIO_AF_0);
   GPIO_PinAFConfig(GPIOA, GPIO_PinSource6, GPIO_AF_0);
   GPIO_PinAFConfig(GPIOA, GPIO_PinSource7, GPIO_AF_0);
-  GPIO_PinAFConfig(GPIOA, GPIO_PinSource15, GPIO_AF_0);
 
   //Set up the SPI pins
-  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;
+  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;
   GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;
   GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
@@ -227,27 +224,28 @@ void MySPI_Init(){
 /** 
  * @brief Initialize the NRF24L01+ module
  * @retval None
-*/  //None of this code is checked. It is a direct copy from Copilot
-void NRF24L01_Init(){
+*/  //Not tested
+void NRF24L01p_Init(){
   //Set up the SPI peripheral
   MySPI_Init();
   //Set up the GPIO pins
-  GPIO_InitTypeDef GPIO_InitStruct;
-  //Set up the CE pin
-  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_1;
-  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
-  GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
-  GPIO_Init(GPIOA, &GPIO_InitStruct);
-  //Set up the CSN pin !Not sure why this is done here, disabling for now
-  //GPIO_InitStruct.GPIO_Pin = GPIO_Pin_15;
-  //GPIO_Init(GPIOA, &GPIO_InitStruct);
+  GPIO_InitTypeDef GPIO_InitStruct_1;
+  //Set up the CE and CSN pins
+  GPIO_InitStruct_1.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_15;
+  GPIO_InitStruct_1.GPIO_Mode = GPIO_Mode_OUT;
+  GPIO_InitStruct_1.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStruct_1.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStruct_1.GPIO_PuPd = GPIO_PuPd_UP; //Check if this is correct
+  GPIO_Init(GPIOA, &GPIO_InitStruct_1);
+
+  GPIO_InitTypeDef GPIO_InitStruct_2;
   //Set up the IRQ pin
-  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_8;
-  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
-  GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;
-  GPIO_Init(GPIOA, &GPIO_InitStruct);
+  GPIO_InitStruct_2.GPIO_Pin = GPIO_Pin_8;
+  GPIO_InitStruct_2.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStruct_2.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStruct_2.GPIO_Mode = GPIO_Mode_IN;
+  GPIO_InitStruct_2.GPIO_PuPd = GPIO_PuPd_UP;
+  GPIO_Init(GPIOA, &GPIO_InitStruct_2);
 }
 
 /**
