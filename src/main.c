@@ -192,7 +192,7 @@ uint8_t nrf24_read_register(uint8_t reg) {
     set_nrf24_SPI_CSN(0);
 
     // Prepare command to read (register address with read command bit)
-    txData[0] = reg | 0x03; // Read command
+    txData[0] = reg | 0x00; // Read command and PWR_UP=1
     txData[1] = 0xFF; // Dummy byte for clocking out data
 
     // Start SPI transmission and reception
