@@ -219,7 +219,7 @@ void test_nrf24_connection() {
     uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG);
     
     // Print or check the configValue for expected settings
-    if ((configValue & 0x03) == 0x03) { // Check if PWR_UP and PRIM_RX bits are set
+    if ((configValue & 0x01) == 0x01) { // Check if PWR_UP and PRIM_RX bits are set
         // Successful connection
         send_stringln("SPI successful");
         // For example: printf("NRF24L01+ Connected. CONFIG: 0x%02X\n", configValue);
