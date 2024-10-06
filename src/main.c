@@ -5,6 +5,7 @@
 #include "main.h"
 #include "bme280.h"
 #include "bme280_defs.h"
+#include "stm32f0xx_spi.h"
 
 /* Exported functions ------------------------------------------------------- */
 void TimingDelay_Decrement(void);
@@ -62,13 +63,10 @@ int main(void)
   bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam);  
   
   display_sensor_reading();
-
-  //  Initialize NRF24L01+ module
-  //NRF24L01p_Init();
-
+/*
   //Set up the GPIO pins
   GPIO_InitTypeDef GPIO_InitStruct_1;
-  //Set up the CE and CSN pins
+  //Set up the CSN pins
   GPIO_InitStruct_1.GPIO_Pin = GPIO_Pin_15;
   GPIO_InitStruct_1.GPIO_Mode = GPIO_Mode_OUT;
   GPIO_InitStruct_1.GPIO_Speed = GPIO_Speed_50MHz;
@@ -77,15 +75,15 @@ int main(void)
   GPIO_Init(GPIOA, &GPIO_InitStruct_1);
 
   GPIO_InitTypeDef GPIO_InitStruct_2;
-  //Set up the CE and CSN pins
+  //Set up the CE pin
   GPIO_InitStruct_2.GPIO_Pin = GPIO_Pin_1;
   GPIO_InitStruct_2.GPIO_Mode = GPIO_Mode_OUT;
   GPIO_InitStruct_2.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStruct_2.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStruct_2.GPIO_PuPd = GPIO_PuPd_DOWN; //Check if this is correct
-  GPIO_Init(GPIOA, &GPIO_InitStruct_2);
+  GPIO_Init(GPIOA, &GPIO_InitStruct_2);*/
 
-  //Set CSN and CE pins low
+  //cycle CSN and CE pins
   set_nrf24_SPI_CSN(0);
   set_nrf24_SPI_CE(0);
   Delay(1);
@@ -94,8 +92,10 @@ int main(void)
   Delay(1);
   set_nrf24_SPI_CSN(0);
   set_nrf24_SPI_CE(0);
-  //set the pwr_up bit to 1
-  //nrf24_SPI(0x2E);
+
+  //Initialize the SPI
+
+
 
 
   STM_EVAL_LEDInit(LED2);
