@@ -83,11 +83,11 @@ int main(void)
   GPIO_InitStruct_2.GPIO_Mode = GPIO_Mode_OUT;
   GPIO_InitStruct_2.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStruct_2.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStruct_2.GPIO_PuPd = GPIO_PuPd_UP; //Check if this is correct
+  GPIO_InitStruct_2.GPIO_PuPd = GPIO_PuPd_DOWN; //Check if this is correct
   GPIO_Init(GPIOA, &GPIO_InitStruct_2);
 
   //Set CSN and CE pins low
-  //set_nrf24_SPI_CE(1);
+  set_nrf24_SPI_CE(1);
   set_nrf24_SPI_CSN(1);//
   Delay(1);
   set_nrf24_SPI_CSN(0);//
@@ -96,7 +96,7 @@ int main(void)
   Delay(1);
   set_nrf24_SPI_CSN(0);//
   Delay(1);
-  //set_nrf24_SPI_CE(0);
+  set_nrf24_SPI_CE(0);
 
 
   STM_EVAL_LEDInit(LED2);
