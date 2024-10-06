@@ -63,6 +63,7 @@ int main(void)
   NRF24L01p_Init();
   //Check if initialization was successful
   //TODO
+  Delay(1);
   test_nrf24_connection();
 
   STM_EVAL_LEDInit(LED2);
@@ -245,6 +246,7 @@ void test_nrf24_connection() {
     nrf24_write_register(NRF24L01_CONFIG, 0x02); // PWR_UP=1
     Delay(2);
     nrf24_write_register(NRF24L01_CONFIG, 0x03); // PWR_UP=1 and PRIM_RX=1
+    Delay(1);
     set_nrf24_SPI_CE(1);
     Delay(1);
 
