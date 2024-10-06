@@ -61,9 +61,11 @@ int main(void)
   //bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam);  
 
   NRF24L01p_Init();
+  send_stringln("1");
   //Check if initialization was successful
   //TODO
   test_nrf24_connection();
+  send_stringln("2");
 
   STM_EVAL_LEDInit(LED2);
   STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);  
