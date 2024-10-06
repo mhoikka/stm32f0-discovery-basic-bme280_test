@@ -243,21 +243,12 @@ uint8_t NRF24L01_CONFIG = 0x00;
 void test_nrf24_connection() {
     // Read the CONFIG register
     char num_buf[10];
-    nrf24_write_register(NRF24L01_CONFIG, 0x0B);
+    // Example to power up and set to RX mode
+    nrf24_write_register(NRF24L01_CONFIG, 0x0B); // PWR_UP=1 and PRIM_RX=1
+
+    // Optionally, you can read back the CONFIG register to verify
     uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG);
-    
-    // Print or check the configValue for expected settings
-    if ((configValue & 0x0E) == 0x0E) { // Check if PWR_UP and PRIM_RX bits are set
-        // Successful connection
-        send_stringln("SPI successful");
-        // For example: printf("NRF24L01+ Connected. CONFIG: 0x%02X\n", configValue);
-    } else {
-        send_stringln("SPI failure");
-        itoa(configValue, num_buf, 16);
-        send_stringln(num_buf);
-        // Handle connection error
-        // For example: printf("NRF24L01+ Connection Failed. CONFIG: 0x%02X\n", configValue);
-    }
+    send_stringln(configValue);
 }
 
 /**
