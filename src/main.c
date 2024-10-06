@@ -193,7 +193,7 @@ uint8_t nrf24_read_register(uint8_t reg) {
     Delay(2);
 
     // Prepare command to read (register address with read command bit)
-    txData[0] = reg | 0x01; // Read command 
+    txData[0] = reg | 0x00; // Read command 
     txData[1] = 0xFF; // Dummy byte for clocking out data
 
     // Start SPI transmission and reception
