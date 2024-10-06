@@ -255,6 +255,13 @@ void test_nrf24_connection() {
     uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG);
     itoa(configValue, num_buf, 16);
     send_stringln(num_buf);
+
+    // Optional: Check if expected bits are set
+    if ((configValue & 0x03) == 0x03) {
+        send_stringln("SPI successful: PWR_UP and PRIM_RX are set.");
+    } else {
+        send_stringln("SPI failure: Check configuration.");
+    }
 }
 
 /**
