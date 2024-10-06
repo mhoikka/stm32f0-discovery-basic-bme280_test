@@ -86,9 +86,14 @@ int main(void)
   //cycle CSN and CE pins
   NRF24L01p_Init();
 
+SPI1->CR1 |= SPI_CR1_SPE;
 // Check if SPI is ready by reading the status register
-  if (SPI1->SR & SPI_SR_RXNE) {
-      send_stringln("SPI succcessfully initialized");
+  if (SPI1->SR ) {
+      send_stringln("SPI partly initialized");
+      if (& SPI_SR_RXNE){
+        send_stringln("SPI succcessfully initialized");
+      }
+      
   } else {
       // Handle initialization error
       send_stringln("SPI failure");
