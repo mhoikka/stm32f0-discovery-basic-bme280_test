@@ -192,7 +192,7 @@ uint8_t nrf24_read_register(uint8_t reg) {
     set_nrf24_SPI_CSN(0);
 
     // Prepare command to read (register address with read command bit)
-    txData[0] = reg | 1; // Read command
+    txData[0] = reg | 0x03; // Read command
     txData[1] = 0xFF; // Dummy byte for clocking out data
 
     // Start SPI transmission and reception
@@ -219,7 +219,7 @@ void test_nrf24_connection() {
     uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG);
     
     // Print or check the configValue for expected settings
-    if ((configValue & 0x0E) == 0x0E) { // Check if PWR_UP and PRIM_RX bits are set
+    if ((configValue & 0x03) == 0x03) { // Check if PWR_UP and PRIM_RX bits are set
         // Successful connection
         send_stringln("SPI successful");
         // For example: printf("NRF24L01+ Connected. CONFIG: 0x%02X\n", configValue);
