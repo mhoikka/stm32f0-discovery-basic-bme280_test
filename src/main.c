@@ -59,68 +59,21 @@ int main(void)
 
   BME_Init();
   //bme280_set_sensor_mode(BME280_POWERMODE_FORCED, &bme280_initparam);
-  //instead of forced, let's try normal mode
   bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam);  
   
   display_sensor_reading();
-/*
-  //Set up the GPIO pins
-  GPIO_InitTypeDef GPIO_InitStruct_1;
-  //Set up the CSN pins
-  GPIO_InitStruct_1.GPIO_Pin = GPIO_Pin_15;
-  GPIO_InitStruct_1.GPIO_Mode = GPIO_Mode_OUT;
-  GPIO_InitStruct_1.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_InitStruct_1.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStruct_1.GPIO_PuPd = GPIO_PuPd_UP; //Check if this is correct
-  GPIO_Init(GPIOA, &GPIO_InitStruct_1);
 
-  GPIO_InitTypeDef GPIO_InitStruct_2;
-  //Set up the CE pin
-  GPIO_InitStruct_2.GPIO_Pin = GPIO_Pin_1;
-  GPIO_InitStruct_2.GPIO_Mode = GPIO_Mode_OUT;
-  GPIO_InitStruct_2.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_InitStruct_2.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStruct_2.GPIO_PuPd = GPIO_PuPd_DOWN; //Check if this is correct
-  GPIO_Init(GPIOA, &GPIO_InitStruct_2);*/
-
-  //cycle CSN and CE pins
   NRF24L01p_Init();
 
-SPI1->CR1 |= SPI_CR1_SPE;
-// Check if SPI is ready by reading the status register
-  if (SPI1->SR ) {
-      send_stringln("SPI partly initialized");
-      if (SPI1->SPI_SR_RXNE){
-        send_stringln("SPI succcessfully initialized");
-      }
-      
-  } else {
-      // Handle initialization error
-      send_stringln("SPI failure");
+  SPI1->CR1 |= SPI_CR1_SPE;
+  // Check if SPI is ready by reading the status register
+  if (SPI1->SR & SPI_SR_RXNE) {
+    send_stringln("SPI succcessfully initialized");
+  }   
+  else {
+    // Handle initialization error
+    send_stringln("SPI failure");
   }
-
-  //Test the SPI by writing to a register and then reading from it and printing the value
-  //uint8_t reg = 0x00;
-  //uint8_t data = 0x00;
-  //NRF24L01p_WriteReg(0x00, 0x00); 
-  //data = NRF24L01p_ReadReg(0x00);
-  //send_stringln("Data: ");
-  //send_stringln(data);
-
-/*
-  set_nrf24_SPI_CSN(0);
-  set_nrf24_SPI_CE(0);
-  Delay(1);
-  set_nrf24_SPI_CSN(1);
-  set_nrf24_SPI_CE(1);
-  Delay(1);
-  set_nrf24_SPI_CSN(0);
-  set_nrf24_SPI_CE(0);*/
-
-  //Initialize the SPI
-
-
-
 
   STM_EVAL_LEDInit(LED2);
   STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);  
