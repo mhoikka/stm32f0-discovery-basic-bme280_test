@@ -214,12 +214,13 @@ uint8_t nrf24_read_register(uint8_t reg) {
 void nrf24_write_register(uint8_t reg, uint8_t value) {
     uint8_t txData[2]; // Transmit data buffer
 
-    // Set CSN low to start communication
-    set_nrf24_SPI_CSN(0);
     // Prepare command to write (register address with write command prefix)
     txData[0] = reg | 0x20; // Write command
     txData[1] = value;      // Data to write
 
+    // Set CSN low to start communication
+    set_nrf24_SPI_CSN(0);
+    
     // Start SPI transmission
     for (int i = 0; i < 2; i++) {
         // Transmit byte
@@ -320,7 +321,7 @@ void MySPI_Init(){
   SPI_InitStruct.SPI_CPOL = SPI_CPOL_Low;
   SPI_InitStruct.SPI_CPHA = SPI_CPHA_1Edge;
   SPI_InitStruct.SPI_NSS = SPI_NSS_Soft;
-  SPI_InitStruct.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_256;
+  SPI_InitStruct.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_32;
   SPI_InitStruct.SPI_FirstBit = SPI_FirstBit_MSB;
   SPI_InitStruct.SPI_CRCPolynomial = 7;
 
