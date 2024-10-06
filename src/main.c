@@ -222,7 +222,7 @@ void nrf24_write_register(uint8_t reg, uint8_t value) {
     set_nrf24_SPI_CSN(0);
     Delay(2);
     // Prepare command to write (register address with write command prefix)
-    txData[0] = reg | 0x02; // Write command
+    txData[0] = reg | 0x20; // Write command
     txData[1] = value;      // Data to write
 
     // Start SPI transmission
