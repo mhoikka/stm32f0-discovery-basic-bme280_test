@@ -190,7 +190,6 @@ uint8_t nrf24_read_register(uint8_t reg) {
 
     // Set CSN low to start communication
     set_nrf24_SPI_CSN(0);
-    Delay(2);
     // Prepare command to read (register address with read command bit)
     txData[0] = reg | 0x00; // Read command 
     txData[1] = 0xFF; // Dummy byte for clocking out data
@@ -209,7 +208,6 @@ uint8_t nrf24_read_register(uint8_t reg) {
 
     // Set CSN high to end communication
     set_nrf24_SPI_CSN(1);
-    Delay(2);
     return rxData[1]; // Return the value read from the register
 }
 
@@ -236,7 +234,6 @@ void nrf24_write_register(uint8_t reg, uint8_t value) {
 
     // Set CSN high to end communication
     set_nrf24_SPI_CSN(1);
-    Delay(2);
 }
 
 uint8_t NRF24L01_CONFIG = 0x00;
@@ -247,7 +244,7 @@ void test_nrf24_connection() {
     // Example to power up and set to RX mode
     //nrf24_write_register(NRF24L01_CONFIG, 0x02); // PWR_UP=1 
     //Delay(2);
-    nrf24_write_register(NRF24L01_CONFIG, 0x01); // PRIM_RX=1
+    //nrf24_write_register(NRF24L01_CONFIG, 0x01); // PRIM_RX=1
     //set_nrf24_SPI_CE(1);
     //Delay(1);
 
