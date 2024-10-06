@@ -57,9 +57,8 @@ int main(void)
 
   send_stringln("Start");
 
-  BME_Init();
-  //bme280_set_sensor_mode(BME280_POWERMODE_FORCED, &bme280_initparam);
-  bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam);  
+  //BME_Init();
+  //bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam);  
 
   NRF24L01p_Init();
   //Check if initialization was successful
