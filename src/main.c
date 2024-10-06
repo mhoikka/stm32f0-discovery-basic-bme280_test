@@ -193,7 +193,7 @@ uint8_t nrf24_read_register(uint8_t reg) {
     Delay(2);
 
     // Prepare command to read (register address with read command bit)
-    txData[0] = reg | 0x03; // Read command 
+    txData[0] = reg | 0x01; // Read command 
     txData[1] = 0xFF; // Dummy byte for clocking out data
 
     // Start SPI transmission and reception
@@ -222,7 +222,7 @@ void nrf24_write_register(uint8_t reg, uint8_t value) {
     set_nrf24_SPI_CSN(0);
     Delay(2);
     // Prepare command to write (register address with write command prefix)
-    txData[0] = reg | 0x20; // Write command
+    txData[0] = reg | 0x02; // Write command
     txData[1] = value;      // Data to write
 
     // Start SPI transmission
@@ -247,9 +247,9 @@ void test_nrf24_connection() {
     // Read the CONFIG register
     char num_buf[10];
     // Example to power up and set to RX mode
-    //nrf24_write_register(NRF24L01_CONFIG, 0x03); // PWR_UP=1 and PRIM_RX=1
+    nrf24_write_register(NRF24L01_CONFIG, 0x03); // PWR_UP=1 and PRIM_RX=1
 
-    //Delay(15);
+    Delay(15);
 
     // Optionally, you can read back the CONFIG register to verify
     uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG);
