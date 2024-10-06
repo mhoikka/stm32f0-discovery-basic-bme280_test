@@ -75,7 +75,7 @@ int main(void)
   GPIO_InitStruct_1.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStruct_1.GPIO_PuPd = GPIO_PuPd_UP; //Check if this is correct
   GPIO_Init(GPIOA, &GPIO_InitStruct_1);
-/** 
+
   //Set up the GPIO pins
   GPIO_InitTypeDef GPIO_InitStruct_2;
   //Set up the CE and CSN pins
@@ -85,7 +85,7 @@ int main(void)
   GPIO_InitStruct_2.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStruct_2.GPIO_PuPd = GPIO_PuPd_UP; //Check if this is correct
   GPIO_Init(GPIOA, &GPIO_InitStruct_2);
-*/
+
   //Set CSN and CE pins low
   //set_nrf24_SPI_CE(1);
   set_nrf24_SPI_CSN(1);//
