@@ -61,11 +61,9 @@ int main(void)
   //bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam);  
 
   NRF24L01p_Init();
-  send_stringln("1");
   //Check if initialization was successful
   //TODO
   test_nrf24_connection();
-  send_stringln("2");
 
   STM_EVAL_LEDInit(LED2);
   STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);  
@@ -241,17 +239,22 @@ uint8_t NRF24L01_CONFIG = 0x00;
 void test_nrf24_connection() {
     char num_buf[10];
     char num_buf2[10];
-
+    send_stringln("-1");
+    set_nrf24_SPI_CE(1);
+    send_stringln("0");
     // Example to power up and set to RX mode
     nrf24_write_register(NRF24L01_CONFIG, 0x03); // PWR_UP=1 and PRIM_RX=1
+    send_stringln("1");
     //nrf24_write_register(NRF24L01_CONFIG, 0x01); // PRIM_RX=1
     //set_nrf24_SPI_CE(1);
     //Delay(1);
 
     // Optionally, you can read back the CONFIG register to verify
     uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG);
+    send_stringln("2");
     Delay(2);
     uint8_t configValue2 = nrf24_read_register(NRF24L01_CONFIG);
+    send_stringln("3");
     set_nrf24_SPI_CE(0);
 
     // Optional: Check if expected bits are set
