@@ -84,6 +84,8 @@ int main(void)
   GPIO_Init(GPIOA, &GPIO_InitStruct_2);*/
 
   //cycle CSN and CE pins
+  NRF24L01p_Init();
+  
   set_nrf24_SPI_CSN(0);
   set_nrf24_SPI_CE(0);
   Delay(1);
