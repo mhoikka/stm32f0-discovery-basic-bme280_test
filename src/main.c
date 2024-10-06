@@ -216,6 +216,7 @@ uint8_t nrf24_read_register(uint8_t reg) {
 uint8_t NRF24L01_CONFIG = 0x00;
 void test_nrf24_connection() {
     // Read the CONFIG register
+    char num_buf[10];
     uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG);
     
     // Print or check the configValue for expected settings
@@ -225,6 +226,8 @@ void test_nrf24_connection() {
         // For example: printf("NRF24L01+ Connected. CONFIG: 0x%02X\n", configValue);
     } else {
         send_stringln("SPI failure");
+        itoa(configValue, num_buf, 16);
+        send_stringln(num_buf);
         // Handle connection error
         // For example: printf("NRF24L01+ Connection Failed. CONFIG: 0x%02X\n", configValue);
     }
