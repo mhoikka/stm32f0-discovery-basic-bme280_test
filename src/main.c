@@ -209,7 +209,6 @@ uint8_t nrf24_read_register(uint8_t reg) {
 
     // Set CSN high to end communication
     set_nrf24_SPI_CSN(1);
-    Delay(2);
     return rxData[1]; // Return the value read from the register
 }
 
