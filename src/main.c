@@ -241,8 +241,7 @@ void test_nrf24_connection() {
     char num_buf2[10];
 
     // Example to power up and set to RX mode
-    //nrf24_write_register(NRF24L01_CONFIG, 0x02); // PWR_UP=1 
-    //Delay(2);
+    nrf24_write_register(NRF24L01_CONFIG, 0x03); // PWR_UP=1 and PRIM_RX=1
     //nrf24_write_register(NRF24L01_CONFIG, 0x01); // PRIM_RX=1
     //set_nrf24_SPI_CE(1);
     //Delay(1);
