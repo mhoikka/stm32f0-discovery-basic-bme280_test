@@ -208,7 +208,7 @@ uint8_t nrf24_read_register(uint8_t reg) {
 
     // Set CSN high to end communication
     set_nrf24_SPI_CSN(1);
-    return rxData[1]; // Return the value read from the register
+    return rxData[0]; // Return the value read from the register
 }
 
 void nrf24_write_register(uint8_t reg, uint8_t value) {
@@ -249,7 +249,7 @@ void test_nrf24_connection() {
 
     set_nrf24_SPI_CSN(1);
     set_nrf24_SPI_CE(0);
-    // Optionally, you can read back the CONFIG register to verify
+
     uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG);
     nrf24_write_register(NRF24L01_CONFIG, 0x0E); // PWR_UP=1 and PRIM_RX=1
     //set_nrf24_SPI_CE(1);
@@ -326,7 +326,7 @@ void MySPI_Init(){
   SPI_InitStruct.SPI_CPOL = SPI_CPOL_Low;
   SPI_InitStruct.SPI_CPHA = SPI_CPHA_1Edge;
   SPI_InitStruct.SPI_NSS = SPI_NSS_Soft;
-  SPI_InitStruct.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_256;
+  SPI_InitStruct.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_32;
   SPI_InitStruct.SPI_FirstBit = SPI_FirstBit_MSB;
   SPI_InitStruct.SPI_CRCPolynomial = 7;
 
