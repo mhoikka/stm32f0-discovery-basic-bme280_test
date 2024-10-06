@@ -218,7 +218,6 @@ void nrf24_write_register(uint8_t reg, uint8_t value) {
 
     // Set CSN low to start communication
     set_nrf24_SPI_CSN(0);
-    Delay(2);
     // Prepare command to write (register address with write command prefix)
     txData[0] = reg | 0x20; // Write command
     txData[1] = value;      // Data to write
@@ -246,11 +245,11 @@ void test_nrf24_connection() {
     char num_buf2[10];
 
     // Example to power up and set to RX mode
-    nrf24_write_register(NRF24L01_CONFIG, 0x02); // PWR_UP=1 
-    Delay(2);
-    set_nrf24_SPI_CE(1);
-    Delay(1);
-    nrf24_write_register(NRF24L01_CONFIG, 0x03); // PRIM_RX=1
+    //nrf24_write_register(NRF24L01_CONFIG, 0x02); // PWR_UP=1 
+    //Delay(2);
+    nrf24_write_register(NRF24L01_CONFIG, 0x01); // PRIM_RX=1
+    //set_nrf24_SPI_CE(1);
+    //Delay(1);
 
     // Optionally, you can read back the CONFIG register to verify
     uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG);
