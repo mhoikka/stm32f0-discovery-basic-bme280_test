@@ -224,6 +224,7 @@ void test_nrf24_connection() {
         send_stringln("SPI successful");
         // For example: printf("NRF24L01+ Connected. CONFIG: 0x%02X\n", configValue);
     } else {
+        send_stringln("SPI failure");
         // Handle connection error
         // For example: printf("NRF24L01+ Connection Failed. CONFIG: 0x%02X\n", configValue);
     }
