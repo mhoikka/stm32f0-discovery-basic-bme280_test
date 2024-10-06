@@ -236,14 +236,10 @@ void nrf24_write_register(uint8_t reg, uint8_t value) {
     set_nrf24_SPI_CSN(1);
 }
 
-
-
 uint8_t NRF24L01_CONFIG = 0x00;
 void test_nrf24_connection() {
     char num_buf[10];
     char num_buf2[10];
-
-    
     // Example to power up and set to RX mode
     //nrf24_write_register(NRF24L01_CONFIG, 0x02); // PWR_UP=1
     //nrf24_write_register(NRF24L01_CONFIG, 0x03); // PWR_UP=1 and PRIM_RX=1
@@ -255,7 +251,7 @@ void test_nrf24_connection() {
     set_nrf24_SPI_CE(0);
     // Optionally, you can read back the CONFIG register to verify
     uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG);
-    nrf24_write_register(NRF24L01_CONFIG, 0x01); // PWR_UP=1 and PRIM_RX=1
+    nrf24_write_register(NRF24L01_CONFIG, 0x0E); // PWR_UP=1 and PRIM_RX=1
     //set_nrf24_SPI_CE(1);
     Delay(2);
     uint8_t configValue2 = nrf24_read_register(NRF24L01_CONFIG);
