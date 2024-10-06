@@ -245,6 +245,8 @@ void test_nrf24_connection() {
     char num_buf[10];
     // Example to power up and set to RX mode
     nrf24_write_register(NRF24L01_CONFIG, 0x0B); // PWR_UP=1 and PRIM_RX=1
+    
+    Delay(2);
 
     // Optionally, you can read back the CONFIG register to verify
     uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG);
