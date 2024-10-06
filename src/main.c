@@ -60,20 +60,11 @@ int main(void)
   BME_Init();
   //bme280_set_sensor_mode(BME280_POWERMODE_FORCED, &bme280_initparam);
   bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam);  
-  
-  display_sensor_reading();
 
   NRF24L01p_Init();
-
-  SPI1->CR1 |= SPI_CR1_SPE;
-  // Check if SPI is ready by reading the status register
-  if (SPI1->SR & SPI_SR_RXNE) {
-    send_stringln("SPI succcessfully initialized");
-  }   
-  else {
-    // Handle initialization error
-    send_stringln("SPI failure");
-  }
+  //Check if initialization was successful
+  //TODO
+  test_nrf24_connection();
 
   STM_EVAL_LEDInit(LED2);
   STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);  
@@ -83,7 +74,6 @@ int main(void)
   while (1)
   {
     STM_EVAL_LEDToggle(LED2);
-
     display_sensor_reading();
 
     //  Display new sensor readings and LED2 Toggle each 1000ms 
@@ -191,6 +181,52 @@ void __attribute__((optimize("O0"))) bme280_delay_microseconds(uint32_t usec, vo
     __NOP();__NOP();__NOP();__NOP();__NOP();
     //lol this is nearly perfect timing
   }
+}
+
+
+uint8_t nrf24_read_register(uint8_t reg) {
+    uint8_t txData[2]; // Transmit data buffer
+    uint8_t rxData[2]; // Receive data buffer
+
+    // Set CSN low to start communication
+    set_nrf24_SPI_CSN(0);
+
+    // Prepare command to read (register address with read command bit)
+    txData[0] = reg | 1; // Read command
+    txData[1] = 0xFF; // Dummy byte for clocking out data
+
+    // Start SPI transmission and reception
+    for (int i = 0; i < 2; i++) {
+        // Transmit byte
+        SPI1->DR = txData[i];
+
+        // Wait until transmission is complete
+        while (!(SPI1->SR & SPI_SR_RXNE)); // Wait until receive buffer is not empty
+
+        // Read received byte
+        rxData[i] = SPI1->DR; // Read received data
+    }
+
+    // Set CSN high to end communication
+    set_nrf24_SPI_CSN(1);
+
+    return rxData[1]; // Return the value read from the register
+}
+
+uint8_t NRF24L01_CONFIG = 0x00;
+void test_nrf24_connection() {
+    // Read the CONFIG register
+    uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG);
+    
+    // Print or check the configValue for expected settings
+    if ((configValue & 0x0E) == 0x0E) { // Check if PWR_UP and PRIM_RX bits are set
+        // Successful connection
+        send_stringln("SPI successful");
+        // For example: printf("NRF24L01+ Connected. CONFIG: 0x%02X\n", configValue);
+    } else {
+        // Handle connection error
+        // For example: printf("NRF24L01+ Connection Failed. CONFIG: 0x%02X\n", configValue);
+    }
 }
 
 /**
