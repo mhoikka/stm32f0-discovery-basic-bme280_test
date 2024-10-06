@@ -83,7 +83,7 @@ int main(void)
   GPIO_InitStruct_2.GPIO_Mode = GPIO_Mode_OUT;
   GPIO_InitStruct_2.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStruct_2.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStruct_2.GPIO_PuPd = GPIO_PuPd_DOWN; //Check if this is correct
+  GPIO_InitStruct_2.GPIO_PuPd = GPIO_PuPd_UP; //Check if this is correct
   GPIO_Init(GPIOA, &GPIO_InitStruct_2);
 
   //Set CSN and CE pins low
