@@ -74,7 +74,7 @@ int main(void)
   while (1)
   {
     STM_EVAL_LEDToggle(LED2);
-    display_sensor_reading();
+    //display_sensor_reading();
 
     //  Display new sensor readings and LED2 Toggle each 1000ms 
     Delay(1000);
