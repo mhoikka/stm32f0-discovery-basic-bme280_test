@@ -85,7 +85,24 @@ int main(void)
 
   //cycle CSN and CE pins
   NRF24L01p_Init();
-  
+
+// Check if SPI is ready by reading the status register
+  if (SPI1->SR & SPI_SR_RXNE) {
+      send_stringln("SPI succcessfully initialized");
+  } else {
+      // Handle initialization error
+      send_stringln("SPI failure");
+  }
+
+  //Test the SPI by writing to a register and then reading from it and printing the value
+  //uint8_t reg = 0x00;
+  //uint8_t data = 0x00;
+  //NRF24L01p_WriteReg(0x00, 0x00); 
+  //data = NRF24L01p_ReadReg(0x00);
+  //send_stringln("Data: ");
+  //send_stringln(data);
+
+/*
   set_nrf24_SPI_CSN(0);
   set_nrf24_SPI_CE(0);
   Delay(1);
@@ -93,7 +110,7 @@ int main(void)
   set_nrf24_SPI_CE(1);
   Delay(1);
   set_nrf24_SPI_CSN(0);
-  set_nrf24_SPI_CE(0);
+  set_nrf24_SPI_CE(0);*/
 
   //Initialize the SPI
 
