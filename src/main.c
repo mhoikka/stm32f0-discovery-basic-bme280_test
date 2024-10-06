@@ -190,7 +190,6 @@ uint8_t nrf24_read_register(uint8_t reg) {
 
     // Set CSN low to start communication
     set_nrf24_SPI_CSN(0);
-    Delay(2);
 
     // Prepare command to read (register address with read command bit)
     txData[0] = reg | 0x00; // Read command 
@@ -210,7 +209,6 @@ uint8_t nrf24_read_register(uint8_t reg) {
 
     // Set CSN high to end communication
     set_nrf24_SPI_CSN(1);
-    Delay(2);
 
     return rxData[1]; // Return the value read from the register
 }
@@ -220,7 +218,7 @@ void nrf24_write_register(uint8_t reg, uint8_t value) {
 
     // Set CSN low to start communication
     set_nrf24_SPI_CSN(0);
-    Delay(2);
+
     // Prepare command to write (register address with write command prefix)
     txData[0] = reg | 0x20; // Write command
     txData[1] = value;      // Data to write
@@ -239,12 +237,12 @@ void nrf24_write_register(uint8_t reg, uint8_t value) {
 
     // Set CSN high to end communication
     set_nrf24_SPI_CSN(1);
-    Delay(2);
 }
 
 uint8_t NRF24L01_CONFIG = 0x00;
 void test_nrf24_connection() {
     char num_buf[10];
+    char num_buf2[10];
     set_nrf24_SPI_CE(1);
     // Example to power up and set to RX mode
     nrf24_write_register(NRF24L01_CONFIG, 0x03); // PWR_UP=1 and PRIM_RX=1
@@ -253,6 +251,8 @@ void test_nrf24_connection() {
 
     // Optionally, you can read back the CONFIG register to verify
     uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG);
+    Delay(2);
+    uint8_t configValue2 = nrf24_read_register(NRF24L01_CONFIG);
     set_nrf24_SPI_CE(0);
 
     // Optional: Check if expected bits are set
@@ -262,6 +262,8 @@ void test_nrf24_connection() {
         send_stringln("SPI failure: Check configuration.");
         itoa(configValue, num_buf, 16);
         send_stringln(num_buf);
+        itoa(configValue2, num_buf2, 16);
+        send_stringln(num_buf2);
     }
 }
 
