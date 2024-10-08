@@ -252,6 +252,7 @@ void nrf24_write_register(uint8_t reg, uint8_t value) {
 }
 
 uint8_t NRF24L01_CONFIG = 0x00;
+uint8_t NRF24L01_ENAA = 0x01;
 void test_nrf24_connection() {
     char num_buf[10];
     char num_buf2[10];
@@ -259,8 +260,8 @@ void test_nrf24_connection() {
     set_nrf24_SPI_CSN(1);
     set_nrf24_SPI_CE(0);
 
-    uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG);
-    nrf24_write_register(NRF24L01_CONFIG, 0x03); // PWR_UP=1 and PRIM_RX=1
+    uint8_t configValue = nrf24_read_register(NRF24L01_ENAA);
+    //nrf24_write_register(NRF24L01_CONFIG, 0x03); // PWR_UP=1 and PRIM_RX=1
     //set_nrf24_SPI_CE(1); //enables chip to receive data
     Delay(2);
     uint8_t configValue2 = nrf24_read_register(NRF24L01_CONFIG);
@@ -339,7 +340,7 @@ void MySPI_Init(){
   SPI_InitStruct.SPI_FirstBit = SPI_FirstBit_MSB;
 
   // Disable CRC by clearing the CRCEN bit in SPI_CR1 register
-  SPI1->CR1 &= ~SPI_CR1_CRCEN;
+  //SPI1->CR1 &= ~SPI_CR1_CRCEN;
 
   //Initialize the SPI peripheral
   SPI_Init(SPI1, &SPI_InitStruct);
