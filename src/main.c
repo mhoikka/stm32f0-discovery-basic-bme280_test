@@ -259,8 +259,8 @@ void test_nrf24_connection() {
 
     set_nrf24_SPI_CSN(1);
     set_nrf24_SPI_CE(0);
-    Delay(2);
-    
+    Delay(20);
+
     uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG);
     nrf24_write_register(NRF24L01_CONFIG, 0x0B); // PWR_UP=1, PRIM_RX=1, CRCO=0 (1 byte), CRC_EN=1
     uint8_t configValue2 = nrf24_read_register(NRF24L01_CONFIG);
