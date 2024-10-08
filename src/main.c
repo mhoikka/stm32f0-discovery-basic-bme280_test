@@ -277,8 +277,8 @@ void test_nrf24_connection() {
         send_stringln("SPI failure: Check configuration.");
         itoa(configValue, num_buf, 16);
         send_stringln(num_buf);
-        itoa(configValue2, num_buf2, 16);
-        send_stringln(num_buf2);
+        //itoa(configValue2, num_buf2, 16);
+        //send_stringln(num_buf2);
     }
 }
 
