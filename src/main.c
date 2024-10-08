@@ -337,10 +337,10 @@ void MySPI_Init(){
   SPI_InitStruct.SPI_NSS = SPI_NSS_Soft;
   SPI_InitStruct.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_32;
   SPI_InitStruct.SPI_FirstBit = SPI_FirstBit_MSB;
-  //SPI_InitStruct.SPI_CRCPolynomial = 7;
-  //disable crc 
-  SPI_InitStruct.SPI_CRCPolynomial = 0;
-  
+
+  // Disable CRC by clearing the CRCEN bit in SPI_CR1 register
+  SPI1->CR1 &= ~SPI_CR1_CRCEN;
+
   //Initialize the SPI peripheral
   SPI_Init(SPI1, &SPI_InitStruct);
   SPI_Cmd(SPI1, ENABLE);
