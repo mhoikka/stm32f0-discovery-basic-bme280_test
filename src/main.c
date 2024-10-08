@@ -240,16 +240,15 @@ void nrf24_write_register(uint8_t reg, uint8_t value) {
 uint8_t NRF24L01_CONFIG = 0x00;
 void test_nrf24_connection() {
     char num_buf[10];
-    char num_buf2[10];
 
     set_nrf24_SPI_CSN(1);
     set_nrf24_SPI_CE(0);
 
-    uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG);
+    //uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG);
     nrf24_write_register(NRF24L01_CONFIG, 0x03); // PWR_UP=1 and PRIM_RX=1
     //set_nrf24_SPI_CE(1); //enables chip to receive data
     Delay(2);
-    uint8_t configValue2 = nrf24_read_register(NRF24L01_CONFIG);
+    uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG);
     set_nrf24_SPI_CE(0);
 
     // Optional: Check if expected bits are set
@@ -259,8 +258,6 @@ void test_nrf24_connection() {
         send_stringln("SPI failure: Check configuration.");
         itoa(configValue, num_buf, 16);
         send_stringln(num_buf);
-        itoa(configValue2, num_buf2, 16);
-        send_stringln(num_buf2);
     }
 }
 
