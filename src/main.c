@@ -188,12 +188,13 @@ uint8_t nrf24_read_register(uint8_t reg) {
     uint8_t txData[2]; // Transmit data buffer
     uint8_t rxData[2]; // Receive data buffer
 
-    // Set CSN low to start communication
-    set_nrf24_SPI_CSN(0);
     // Prepare command to read (register address with read command bit)
     txData[0] = reg | 0x00; // Read command 
     txData[1] = 0x00; // Dummy byte for clocking out data
 
+    // Set CSN low to start communication
+    set_nrf24_SPI_CSN(0);
+    
     // Start SPI transmission and reception
     for (int i = 0; i < 2; i++) {
         // Transmit byte
