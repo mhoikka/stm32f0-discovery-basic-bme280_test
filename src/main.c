@@ -201,6 +201,18 @@ uint8_t nrf24_read_register(uint8_t reg) {
         SPI1->DR = txData[i];
 
         // Wait until transmission is complete
+        //while (!(SPI1->SR & SPI_SR_RXNE)); // Wait until receive buffer is not empty
+
+        // Read received byte
+        //rxData[i] = SPI1->DR; // Read received data
+    }
+
+    // Start SPI transmission and reception
+    for (int i = 0; i < 2; i++) {
+        // Transmit byte
+        //SPI1->DR = txData[i];
+
+        // Wait until transmission is complete
         while (!(SPI1->SR & SPI_SR_RXNE)); // Wait until receive buffer is not empty
 
         // Read received byte
