@@ -338,7 +338,9 @@ void MySPI_Init(){
   SPI_InitStruct.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_32;
   SPI_InitStruct.SPI_FirstBit = SPI_FirstBit_MSB;
   //SPI_InitStruct.SPI_CRCPolynomial = 7;
-
+  //disable crc 
+  SPI_InitStruct.SPI_CRCPolynomial = 0;
+  
   //Initialize the SPI peripheral
   SPI_Init(SPI1, &SPI_InitStruct);
   SPI_Cmd(SPI1, ENABLE);
