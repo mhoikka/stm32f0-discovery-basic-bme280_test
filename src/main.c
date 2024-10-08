@@ -189,7 +189,7 @@ uint8_t nrf24_read_register(uint8_t reg) {
     uint8_t rxData[2]; // Receive data buffer
 
     // Prepare command to read (register address with read command bit)
-    txData[0] = reg | 0x00; // Read command 
+    txData[0] = reg | 0x04; // Read command 
     txData[1] = 0x00; // Dummy byte for clocking out data
 
     // Set CSN low to start communication
