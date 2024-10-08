@@ -262,11 +262,11 @@ void test_nrf24_connection() {
 
     uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG);
     nrf24_write_register(NRF24L01_CONFIG, 0x0B); // PWR_UP=1, PRIM_RX=1, CRCO=0 (1 byte), CRC_EN=1
-    uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG);
+    uint8_t configValue2 = nrf24_read_register(NRF24L01_CONFIG);
     //set_nrf24_SPI_CE(1); //enables chip to receive data
     Delay(2);
-    uint8_t configValue2 = nrf24_read_register(NRF24L01_CONFIG);
-    set_nrf24_SPI_CE(0);
+
+    //set_nrf24_SPI_CE(0);
 
     // Optional: Check if expected bits are set
     if ((configValue & 0x03) == 0x03) {
