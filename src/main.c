@@ -262,7 +262,8 @@ void test_nrf24_connection() {
     Delay(150); //Let the chip power up and reset 
 
     uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG); // Does not actually read the CONFIG register
-    nrf24_write_register(NRF24L01_CONFIG, 0x0B); // PWR_UP=1, PRIM_RX=1, CRCO=0 (1 byte), CRC_EN=1
+    nrf24_write_register(NRF24L01_CONFIG, 0x02); // PWR_UP=1 //, PRIM_RX=1, CRCO=0 (1 byte), CRC_EN=1
+    Delay(2); // Wait for the chip to power up
     uint8_t configValue2 = nrf24_read_register(NRF24L01_CONFIG); 
     //Delay(10); // Wait for the chip to power up
     //uint8_t configValue2 = nrf24_read_register(NRF24L01_CONFIG);
@@ -441,7 +442,7 @@ void I2C_Settings_Init(){
  * @brief Initializes the UART connection for the STM32F030R8
  * @retval None
  */
-void  UART_Settings_Init(){
+void UART_Settings_Init(){
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
 
