@@ -227,7 +227,7 @@ void nrf24_write_register(uint8_t reg, uint8_t value) {
         SPI1->DR = txData[i];
 
         // Wait until transmission is complete
-        //while (!(SPI1->SR & SPI_SR_RXNE)); // Wait until receive buffer is not empty
+        while (!(SPI1->SR & SPI_SR_RXNE)); // Wait until receive buffer is not empty
 
         // Read received byte (not used, but necessary to complete the transaction)
         //(void)SPI1->DR; // Discard the received byte
@@ -244,7 +244,7 @@ void test_nrf24_connection() {
     set_nrf24_SPI_CSN(1);
     set_nrf24_SPI_CE(0);
 
-    //uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG);
+    uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG);
     nrf24_write_register(NRF24L01_CONFIG, 0x03); // PWR_UP=1 and PRIM_RX=1
     //set_nrf24_SPI_CE(1); //enables chip to receive data
     Delay(2);
