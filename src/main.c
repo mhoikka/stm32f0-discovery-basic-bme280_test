@@ -197,7 +197,7 @@ uint8_t* nrf24_read_register(uint8_t reg) {
     // Start SPI transmission and reception
     for (int i = 0; i < 1; i++) {
         // Transmit byte
-        *(__IO uint8_t*)(&SPI2->DR) = txData[i];
+        *(__IO uint8_t*)(&SPI1->DR) = txData[i];
 
         // Wait until transmission is complete
         while (!(SPI1->SR & SPI_SR_RXNE)); // Wait until receive buffer is not empty
@@ -225,7 +225,7 @@ void nrf24_write_register(uint8_t reg, uint8_t value) {
     // Start SPI transmission
     for (int i = 0; i < 1; i++) {
         // Transmit byte
-        *(__IO uint8_t*)(&SPI2->DR) = txData[i]; //*(__IO uint8_t*)(&SPI1->DR) = txData[i];
+        *(__IO uint8_t*)(&SPI1->DR) = txData[i]; //*(__IO uint8_t*)(&SPI1->DR) = txData[i];
 
         // Wait until transmission is complete
         while (!(SPI1->SR & SPI_SR_RXNE)); // Wait until receive buffer is not empty
@@ -341,7 +341,7 @@ void MySPI_Init(){
 
   // Disable CRC by clearing the CRCEN bit in SPI_CR1 register
   //SPI1->CR1 &= ~SPI_CR1_CRCEN;
-  //SPI1->CR2 |= SPI_CR2_FRXTH;
+  SPI1->CR2 |= SPI_CR2_FRXTH;
 
   //Initialize the SPI peripheral
   SPI_Init(SPI1, &SPI_InitStruct);
