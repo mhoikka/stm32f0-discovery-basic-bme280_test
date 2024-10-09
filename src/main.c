@@ -195,7 +195,7 @@ uint8_t* nrf24_read_register(uint8_t reg) {
     set_nrf24_SPI_CSN(0);
     
     // Start SPI transmission and reception
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 1; i++) {
         // Transmit byte
         SPI1->DR = txData[i];
 
@@ -236,6 +236,7 @@ void nrf24_write_register(uint8_t reg, uint8_t value) {
 
 uint8_t NRF24L01_CONFIG = 0x00;
 uint8_t NRF24L01_ENAA = 0x01;
+uint8_t CONFIG_SETTINGS = 0x03;
 void test_nrf24_connection() {
     char num_buf[10];
     char num_buf2[10];
@@ -245,15 +246,12 @@ void test_nrf24_connection() {
     set_nrf24_SPI_CE(0);
     Delay(150); //Let the chip power up and reset 
 
-    uint8_t configValue = nrf24_read_register(NRF24L01_ENAA); // Does not actually read the CONFIG register
-    nrf24_write_register(NRF24L01_ENAA, 0x02); // PWR_UP=1 //, PRIM_RX=0, CRCO=0 (1 byte), CRC_EN=0
+    uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG); // Does not actually read the CONFIG register
+    nrf24_write_register(NRF24L01_CONFIG, CONFIG_SETTINGS); // PWR_UP=1 //, PRIM_RX=0, CRCO=0 (1 byte), CRC_EN=0
     
     //Delay(2); // Wait for the chip to power up
-    uint8_t configValue2 = nrf24_read_register(NRF24L01_ENAA); 
-    nrf24_write_register(NRF24L01_ENAA, 0x3F); // PWR_UP=1 //, PRIM_RX=0, CRCO=0 (1 byte), CRC_EN=0
-    
-    //Delay(2); // Wait for the chip to power up
-    uint8_t configValue3 = nrf24_read_register(NRF24L01_ENAA); 
+    uint8_t configValue2 = nrf24_read_register(NRF24L01_CONFIG); 
+
     //Delay(10); // Wait for the chip to power up
     //uint8_t configValue2 = nrf24_read_register(NRF24L01_CONFIG);
     //set_nrf24_SPI_CE(1); //enables chip to receive data
@@ -262,14 +260,10 @@ void test_nrf24_connection() {
     //set_nrf24_SPI_CE(0);
 
     // Optional: Check if expected bits are set
-    if ((configValue & 0x03) == 0x03) {
+    if ((configValue & CONFIG_SETTINGS) == CONFIG_SETTINGS) {
         send_stringln("SPI successful: PWR_UP and PRIM_RX are set.");
     } else {
         send_stringln("SPI failure: Check configuration.");
-        itoa(SPI1->CR1, num_buf, 16); //SUS
-        send_stringln(num_buf);
-        itoa(SPI1->CR2, num_buf2, 16);
-        send_stringln(num_buf2);
         /*
         itoa(configValue, num_buf, 16); //SUS
         send_stringln(num_buf);
