@@ -341,7 +341,7 @@ void MySPI_Init(){
 
   // Disable CRC by clearing the CRCEN bit in SPI_CR1 register
   //SPI1->CR1 &= ~SPI_CR1_CRCEN;
-  SPI1->CR2 |= SPI_CR2_FRXTH;
+  //SPI1->CR2 |= SPI_CR2_FRXTH;
 
   //Initialize the SPI peripheral
   SPI_Init(SPI1, &SPI_InitStruct);
