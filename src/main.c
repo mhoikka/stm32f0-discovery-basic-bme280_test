@@ -183,60 +183,23 @@ void __attribute__((optimize("O0"))) bme280_delay_microseconds(uint32_t usec, vo
   }
 }
 
-
-uint8_t nrf24_read_register(uint8_t reg) {
-    uint8_t txData[2]; // Transmit data buffer
-    uint8_t rxData[2]; // Receive data buffer
-
-    // Prepare command to read (register address with read command bit)
-    txData[0] = reg | 0x00; // Read command 
-    txData[1] = 0x00; // Dummy byte for clocking out data
-
-    // Set CSN low to start communication
-    set_nrf24_SPI_CSN(0);
-    
-    // Start SPI transmission and reception
-    for (int i = 0; i < 2; i++) {
-        // Transmit byte
-        SPI1->DR = txData[i];
-
-        // Wait until transmission is complete
-        while (!(SPI1->SR & SPI_SR_RXNE)); // Wait until receive buffer is not empty
-
-        // Read received byte
-        rxData[i] = SPI1->DR; // Read received data
-    }
-
-    // Set CSN high to end communication
-    set_nrf24_SPI_CSN(1);
-    return rxData[1]; // Return the value read from the register
+uint8_t spi_read_write(uint8_t data)
+{
+    while(SPI1 -> SR & SPI_SR_RXNE) (void)*(volatile uint8_t *)&SPI1 -> DR;   //clean the FIFO
+    *(volatile uint8_t *)&SPI1 -> DR = data;
+    while(!(SPI1 -> SR & SPI_SR_RXNE));
+    return *(volatile uint8_t *)&SPI1 -> DR;
 }
 
-void nrf24_write_register(uint8_t reg, uint8_t value) {
-    uint8_t txData[2]; // Transmit data buffer
-
-    // Prepare command to write (register address with write command prefix)
-    txData[0] = reg | 0x20; // Write command
-    txData[1] = value;      // Data to write
-
-    // Set CSN low to start communication
-    set_nrf24_SPI_CSN(0);
-    
-    
-    // Start SPI transmission
-    for (int i = 0; i < 2; i++) {
-        // Transmit byte
-        SPI1->DR = txData[i];
-
-        // Wait until transmission is complete
-        while (!(SPI1->SR & SPI_SR_RXNE)); // Wait until receive buffer is not empty
-
-        // Read received byte (not used, but necessary to complete the transaction) //Is it though?
-        (void)SPI1->DR; // Discard the received byte
-    }
-
-    // Set CSN high to end communication
-    set_nrf24_SPI_CSN(1);
+uint8_t execute_command(uint8_t command, uint16_t *data)
+{
+    uint8_t status;
+    set_nrf24_SPI_CSN(0);  
+    status = spi_read_write(command);
+    *data = spi_read_write(0);
+    *data |= ((uint16_t)spi_read_write(0)) << 8;
+    set_nrf24_SPI_CSN(1);  
+    return status
 }
 
 uint8_t NRF24L01_CONFIG = 0x00;
@@ -334,7 +297,7 @@ void MySPI_Init(){
   SPI_InitStruct.SPI_FirstBit = SPI_FirstBit_MSB;
 
   // Disable CRC by clearing the CRCEN bit in SPI_CR1 register
-  SPI1->CR1 &= ~SPI_CR1_CRCEN;
+  //SPI1->CR1 &= ~SPI_CR1_CRCEN;
 
   //Initialize the SPI peripheral
   SPI_Init(SPI1, &SPI_InitStruct);
