@@ -199,7 +199,7 @@ uint8_t execute_command(uint8_t command, uint16_t *data)
     *data = spi_read_write(0);
     *data |= ((uint16_t)spi_read_write(0)) << 8;
     set_nrf24_SPI_CSN(1);  
-    return status
+    return status;
 }
 
 uint8_t NRF24L01_CONFIG = 0x00;
