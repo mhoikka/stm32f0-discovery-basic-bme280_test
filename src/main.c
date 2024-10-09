@@ -242,6 +242,7 @@ uint8_t NRF24L01_ENAA = 0x01;
 void test_nrf24_connection() {
     char num_buf[10];
     char num_buf2[10];
+    char num_buf3[10];
 
     set_nrf24_SPI_CSN(1);
     set_nrf24_SPI_CE(0);
@@ -255,7 +256,7 @@ void test_nrf24_connection() {
     nrf24_write_register(NRF24L01_ENAA, 0x3F); // PWR_UP=1 //, PRIM_RX=0, CRCO=0 (1 byte), CRC_EN=0
     
     //Delay(2); // Wait for the chip to power up
-    uint8_t configValue2 = nrf24_read_register(NRF24L01_ENAA); 
+    uint8_t configValue3 = nrf24_read_register(NRF24L01_ENAA); 
     //Delay(10); // Wait for the chip to power up
     //uint8_t configValue2 = nrf24_read_register(NRF24L01_CONFIG);
     //set_nrf24_SPI_CE(1); //enables chip to receive data
@@ -272,6 +273,8 @@ void test_nrf24_connection() {
         send_stringln(num_buf);
         itoa(configValue2, num_buf2, 16);
         send_stringln(num_buf2);
+        itoa(configValue3, num_buf3, 16);
+        send_stringln(num_buf3);
     }
 }
 
