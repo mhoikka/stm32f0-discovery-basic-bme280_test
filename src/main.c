@@ -195,7 +195,7 @@ uint8_t* nrf24_read_register(uint8_t reg) {
     set_nrf24_SPI_CSN(0);
     
     // Start SPI transmission and reception
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 1; i++) {
         // Transmit byte
         SPI1->DR = txData[i];
 
@@ -338,7 +338,7 @@ void MySPI_Init(){
   //Set up the SPI peripheral
   SPI_InitStruct.SPI_Direction = SPI_Direction_2Lines_FullDuplex;
   SPI_InitStruct.SPI_Mode = SPI_Mode_Master;
-  SPI_InitStruct.SPI_DataSize = SPI_DataSize_8b;
+  SPI_InitStruct.SPI_DataSize = SPI_DataSize_16b;
   SPI_InitStruct.SPI_CPOL = SPI_CPOL_Low;
   SPI_InitStruct.SPI_CPHA = SPI_CPHA_1Edge;
   SPI_InitStruct.SPI_NSS = SPI_NSS_Soft;
