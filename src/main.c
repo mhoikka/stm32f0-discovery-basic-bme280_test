@@ -278,12 +278,18 @@ void test_nrf24_connection() {
         send_stringln("SPI successful: PWR_UP and PRIM_RX are set.");
     } else {
         send_stringln("SPI failure: Check configuration.");
+        itoa(SPI1->CR1, num_buf, 16); //SUS
+        send_stringln(num_buf);
+        itoa(SPI1->CR2, num_buf2, 16);
+        send_stringln(num_buf2);
+        /*
         itoa(configValue, num_buf, 16); //SUS
         send_stringln(num_buf);
         itoa(configValue2, num_buf2, 16);
         send_stringln(num_buf2);
         itoa(configValue3, num_buf3, 16);
         send_stringln(num_buf3);
+        */
     }
 }
 
