@@ -195,7 +195,7 @@ uint8_t* nrf24_read_register(uint8_t reg) {
     set_nrf24_SPI_CSN(0);
     
     // Start SPI transmission and reception
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 2; i++) {
         // Transmit byte
         SPI1->DR = txData[i];
 
@@ -217,22 +217,18 @@ void nrf24_write_register(uint8_t reg, uint8_t value) {
     // Prepare command to write (register address with write command prefix)
     txData[0] = reg | 0x20; // Write command
     txData[1] = value;      // Data to write
-    //uint16_t datatowrite = (txData[1] << 8) | txData[0];
+    uint16_t datatowrite = (txData[1] << 8) | txData[0];
     // Set CSN low to start communication
     set_nrf24_SPI_CSN(0);
     
-    
-    // Start SPI transmission
-    for (int i = 0; i < 2; i++) {
-        // Transmit byte
-        SPI1->DR = reg; //datatowrite; //txData[i];
+    // Transmit byte
+    SPI1->DR = datatowrite; //txData[i];
 
-        // Wait until transmission is complete
-        while (!(SPI1->SR & SPI_SR_RXNE)); // Wait until receive buffer is not empty
+    // Wait until transmission is complete
+    while (!(SPI1->SR & SPI_SR_RXNE)); // Wait until receive buffer is not empty
 
-        // Read received byte (not used, but necessary to complete the transaction) //Is it though?
-        (void)SPI1->DR; // Discard the received byte
-    }
+    // Read received byte (not used, but necessary to complete the transaction) //Is it though?
+    (void)SPI1->DR; // Discard the received byte
 
     // Set CSN high to end communication
     set_nrf24_SPI_CSN(1);
