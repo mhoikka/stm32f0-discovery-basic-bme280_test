@@ -191,15 +191,60 @@ uint8_t spi_read_write(uint8_t data)
     return *(volatile uint8_t *)&SPI1 -> DR;
 }
 
-uint8_t execute_command(uint8_t command, uint16_t *data)
-{
-    uint8_t status;
-    set_nrf24_SPI_CSN(0);  
-    status = spi_read_write(command);
-    *data = spi_read_write(0);
-    *data |= ((uint16_t)spi_read_write(0)) << 8;
-    set_nrf24_SPI_CSN(1);  
-    return status;
+uint8_t* nrf24_read_register(uint8_t reg) {
+    uint8_t txData[3]; // Transmit data buffer
+    uint8_t rxData[3]; // Receive data buffer
+
+    // Prepare command to read (register address with read command bit)
+    txData[0] = reg | 0x00; // Read command 
+    txData[1] = 0x00; // Dummy byte for clocking out data
+    txData[2] = 0x00; // Dummy byte for clocking out data
+
+    // Set CSN low to start communication
+    set_nrf24_SPI_CSN(0);
+    
+    // Start SPI transmission and reception
+    for (int i = 0; i < 3; i++) {
+        // Transmit byte
+        SPI1->DR = txData[i];
+
+        // Wait until transmission is complete
+        while (!(SPI1->SR & SPI_SR_RXNE)); // Wait until receive buffer is not empty
+
+        // Read received byte
+        rxData[i] = SPI1->DR; // Read received data
+    }
+
+    // Set CSN high to end communication
+    set_nrf24_SPI_CSN(1);
+    return *rxData; // Return the value read from the register
+}
+
+void nrf24_write_register(uint8_t reg, uint16_t value) {
+    uint8_t txData[3]; // Transmit data buffer
+
+    // Prepare command to write (register address with write command prefix)
+    txData[0] = reg | 0x20;                     // Write command
+    txData[1] = (uint8_t)(value & 0xFF);        // Data to write
+    txData[2] = (uint8_t)((value >> 8) & 0xFF); 
+
+    // Set CSN low to start communication
+    set_nrf24_SPI_CSN(0);
+    
+    // Start SPI transmission
+    for (int i = 0; i < 3; i++) {
+        // Transmit byte
+        SPI1->DR = txData[i];
+
+        // Wait until transmission is complete
+        while (!(SPI1->SR & SPI_SR_RXNE)); // Wait until receive buffer is not empty
+
+        // Read received byte (not used, but necessary to complete the transaction) //Is it though?
+        (void)SPI1->DR; // Discard the received byte
+    }
+
+    // Set CSN high to end communication
+    set_nrf24_SPI_CSN(1);
 }
 
 uint8_t NRF24L01_CONFIG = 0x00;
@@ -212,11 +257,11 @@ void test_nrf24_connection() {
     set_nrf24_SPI_CE(0);
     Delay(150); //Let the chip power up and reset 
 
-    uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG); // Does not actually read the CONFIG register
-    nrf24_write_register(NRF24L01_CONFIG, 0x40); // PWR_UP=1 //, PRIM_RX=0, CRCO=0 (1 byte), CRC_EN=0
+    uint8_t *configValue = nrf24_read_register(NRF24L01_CONFIG); // Does not actually read the CONFIG register
+    nrf24_write_register(NRF24L01_CONFIG, 0x0002); // PWR_UP=1 //, PRIM_RX=0, CRCO=0 (1 byte), CRC_EN=0
     
     Delay(2); // Wait for the chip to power up
-    uint8_t configValue2 = nrf24_read_register(NRF24L01_CONFIG); 
+    uint8_t *configValue2 = nrf24_read_register(NRF24L01_CONFIG); 
     //Delay(10); // Wait for the chip to power up
     //uint8_t configValue2 = nrf24_read_register(NRF24L01_CONFIG);
     //set_nrf24_SPI_CE(1); //enables chip to receive data
@@ -225,13 +270,13 @@ void test_nrf24_connection() {
     //set_nrf24_SPI_CE(0);
 
     // Optional: Check if expected bits are set
-    if ((configValue & 0x03) == 0x03) {
+    if ((*++configValue & 0x03) == 0x03) {
         send_stringln("SPI successful: PWR_UP and PRIM_RX are set.");
     } else {
         send_stringln("SPI failure: Check configuration.");
-        itoa(configValue, num_buf, 16);
+        itoa(*configValue, num_buf, 16); //SUS
         send_stringln(num_buf);
-        itoa(configValue2, num_buf2, 16);
+        itoa(*configValue2, num_buf2, 16);
         send_stringln(num_buf2);
     }
 }
