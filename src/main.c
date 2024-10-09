@@ -247,11 +247,11 @@ void test_nrf24_connection() {
     set_nrf24_SPI_CE(0);
     Delay(150); //Let the chip power up and reset 
 
-    uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG); // Does not actually read the CONFIG register
+    uint8_t configValue = nrf24_read_register(NRF24L01_ENAA); // Does not actually read the CONFIG register
     nrf24_write_register(NRF24L01_CONFIG, 0x02); // PWR_UP=1 //, PRIM_RX=0, CRCO=0 (1 byte), CRC_EN=0
     
     Delay(2); // Wait for the chip to power up
-    uint8_t configValue2 = nrf24_read_register(NRF24L01_CONFIG); 
+    uint8_t configValue2 = nrf24_read_register(NRF24L01_ENAA); 
     //Delay(10); // Wait for the chip to power up
     //uint8_t configValue2 = nrf24_read_register(NRF24L01_CONFIG);
     //set_nrf24_SPI_CE(1); //enables chip to receive data
