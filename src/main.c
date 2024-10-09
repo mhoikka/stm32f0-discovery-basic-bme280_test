@@ -195,7 +195,7 @@ uint8_t* nrf24_read_register(uint8_t reg) {
     set_nrf24_SPI_CSN(0);
     
     // Start SPI transmission and reception
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 1; i++) {
         // Transmit byte
         *(__IO uint8_t*)(&SPI2->DR) = txData[i];
 
@@ -223,7 +223,7 @@ void nrf24_write_register(uint8_t reg, uint8_t value) {
     
     
     // Start SPI transmission
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 1; i++) {
         // Transmit byte
         *(__IO uint8_t*)(&SPI2->DR) = txData[i]; //*(__IO uint8_t*)(&SPI1->DR) = txData[i];
 
