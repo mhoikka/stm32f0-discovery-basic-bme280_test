@@ -231,7 +231,7 @@ void nrf24_write_register(uint8_t reg, uint8_t value) {
         while (!(SPI1->SR & SPI_SR_RXNE)); // Wait until receive buffer is not empty
 
         // Read received byte (not used, but necessary to complete the transaction) //Is it though?
-        //(void)SPI1->DR; // Discard the received byte
+        (void)SPI1->DR; // Discard the received byte
     }
 
     // Set CSN high to end communication
