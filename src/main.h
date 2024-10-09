@@ -42,8 +42,8 @@ void bme280_delay_microseconds(uint32_t usec, void *intf_ptr);
 void TimingDelay_Decrement(void);
 void Delay(__IO uint32_t nTime);
 
-uint8_t nrf24_read_register(uint8_t reg);
-void nrf24_write_register(uint8_t reg, uint8_t value);
+uint8_t* nrf24_read_register(uint8_t reg);
+void nrf24_write_register(uint8_t reg, uint16_t value);
 void test_nrf24_connection();
 void set_nrf24_SPI_CSN(uint8_t input);
 void set_nrf24_SPI_CE(uint8_t input);
