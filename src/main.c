@@ -106,6 +106,7 @@ void TimingDelay_Decrement(void)
   }
 }
 
+struct bme280_data bme280_datastruct;
 /**
  * @brief return the sensor reading
  * @retval None

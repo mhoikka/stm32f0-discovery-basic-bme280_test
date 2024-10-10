@@ -12,8 +12,22 @@ typedef struct my_device_context {
 } my_device_context;
 struct my_device_context ctx = {};
 struct bme280_dev bme280_initparam;
+struct bme280_data bme280_datastruct;
 
 uint8_t NUM_REGISTERS_BME280 = 4;
+
+
+
+/**
+ * @brief Display formatted sensor reading from BME280
+ * @param pointer to char buffer that stores the sensor readings while they are being written over UART
+ * @retval None
+ */
+void *get_sensor_reading(){
+  bme280_get_sensor_data(BME280_ALL, &bme280_datastruct, &bme280_initparam);
+  return (void*)bme280_datastruct;
+}
+
 /**
  * @brief  Delay function for BME280 drivers.
  * @param  usec: specifies the delay time length, in 1 microsecond.
