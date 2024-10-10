@@ -25,7 +25,7 @@ uint8_t NUM_REGISTERS_BME280 = 4;
  */
 void *get_sensor_reading(){
   bme280_get_sensor_data(BME280_ALL, &bme280_datastruct, &bme280_initparam);
-  return (void*)bme280_datastruct;
+  return &bme280_datastruct;
 }
 
 /**
