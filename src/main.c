@@ -107,13 +107,12 @@ void TimingDelay_Decrement(void)
 }
 
 /**
- * @brief Display formatted sensor reading from BME280
- * @param pointer to char buffer that stores the sensor readings while they are being written over UART
+ * @brief return the sensor reading
  * @retval None
  */
 void display_sensor_reading(){
   char num_buf[65];
-  itoa(bme280_get_sensor_data(BME280_ALL, &bme280_datastruct, &bme280_initparam), num_buf, 10);
+  struct bme280_data bme280_datastruct = (bme280_datastruct)*get_sensor_reading();
   send_string(itoa((int)(bme280_datastruct.temperature), num_buf, 10));
   send_stringln(" C");
   send_string(itoa((int)(bme280_datastruct.pressure), num_buf, 10));
