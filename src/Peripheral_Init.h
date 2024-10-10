@@ -11,7 +11,7 @@
 #include "stm32f0xx_nucleo.h"
 #include "bme280_defs.h"
 
-struct bme280_data *get_sensor_reading();
+bme280_data *get_sensor_reading();
 void bme280_delay_microseconds(uint32_t usec, void *intf_ptr);
 int8_t BME280_I2C_bus_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, void *intf_ptr);
 int8_t BME280_I2C_bus_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t cnt, void *intf_ptr);
