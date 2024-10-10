@@ -13,7 +13,6 @@ void Delay(__IO uint32_t nTime);
 
 
 /* Private typedef -----------------------------------------------------------*/
-struct my_device_context ctx = {};
 struct bme280_dev bme280_initparam;
 struct bme280_data bme280_datastruct;
 
