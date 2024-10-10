@@ -390,7 +390,7 @@ struct bme280_calib_data
  * humidity data
  */
 #ifdef BME280_DOUBLE_ENABLE
-struct bme280_data
+typedef struct bme280_data
 {
     /*! Compensated pressure */
     double pressure;
