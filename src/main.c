@@ -61,8 +61,7 @@ int main(void)
   //bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam);  
 
   NRF24L01p_Init();
-  //Check if initialization was successful
-  //TODO
+
   Delay(1);
   test_nrf24_connection();
 
@@ -73,10 +72,10 @@ int main(void)
 
   while (1)
   {
+    // Display new sensor readings and LED2 Toggle each 1000ms
     STM_EVAL_LEDToggle(LED2);
-    //display_sensor_reading();
-
-    //  Display new sensor readings and LED2 Toggle each 1000ms 
+    // display_sensor_reading();
+     
     Delay(1000);
   }
 }
@@ -225,13 +224,13 @@ void nrf24_write_register(uint8_t reg, uint8_t value) {
     // Start SPI transmission
     for (int i = 0; i < 2; i++) {
         // Transmit byte
-        *(__IO uint8_t*)(&SPI1->DR) = txData[i]; //*(__IO uint8_t*)(&SPI1->DR) = txData[i];
+        *(__IO uint8_t*)(&SPI1->DR) = txData[i]; 
 
         // Wait until transmission is complete
         while (!(SPI1->SR & SPI_SR_RXNE)); // Wait until receive buffer is not empty
 
-        // Read received byte (not used, but necessary to complete the transaction) //Is it though?
-        (void)SPI1->DR; // Discard the received byte
+        // Read received byte (not used, but necessary to complete the transaction) 
+        (void)SPI1->DR; 
     }
 
     // Set CSN high to end communication
@@ -250,32 +249,19 @@ void test_nrf24_connection() {
     set_nrf24_SPI_CE(0);
     Delay(150); //Let the chip power up and reset 
 
-    uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG); // Does not actually read the CONFIG register
-    nrf24_write_register(NRF24L01_CONFIG, CONFIG_SETTINGS); // PWR_UP=1 //, PRIM_RX=0, CRCO=0 (1 byte), CRC_EN=0
+    uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG); 
+    nrf24_write_register(NRF24L01_CONFIG, CONFIG_SETTINGS); 
     
-    //Delay(2); // Wait for the chip to power up
     uint8_t configValue2 = nrf24_read_register(NRF24L01_CONFIG); 
 
-    //Delay(10); // Wait for the chip to power up
-    //uint8_t configValue2 = nrf24_read_register(NRF24L01_CONFIG);
     //set_nrf24_SPI_CE(1); //enables chip to receive data
-    Delay(2);
+    //Delay(2);
 
-    //set_nrf24_SPI_CE(0);
-
-    // Optional: Check if expected bits are set
+    // Check if expected bits are set
     if ((configValue & CONFIG_SETTINGS) == CONFIG_SETTINGS) {
-        send_stringln("SPI successful: PWR_UP and PRIM_RX are set.");
+        send_stringln("Successful: READ bits match WRITE bits");
     } else {
-        send_stringln("SPI failure: Check configuration.");
-        /*
-        itoa(configValue, num_buf, 16); //SUS
-        send_stringln(num_buf);
-        itoa(configValue2, num_buf2, 16);
-        send_stringln(num_buf2);
-        itoa(configValue3, num_buf3, 16);
-        send_stringln(num_buf3);
-        */
+        send_stringln("Failure: READ bits do not match WRITE bits");
     }
 }
 
@@ -339,9 +325,7 @@ void MySPI_Init(){
   SPI_InitStruct.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_32;
   SPI_InitStruct.SPI_FirstBit = SPI_FirstBit_MSB;
 
-  // Disable CRC by clearing the CRCEN bit in SPI_CR1 register
-  //SPI1->CR1 &= ~SPI_CR1_CRCEN;
-  SPI1->CR2 |= SPI_CR2_FRXTH;
+  SPI1->CR2 |= SPI_CR2_FRXTH; //RXNE event is generated if the FIFO level is greater than or equal to 8
 
   //Initialize the SPI peripheral
   SPI_Init(SPI1, &SPI_InitStruct);
@@ -362,7 +346,7 @@ void NRF24L01p_Init(){
   GPIO_InitStruct_1.GPIO_Mode = GPIO_Mode_OUT;
   GPIO_InitStruct_1.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStruct_1.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStruct_1.GPIO_PuPd = GPIO_PuPd_UP; //Check if this is correct
+  GPIO_InitStruct_1.GPIO_PuPd = GPIO_PuPd_UP; 
   GPIO_Init(GPIOA, &GPIO_InitStruct_1);
 
   GPIO_InitTypeDef GPIO_InitStruct_2;
@@ -514,6 +498,7 @@ void display_sensor_reading(){
   send_stringln(" Pa");
   send_string(itoa((int)(bme280_datastruct.humidity), num_buf, 10));
   send_stringln(" %");
+  send_stringln("");
 }
 
 /**
