@@ -23,9 +23,9 @@ uint8_t NUM_REGISTERS_BME280 = 4;
  * @param pointer to char buffer that stores the sensor readings while they are being written over UART
  * @retval None
  */
-struct bme280_data *get_sensor_reading(){
+struct bme280_data get_sensor_reading(){
   bme280_get_sensor_data(BME280_ALL, &bme280_datastruct, &bme280_initparam);
-  return &bme280_datastruct;
+  return bme280_datastruct;
 }
 
 /**
