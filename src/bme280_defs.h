@@ -402,7 +402,7 @@ typedef struct bme280_data
     double humidity;
 };
 #else
-struct bme280_data
+typedef struct bme280_data
 {
     /*! Compensated pressure */
     uint32_t pressure;
