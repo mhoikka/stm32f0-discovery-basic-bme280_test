@@ -113,7 +113,7 @@ struct bme280_data bme280_datastruct;
  */
 void display_sensor_reading(){
   char num_buf[65];
-  bme280_data* bme280_datastruct = (bme280_datastruct*)get_sensor_reading();
+  bme280_data* bme280_datastruct = (bme280_data)get_sensor_reading();
   send_string(itoa((int)(*bme280_datastruct.temperature), num_buf, 10));
   send_stringln(" C");
   send_string(itoa((int)(*bme280_datastruct.pressure), num_buf, 10));
