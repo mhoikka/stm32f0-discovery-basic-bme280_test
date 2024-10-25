@@ -16,7 +16,19 @@ struct bme280_data bme280_datastruct;
 
 uint8_t NUM_REGISTERS_BME280 = 4;
 
-
+uint8_t CONFIG = 0x00;
+uint8_t CONFIG_SETTINGS = 0x00;
+uint8_t ENAA = 0x01;
+uint8_t SETUP_AW = 0x03;
+uint8_t RF_SETUP = 0x06;
+uint8_t RX_ADDR_P01 = 0x0A;
+uint8_t RX_PW_P0 = 0x11;
+uint8_t TX_ADDR = 0x10;
+uint8_t WRITE_COMMAND = 0x20;
+uint8_t WRITE_PAYLOAD_COMMAND = 0xA0;
+uint8_t READ_PAYLOAD_COMMAND = 0x60;
+uint8_t READ_COMMAND = 0x00;
+uint8_t NRF24L01_CONFIG = 0x07;
 
 /**
  * @brief Display formatted sensor reading from BME280
@@ -184,19 +196,6 @@ void nrf24_write_register(uint8_t reg, uint8_t value) {
     set_nrf24_SPI_CSN(1);
 }
 
-uint8_t CONFIG = 0x00;
-uint8_t CONFIG_SETTINGS = 0x00;
-uint8_t ENAA = 0x01;
-uint8_t SETUP_AW = 0x03;
-uint8_t RF_SETUP = 0x06;
-uint8_t RX_ADDR_P01 = 0x0A;
-uint8_t RX_PW_P0 = 0x11;
-uint8_t TX_ADDR = 0x10;
-uint8_t WRITE_COMMAND = 0x20;
-uint8_t WRITE_PAYLOAD_COMMAND = 0xA0;
-uint8_t READ_PAYLOAD_COMMAND = 0x60;
-uint8_t READ_COMMAND = 0x00;
-uint8_t NRF24L01_CONFIG = 0x07;
 /** 
 * @brief: Writes data to a register
 * @param: reg register to write to
