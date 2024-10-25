@@ -43,7 +43,7 @@ int main(void)
       num_buf[i] = 0;
   }*/
   unsigned char data = 0x01; 
-  
+
   System_Clock_Init();
   I2C_Settings_Init();
   UART_Settings_Init();
@@ -57,9 +57,8 @@ int main(void)
 
   Delay(1);
   //test_nrf24_connection();
-  bme280_delay_microseconds(1000*100, NULL);//wait for device to power on
+  Delay(100);//wait for device to power on
   transmitByteNRF(data);
-
 
   STM_EVAL_LEDInit(LED2);
   STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);  

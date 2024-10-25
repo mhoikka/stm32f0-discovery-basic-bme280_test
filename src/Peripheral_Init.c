@@ -292,18 +292,27 @@ uint8_t ADDRESS_LEN = 3;
 */
  //TODO make this much more functional
 void transmitByteNRF(uint8_t data){
+    send_stringln("Transmitting data");
     uint8_t write_address [3] = {0x93, 0xBD, 0x6B};
+    send_stringln("1.0");
     //set control registers
     nrf24_write_register(SETUP_AW, 0x01); //set to 3 byte address width
+    send_stringln("1.1");
     nrf24_multiwrite_register(TX_ADDR, write_address, ADDRESS_LEN); //set write adress
+    send_stringln("1.2");
     nrf24_write_register(RF_SETUP, 0x20); //set RF Data Rate to 250kbps, RF output power to -18dBm
+    send_stringln("1.3");
     //write data to be transmitted into TX FIFO
     nrf24_write_TX_payload(data);
-    nrf24_write_register(CONFIG, 0x0A); //set to PTX mode and turn on power bit
+    send_stringln("1.4");
+    rf24_write_register(CONFIG, 0x0A); //set to PTX mode and turn on power bit
+    send_stringln("1.5");
     bme280_delay_microseconds(1.5*1000, NULL); //wait for chip to go into TX mode
-
+    send_stringln("1.5");
     set_nrf24_SPI_CE(1); //enable chip to transmit data
+    send_stringln("1.6");
     bme280_delay_microseconds(130, NULL); //wait for chip to go into TX mode
+    send_stringln("1.7");
     Delay(1);            //wait for transmission to complete
     set_nrf24_SPI_CE(0); //disable chip after transmission
     nrf24_write_register(CONFIG, 0x08); //Power down
