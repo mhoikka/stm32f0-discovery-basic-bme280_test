@@ -184,6 +184,18 @@ void nrf24_write_register(uint8_t reg, uint8_t value) {
     set_nrf24_SPI_CSN(1);
 }
 
+uint8_t CONFIG = 0x00;
+uint8_t ENAA = 0x01;
+uint8_t SETUP_AW = 0x03;
+uint8_t RF_SETUP = 0x06;
+uint8_t RX_ADDR_P01 = 0x0A;
+uint8_t RX_PW_P0 = 0x11;
+uint8_t TX_ADDR = 0x10;
+uint8_t WRITE_COMMAND = 0x20;
+uint8_t WRITE_PAYLOAD_COMMAND = 0xA0;
+uint8_t READ_PAYLOAD_COMMAND = 0x60;
+uint8_t READ_COMMAND = 0x00;
+uint8_t NRF24L01_CONFIG = 0x07;
 /** 
 * @brief: Writes data to a register
 * @param: reg register to write to
@@ -195,12 +207,10 @@ void nrf24_multiwrite_register(uint8_t reg, uint8_t *values, uint8_t num_bytes) 
 
     // Prepare command to write (register address with write command prefix)
     txData[0] = reg | WRITE_COMMAND; // Write command
-    memcpy(txData+1, &value, num_bytes); // Copy data to write into buffer
-    txData[1] = value;      // Data to write
+    memcpy(txData+1, &values, num_bytes); // Copy data to write into buffer
 
     // Set CSN low to start communication
     set_nrf24_SPI_CSN(0);
-    
     
     // Start SPI transmission
     for (int i = 0; i < num_bytes; i++) {
@@ -250,17 +260,6 @@ void nrf24_write_TX_payload(uint8_t value) {
     set_nrf24_SPI_CSN(1);
 }
 
-uint8_t CONFIG = 0x00;
-uint8_t ENAA = 0x01;
-uint8_t SETUP_AW = 0x03;
-uint8_t RF_SETUP = 0x06;
-uint8_t RX_ADDR_P01 = 0x0A;
-uint8_t RX_PW_P0 = 0x11;
-uint8_t TX_ADDR = 0x10;
-uint8_t WRITE_COMMAND = 0x20;
-uint8_t WRITE_PAYLOAD_COMMAND = 0xA0;
-uint8_t READ_PAYLOAD_COMMAND = 0x60;
-uint8_t READ_COMMAND = 0x00;
 void test_nrf24_connection() {
     char num_buf[10];
     char num_buf2[10];
