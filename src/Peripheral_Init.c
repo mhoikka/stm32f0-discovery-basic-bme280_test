@@ -305,7 +305,7 @@ void transmitByteNRF(uint8_t data){
     //write data to be transmitted into TX FIFO
     nrf24_write_TX_payload(data);
     send_stringln("1.4");
-    rf24_write_register(CONFIG, 0x0A); //set to PTX mode and turn on power bit
+    nrf24_write_register(CONFIG, 0x0A); //set to PTX mode and turn on power bit
     send_stringln("1.5");
     bme280_delay_microseconds(1.5*1000, NULL); //wait for chip to go into TX mode
     send_stringln("1.5");
