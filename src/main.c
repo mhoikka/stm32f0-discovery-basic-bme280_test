@@ -42,7 +42,8 @@ int main(void)
   {
       num_buf[i] = 0;
   }*/
-
+  unsigned char data = 0x01; 
+  
   System_Clock_Init();
   I2C_Settings_Init();
   UART_Settings_Init();
@@ -55,9 +56,9 @@ int main(void)
   NRF24L01p_Init();
 
   Delay(1);
-  test_nrf24_connection();
-
-  
+  //test_nrf24_connection();
+  bme280_delay_microseconds(1000*100, NULL);//wait for device to power on
+  transmitByteNRF(data);
 
 
   STM_EVAL_LEDInit(LED2);

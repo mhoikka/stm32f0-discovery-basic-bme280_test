@@ -265,11 +265,12 @@ void transmitByteNRF(uint8_t data){
     //write data to be transmitted into TX FIFO
     nrf24_write_TX_payload(data);
     nrf24_write_register(CONFIG, 0x0A); //set to PTX mode and turn on power bit
+    bme280_delay_microseconds(1.5*1000, NULL); //wait for chip to go into TX mode
 
     set_nrf24_SPI_CE(1); //enable chip to transmit data
+    bme280_delay_microseconds(130, NULL); //wait for chip to go into TX mode
     Delay(1);            //wait for transmission to complete
     set_nrf24_SPI_CE(0); //disable chip after transmission
-    bme280_delay_microseconds(130, NULL); //wait for chip to go into standby mode
     nrf24_write_register(CONFIG, 0x08); //Power down
 }
 
