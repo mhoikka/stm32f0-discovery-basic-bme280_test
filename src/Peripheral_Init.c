@@ -185,8 +185,42 @@ void nrf24_write_register(uint8_t reg, uint8_t value) {
 }
 
 /** 
-* brief: Writes a byte of data to the TX FIFO
-* param: value byte of data to be transmitted
+* @brief: Writes data to a register
+* @param: reg register to write to
+* @param: values array of uint8_t data to be transmitted
+* @param: num_bytes number of bytes to be transmitted
+*/
+void nrf24_multiwrite_register(uint8_t reg, uint8_t *values, uint8_t num_bytes) {
+    uint8_t txData[num_bytes+1]; // Transmit data buffer
+
+    // Prepare command to write (register address with write command prefix)
+    txData[0] = reg | WRITE_COMMAND; // Write command
+    memcpy(txData+1, &value, num_bytes); // Copy data to write into buffer
+    txData[1] = value;      // Data to write
+
+    // Set CSN low to start communication
+    set_nrf24_SPI_CSN(0);
+    
+    
+    // Start SPI transmission
+    for (int i = 0; i < num_bytes; i++) {
+        // Transmit byte
+        *(__IO uint8_t*)(&SPI1->DR) = txData[i]; 
+
+        // Wait until transmission is complete
+        while (!(SPI1->SR & SPI_SR_RXNE)); // Wait until receive buffer is not empty
+
+        // Read received byte (not used, but necessary to complete the transaction) 
+        (void)SPI1->DR; 
+    }
+
+    // Set CSN high to end communication
+    set_nrf24_SPI_CSN(1);
+}
+
+/** 
+* @brief: Writes a byte of data to the TX FIFO
+* @param: value byte of data to be transmitted
 */
 //TODO make this capable of transmitting more than one byte
 void nrf24_write_TX_payload(uint8_t value) {
@@ -252,15 +286,17 @@ void test_nrf24_connection() {
     }
 }
 
+uint8_t ADDRESS_LEN = 3;
 /** 
 * @brief: transmits a byte of data for testing purposes
 * @param: data byte of data to be transmitted
 */
  //TODO make this much more functional
 void transmitByteNRF(uint8_t data){
+    uint8_t write_address [3] = {0x93, 0xBD, 0x6B};
     //set control registers
     nrf24_write_register(SETUP_AW, 0x01); //set to 3 byte address width
-    nrf24_write_register(TX_ADDR, 0x93BD6B); //set write adress
+    nrf24_multiwrite_register(TX_ADDR, write_address, ADDRESS_LEN); //set write adress
     nrf24_write_register(RF_SETUP, 0x20); //set RF Data Rate to 250kbps, RF output power to -18dBm
     //write data to be transmitted into TX FIFO
     nrf24_write_TX_payload(data);
