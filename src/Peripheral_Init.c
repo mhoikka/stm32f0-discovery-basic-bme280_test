@@ -134,7 +134,7 @@ uint8_t* nrf24_read_register(uint8_t reg) {
     uint8_t rxData[2]; // Receive data buffer
 
     // Prepare command to read (register address with read command bit)
-    txData[0] = reg | 0x00; // Read command 
+    txData[0] = reg | READ_COMMAND; // Read command 
     txData[1] = 0x00; // Dummy byte for clocking out data
 
     // Set CSN low to start communication
@@ -161,7 +161,7 @@ void nrf24_write_register(uint8_t reg, uint8_t value) {
     uint8_t txData[2]; // Transmit data buffer
 
     // Prepare command to write (register address with write command prefix)
-    txData[0] = reg | 0x20; // Write command
+    txData[0] = reg | WRITE_COMMAND; // Write command
     txData[1] = value;      // Data to write
 
     // Set CSN low to start communication
@@ -184,9 +184,49 @@ void nrf24_write_register(uint8_t reg, uint8_t value) {
     set_nrf24_SPI_CSN(1);
 }
 
-uint8_t NRF24L01_CONFIG = 0x00;
-uint8_t NRF24L01_ENAA = 0x01;
-uint8_t CONFIG_SETTINGS = 0x03;
+/** 
+* brief: Writes a byte of data to the TX FIFO
+* param: value byte of data to be transmitted
+*/
+//TODO make this capable of transmitting more than one byte
+void nrf24_write_TX_payload(uint8_t value) {
+    uint8_t txData[2]; // Transmit data buffer
+
+    // Prepare command to write (register address with write command prefix)
+    txData[0] = WRITE_PAYLOAD_COMMAND; // Write command
+    txData[1] = value;                 // Data to write
+
+    // Set CSN low to start communication
+    set_nrf24_SPI_CSN(0);
+    
+    
+    // Start SPI transmission
+    for (int i = 0; i < 2; i++) {
+        // Transmit byte
+        *(__IO uint8_t*)(&SPI1->DR) = txData[i]; 
+
+        // Wait until transmission is complete
+        while (!(SPI1->SR & SPI_SR_RXNE)); // Wait until receive buffer is not empty
+
+        // Read received byte (not used, but necessary to complete the transaction) 
+        (void)SPI1->DR; 
+    }
+
+    // Set CSN high to end communication
+    set_nrf24_SPI_CSN(1);
+}
+
+uint8_t CONFIG = 0x00;
+uint8_t ENAA = 0x01;
+uint8_t SETUP_AW = 0x03;
+uint8_t RF_SETUP = 0x06;
+uint8_t RX_ADDR_P01 = 0x0A;
+uint8_t RX_PW_P0 = 0x11;
+uint8_t TX_ADDR = 0x10;
+uint8_t WRITE_COMMAND = 0x20;
+uint8_t WRITE_PAYLOAD_COMMAND = 0xA0;
+uint8_t READ_PAYLOAD_COMMAND = 0x60;
+uint8_t READ_COMMAND = 0x00;
 void test_nrf24_connection() {
     char num_buf[10];
     char num_buf2[10];
@@ -194,7 +234,7 @@ void test_nrf24_connection() {
 
     set_nrf24_SPI_CSN(1);
     set_nrf24_SPI_CE(0);
-    Delay(150); //Let the chip power up and reset 
+    Delay(100); //Let the chip power up and down
 
     uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG); 
     nrf24_write_register(NRF24L01_CONFIG, CONFIG_SETTINGS); 
@@ -210,6 +250,27 @@ void test_nrf24_connection() {
     } else {
         send_stringln("Failure: READ bits do not match WRITE bits");
     }
+}
+
+/** 
+* @brief: transmits a byte of data for testing purposes
+* @param: data byte of data to be transmitted
+*/
+ //TODO make this much more functional
+void transmitByteNRF(uint8_t data){
+    //set control registers
+    nrf24_write_register(SETUP_AW, 0x01); //set to 3 byte address width
+    nrf24_write_register(TX_ADDR, 0x93BD6B); //set write adress
+    nrf24_write_register(RF_SETUP, 0x20); //set RF Data Rate to 250kbps, RF output power to -18dBm
+    //write data to be transmitted into TX FIFO
+    nrf24_write_TX_payload(data);
+    nrf24_write_register(CONFIG, 0x0A); //set to PTX mode and turn on power bit
+
+    set_nrf24_SPI_CE(1); //enable chip to transmit data
+    Delay(1);            //wait for transmission to complete
+    set_nrf24_SPI_CE(0); //disable chip after transmission
+    bme280_delay_microseconds(130, NULL); //wait for chip to go into standby mode
+    nrf24_write_register(CONFIG, 0x08); //Power down
 }
 
 

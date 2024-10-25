@@ -57,6 +57,9 @@ int main(void)
   Delay(1);
   test_nrf24_connection();
 
+  
+
+
   STM_EVAL_LEDInit(LED2);
   STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);  
 
