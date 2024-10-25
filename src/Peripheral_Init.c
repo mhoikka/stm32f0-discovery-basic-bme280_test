@@ -185,6 +185,7 @@ void nrf24_write_register(uint8_t reg, uint8_t value) {
 }
 
 uint8_t CONFIG = 0x00;
+uint8_t CONFIG_SETTINGS = 0x00;
 uint8_t ENAA = 0x01;
 uint8_t SETUP_AW = 0x03;
 uint8_t RF_SETUP = 0x06;
