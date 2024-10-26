@@ -21,7 +21,7 @@ uint8_t CONFIG_SETTINGS = 0x00;
 uint8_t ENAA = 0x01;
 uint8_t SETUP_AW = 0x03;
 uint8_t RF_SETUP = 0x06;
-uint8_t RX_ADDR_P01 = 0x0A;
+uint8_t RX_ADDR_P0 = 0x0A;
 uint8_t RX_PW_P0 = 0x11;
 uint8_t TX_ADDR = 0x10;
 uint8_t WRITE_COMMAND = 0x20;
@@ -331,8 +331,8 @@ void transmitByteNRF(uint8_t data){
     //set control registers
     nrf24_write_register(SETUP_AW, 0x01); //set to 3 byte address width
     nrf24_multiwrite_register(TX_ADDR, write_address, ADDRESS_LEN); //set write address
-    nrf24_multiwrite_register(RX_ADDR_P01, write_address, ADDRESS_LEN); //set read address
-    nrf24_write_register(RF_SETUP, 0x00); //set RF Data Rate to 250kbps, RF output power to -18dBm
+    nrf24_multiwrite_register(RX_ADDR_P0, write_address, ADDRESS_LEN); //set read address
+    nrf24_write_register(RF_SETUP, 0x02); //set RF Data Rate to 1Mbps, RF output power to -18dBm
     nrf24_write_register(RX_PW_P0, 0x01); //set payload size to 1 byte
     
     nrf24_write_TX_payload(data); //write data to be transmitted into TX FIFO
