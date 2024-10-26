@@ -317,7 +317,7 @@ void test_nrf24_connection() {
 uint8_t ADDRESS_LEN = 3;
 /** 
 * @brief: transmits a byte of data for testing purposes
-* @param: data byte of data to be transmitted
+* @param: data: byte of data to be transmitted
 */
  //TODO make this much more functional
 void transmitByteNRF(uint8_t data){
@@ -325,7 +325,7 @@ void transmitByteNRF(uint8_t data){
 
     //Clear TX FIFO
     nrf24_clear_TX();
-    nrf24_write_register(STATUS_REG, 0x30); //Clear MAX_RT and TX Data Sent bSit from status register
+    //nrf24_write_register(STATUS_REG, 0x30); //Clear MAX_RT and TX Data Sent bit from status register
     nrf24_write_register(ENAA, 0x3F); //enable auto ack for all pipes 0x00
     
     //set control registers
@@ -334,8 +334,8 @@ void transmitByteNRF(uint8_t data){
     nrf24_multiwrite_register(RX_ADDR_P01, write_address, ADDRESS_LEN); //set read address
     nrf24_write_register(RF_SETUP, 0x00); //set RF Data Rate to 250kbps, RF output power to -18dBm
     nrf24_write_register(RX_PW_P0, 0x01); //set payload size to 1 byte
-    //write data to be transmitted into TX FIFO
-    nrf24_write_TX_payload(data);
+    
+    nrf24_write_TX_payload(data); //write data to be transmitted into TX FIFO
     nrf24_write_register(CONFIG, 0x0A);         //set to PTX mode and turn on power bit 0x0A
     bme280_delay_microseconds(1.5*1000, NULL);  //wait for chip to go into Standby-I mode
 
