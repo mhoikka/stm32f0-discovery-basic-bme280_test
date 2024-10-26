@@ -28,7 +28,7 @@ uint8_t WRITE_COMMAND = 0x20;
 uint8_t WRITE_PAYLOAD_COMMAND = 0xA0;
 uint8_t READ_PAYLOAD_COMMAND = 0x60;
 uint8_t READ_COMMAND = 0x00;
-uint8_t NRF24L01_CONFIG = 0x07;
+uint8_t STATUS_REG = 0x07;
 uint8_t FLUSH_TX = 0xE1;
 
 /**
@@ -298,10 +298,10 @@ void test_nrf24_connection() {
     set_nrf24_SPI_CE(0);
     Delay(100); //Let the chip power up and down
 
-    uint8_t configValue = nrf24_read_register(NRF24L01_CONFIG); 
-    nrf24_write_register(NRF24L01_CONFIG, CONFIG_SETTINGS); 
+    uint8_t configValue = nrf24_read_register(STATUS_REG); 
+    nrf24_write_register(STATUS_REG, CONFIG_SETTINGS); 
     
-    uint8_t configValue2 = nrf24_read_register(NRF24L01_CONFIG); 
+    uint8_t configValue2 = nrf24_read_register(STATUS_REG); 
 
     //set_nrf24_SPI_CE(1); //enables chip to receive data
     //Delay(2);
@@ -325,6 +325,7 @@ void transmitByteNRF(uint8_t data){
 
     //Clear TX FIFO
     nrf24_clear_TX();
+    nrf24_write_register(STATUS_REG, 0x10); //Clear MAX_RT bit from status register
     //set control registers
     nrf24_write_register(SETUP_AW, 0x01); //set to 3 byte address width
     nrf24_multiwrite_register(TX_ADDR, write_address, ADDRESS_LEN); //set write adress
