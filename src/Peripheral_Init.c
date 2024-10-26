@@ -207,7 +207,7 @@ void nrf24_multiwrite_register(uint8_t reg, uint8_t *values, uint8_t num_bytes) 
 
     // Prepare command to write (register address with write command prefix)
     txData[0] = reg | WRITE_COMMAND; // Write command
-    memcpy(&txData[1], &values, num_bytes); // Copy data to write into buffer
+    memcpy(&txData[1], values, num_bytes); // Copy data to write into buffer
 
     // Set CSN low to start communication
     set_nrf24_SPI_CSN(0);
