@@ -326,7 +326,7 @@ void transmitByteNRF(uint8_t data){
     //Clear TX FIFO
     nrf24_clear_TX();
     nrf24_write_register(STATUS_REG, 0x30); //Clear MAX_RT and TX Data Sent bSit from status register
-    nrf24_write_register(ENAA, 0x3F); //enable auto ack for all pipes
+    nrf24_write_register(ENAA, 0x00); //enable auto ack for all pipes 0x3F
     
     //set control registers
     nrf24_write_register(SETUP_AW, 0x01); //set to 3 byte address width
@@ -336,7 +336,7 @@ void transmitByteNRF(uint8_t data){
     nrf24_write_register(RX_PW_P0, 0x01); //set payload size to 1 byte
     //write data to be transmitted into TX FIFO
     nrf24_write_TX_payload(data);
-    nrf24_write_register(CONFIG, 0x0A);         //set to PTX mode and turn on power bit
+    nrf24_write_register(CONFIG, 0x02);         //set to PTX mode and turn on power bit 0x0A
     bme280_delay_microseconds(1.5*1000, NULL);  //wait for chip to go into Standby-I mode
 
     set_nrf24_SPI_CE(1);                  //enable chip to transmit data
