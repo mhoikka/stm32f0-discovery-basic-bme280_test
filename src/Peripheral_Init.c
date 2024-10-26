@@ -326,9 +326,8 @@ void transmitByteNRF(uint8_t data){
     //Clear TX FIFO
     nrf24_clear_TX();
     nrf24_write_register(STATUS_REG, 0x10); //Clear MAX_RT bit from status register
-    //disable AUTO ACK for testing purposes
-    nrf24_write_register(ENAA, 0x00);
-
+    nrf24_write_register(ENAA, 0x3F); //enable auto ack for all pipes
+    
     //set control registers
     nrf24_write_register(SETUP_AW, 0x01); //set to 3 byte address width
     nrf24_multiwrite_register(TX_ADDR, write_address, ADDRESS_LEN); //set write adress
@@ -342,7 +341,7 @@ void transmitByteNRF(uint8_t data){
     bme280_delay_microseconds(130, NULL); //wait for chip to go into TX mode
     Delay(1);                             //wait for transmission to complete
     set_nrf24_SPI_CE(0);                  //disable chip after transmission
-    nrf24_write_register(CONFIG, 0x02);   //power down by setting PWR_UP bit to 0 //0x02 todo
+    nrf24_write_register(CONFIG, 0x08);   //power down by setting PWR_UP bit to 0
 }
 
 
