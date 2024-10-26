@@ -25,7 +25,7 @@ uint8_t RX_ADDR_P01 = 0x0A;
 uint8_t RX_PW_P0 = 0x11;
 uint8_t TX_ADDR = 0x10;
 uint8_t WRITE_COMMAND = 0x20;
-uint8_t WRITE_PAYLOAD_COMMAND = 0xA0;
+uint8_t WRITE_PAYLOAD_COMMAND = 0xB0; // 0xA0 for ACK
 uint8_t READ_PAYLOAD_COMMAND = 0x60;
 uint8_t READ_COMMAND = 0x00;
 uint8_t STATUS_REG = 0x07;
@@ -331,7 +331,7 @@ void transmitByteNRF(uint8_t data){
     //set control registers
     nrf24_write_register(SETUP_AW, 0x01); //set to 3 byte address width
     nrf24_multiwrite_register(TX_ADDR, write_address, ADDRESS_LEN); //set write address
-    nrf24_multiwrite_register(RX_ADDR_P01, write_address, ADDRESS_LEN); //set write address
+    nrf24_multiwrite_register(RX_ADDR_P01, write_address, ADDRESS_LEN); //set read address
     nrf24_write_register(RF_SETUP, 0x00); //set RF Data Rate to 250kbps, RF output power to -18dBm
     nrf24_write_register(RX_PW_P0, 0x01); //set payload size to 1 byte
     //write data to be transmitted into TX FIFO
