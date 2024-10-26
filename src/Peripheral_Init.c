@@ -326,20 +326,23 @@ void transmitByteNRF(uint8_t data){
     //Clear TX FIFO
     nrf24_clear_TX();
     nrf24_write_register(STATUS_REG, 0x10); //Clear MAX_RT bit from status register
+    //disable AUTO ACK for testing purposes
+    nrf24_write_register(ENAA, 0x00);
+
     //set control registers
     nrf24_write_register(SETUP_AW, 0x01); //set to 3 byte address width
     nrf24_multiwrite_register(TX_ADDR, write_address, ADDRESS_LEN); //set write adress
     nrf24_write_register(RF_SETUP, 0x20); //set RF Data Rate to 250kbps, RF output power to -18dBm
     //write data to be transmitted into TX FIFO
     nrf24_write_TX_payload(data);
-    nrf24_write_register(CONFIG, 0x0A); //set to PTX mode and turn on power bit
-    bme280_delay_microseconds(1.5*1000, NULL); //wait for chip to go into TX mode
+    nrf24_write_register(CONFIG, 0x0A);         //set to PTX mode and turn on power bit
+    bme280_delay_microseconds(1.5*1000, NULL);  //wait for chip to go into Standby-I mode
 
-    set_nrf24_SPI_CE(1); //enable chip to transmit data
+    set_nrf24_SPI_CE(1);                  //enable chip to transmit data
     bme280_delay_microseconds(130, NULL); //wait for chip to go into TX mode
-    Delay(1);            //wait for transmission to complete
-    set_nrf24_SPI_CE(0); //disable chip after transmission
-    nrf24_write_register(CONFIG, 0x08); //Power down
+    Delay(1);                             //wait for transmission to complete
+    set_nrf24_SPI_CE(0);                  //disable chip after transmission
+    nrf24_write_register(CONFIG, 0x02);   //power down by setting PWR_UP bit to 0 //0x02 todo
 }
 
 

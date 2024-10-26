@@ -57,7 +57,7 @@ int main(void)
 
   Delay(1);
   //test_nrf24_connection();
-  Delay(100);//wait for device to power on
+  bme280_delay_microseconds(100*1000, NULL);//wait for device to power on
   transmitByteNRF(data);
 
   STM_EVAL_LEDInit(LED2);
