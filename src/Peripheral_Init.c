@@ -325,7 +325,7 @@ void transmitByteNRF(uint8_t data){
 
     //Clear TX FIFO
     nrf24_clear_TX();
-    nrf24_write_register(STATUS_REG, 0x10); //Clear MAX_RT bit from status register
+    nrf24_write_register(STATUS_REG, 0x30); //Clear MAX_RT and TX Data Sent bSit from status register
     nrf24_write_register(ENAA, 0x3F); //enable auto ack for all pipes
     
     //set control registers
