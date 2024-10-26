@@ -325,14 +325,14 @@ void transmitByteNRF(uint8_t data){
 
     //Clear TX FIFO
     nrf24_clear_TX();
-    //nrf24_write_register(STATUS_REG, 0x30); //Clear MAX_RT and TX Data Sent bit from status register
-    nrf24_write_register(ENAA, 0x3F); //enable auto ack for all pipes 0x00
+    nrf24_write_register(STATUS_REG, 0x30); //Clear MAX_RT and TX Data Sent bit from status register
+    nrf24_write_register(ENAA, 0x3F); //enable auto ack for all pipes 
     
     //set control registers
     nrf24_write_register(SETUP_AW, 0x01); //set to 3 byte address width
     nrf24_multiwrite_register(TX_ADDR, write_address, ADDRESS_LEN); //set write address
     nrf24_multiwrite_register(RX_ADDR_P0, write_address, ADDRESS_LEN); //set read address
-    nrf24_write_register(RF_SETUP, 0x00); //set RF Data Rate to 1Mbps, RF output power to -18dBm
+    nrf24_write_register(RF_SETUP, 0x00); //set RF Data Rate to 1Mbps, RF output power to -12dBm
     nrf24_write_register(RX_PW_P0, 0x01); //set payload size to 1 byte
     
     nrf24_write_TX_payload(data); //write data to be transmitted into TX FIFO
