@@ -26,6 +26,7 @@ uint8_t RX_PW_P0 = 0x11;
 uint8_t TX_ADDR = 0x10;
 uint8_t WRITE_COMMAND = 0x20;
 uint8_t WRITE_PAYLOAD_COMMAND = 0xA0; // 0xB0 for NO ACK
+uint8_t WRITE_NOACK_COMMAND = 0xB0; // 0xB0 for NO ACK
 uint8_t READ_PAYLOAD_COMMAND = 0x60;
 uint8_t READ_COMMAND = 0x00;
 uint8_t STATUS_REG = 0x07;
@@ -238,7 +239,7 @@ void nrf24_write_TX_payload(uint8_t value) {
     uint8_t txData[2]; // Transmit data buffer
 
     // Prepare command to write (register address with write command prefix)
-    txData[0] = WRITE_PAYLOAD_COMMAND; // Write command
+    txData[0] = WRITE_NOACK_COMMAND; // Write command
     txData[1] = value;                 // Data to write
 
     // Set CSN low to start communication
@@ -325,18 +326,18 @@ void transmitByteNRF(uint8_t data){
 
     //Clear TX FIFO
     nrf24_clear_TX();
-    //nrf24_write_register(STATUS_REG, 0x30); //Clear MAX_RT and TX Data Sent bit from status register
-    nrf24_write_register(ENAA, 0x3F); //enable auto ack for all pipes 0x00
+    nrf24_write_register(STATUS_REG, 0x30); //Clear MAX_RT and TX Data Sent bit from status register
+    nrf24_write_register(ENAA, 0x00); //disable auto ack for all pipes  opp 0x3F
     
     //set control registers
     nrf24_write_register(SETUP_AW, 0x01); //set to 3 byte address width
     nrf24_multiwrite_register(TX_ADDR, write_address, ADDRESS_LEN); //set write address
     nrf24_multiwrite_register(RX_ADDR_P0, write_address, ADDRESS_LEN); //set read address
-    nrf24_write_register(RF_SETUP, 0x02); //set RF Data Rate to 1Mbps, RF output power to -18dBm
+    nrf24_write_register(RF_SETUP, 0x02); //set RF Data Rate to 1Mbps, RF output power to -12dBm
     nrf24_write_register(RX_PW_P0, 0x01); //set payload size to 1 byte
     
     nrf24_write_TX_payload(data); //write data to be transmitted into TX FIFO
-    nrf24_write_register(CONFIG, 0x0A);         //set to PTX mode and turn on power bit 0x0A
+    nrf24_write_register(CONFIG, 0x02);         //set to PTX mode and turn on power bit 0x0A
     bme280_delay_microseconds(1.5*1000, NULL);  //wait for chip to go into Standby-I mode
 
     set_nrf24_SPI_CE(1);                  //enable chip to transmit data
