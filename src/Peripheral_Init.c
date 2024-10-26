@@ -29,6 +29,7 @@ uint8_t WRITE_PAYLOAD_COMMAND = 0xA0;
 uint8_t READ_PAYLOAD_COMMAND = 0x60;
 uint8_t READ_COMMAND = 0x00;
 uint8_t NRF24L01_CONFIG = 0x07;
+uint8_t FLUSH_TX = 0xE1;
 
 /**
  * @brief Display formatted sensor reading from BME280
@@ -260,6 +261,34 @@ void nrf24_write_TX_payload(uint8_t value) {
     set_nrf24_SPI_CSN(1);
 }
 
+/** 
+* @brief: Clear TX FIFO
+*/
+void nrf24_clear_TX(){
+    uint8_t txData[1]; // Transmit data buffer
+
+    // Prepare command to write (register address with write command prefix)
+    txData[0] = FLUSH_TX; // Write command
+
+    // Set CSN low to start communication
+    set_nrf24_SPI_CSN(0);
+    
+    // Start SPI transmission
+    for (int i = 0; i < 1; i++) {
+        // Transmit byte
+        *(__IO uint8_t*)(&SPI1->DR) = txData[i]; 
+
+        // Wait until transmission is complete
+        while (!(SPI1->SR & SPI_SR_RXNE)); // Wait until receive buffer is not empty
+
+        // Read received byte (not used, but necessary to complete the transaction) 
+        (void)SPI1->DR; 
+    }
+
+    // Set CSN high to end communication
+    set_nrf24_SPI_CSN(1);
+}
+
 void test_nrf24_connection() {
     char num_buf[10];
     char num_buf2[10];
@@ -293,6 +322,9 @@ uint8_t ADDRESS_LEN = 3;
  //TODO make this much more functional
 void transmitByteNRF(uint8_t data){
     uint8_t write_address [3] = {0x93, 0xBD, 0x6B};
+
+    //Clear TX FIFO
+    nrf24_clear_TX();
     //set control registers
     nrf24_write_register(SETUP_AW, 0x01); //set to 3 byte address width
     nrf24_multiwrite_register(TX_ADDR, write_address, ADDRESS_LEN); //set write adress
