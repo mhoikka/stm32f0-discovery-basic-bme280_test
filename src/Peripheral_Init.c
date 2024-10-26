@@ -332,6 +332,7 @@ void transmitByteNRF(uint8_t data){
     nrf24_write_register(SETUP_AW, 0x01); //set to 3 byte address width
     nrf24_multiwrite_register(TX_ADDR, write_address, ADDRESS_LEN); //set write adress
     nrf24_write_register(RF_SETUP, 0x20); //set RF Data Rate to 250kbps, RF output power to -18dBm
+    nrf24_write_register(RX_PW_P0, 0x01); //set payload size to 1 byte
     //write data to be transmitted into TX FIFO
     nrf24_write_TX_payload(data);
     nrf24_write_register(CONFIG, 0x0A);         //set to PTX mode and turn on power bit
