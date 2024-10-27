@@ -423,7 +423,7 @@ void NRF24L01p_Init(){
   //Set up the GPIO pins
   GPIO_InitTypeDef GPIO_InitStruct_1;
   //Set up the CE and CSN pins
-  GPIO_InitStruct_1.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_15;
+  GPIO_InitStruct_1.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_4;
   GPIO_InitStruct_1.GPIO_Mode = GPIO_Mode_OUT;
   GPIO_InitStruct_1.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStruct_1.GPIO_OType = GPIO_OType_PP;
@@ -433,7 +433,7 @@ void NRF24L01p_Init(){
   GPIO_InitTypeDef GPIO_InitStruct_2;
   //Set up the IRQ pin
   GPIO_InitStruct_2.GPIO_Pin = GPIO_Pin_8;
-  GPIO_InitStruct_2.GPIO_Speed = GPIO_Speed_10MHz;
+  GPIO_InitStruct_2.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStruct_2.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStruct_2.GPIO_Mode = GPIO_Mode_IN;
   GPIO_InitStruct_2.GPIO_PuPd = GPIO_PuPd_UP;
