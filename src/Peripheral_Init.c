@@ -433,7 +433,7 @@ void NRF24L01p_Init(){
   GPIO_InitTypeDef GPIO_InitStruct_2;
   //Set up the IRQ pin
   GPIO_InitStruct_2.GPIO_Pin = GPIO_Pin_8;
-  GPIO_InitStruct_2.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStruct_2.GPIO_Speed = GPIO_Speed_10MHz;
   GPIO_InitStruct_2.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStruct_2.GPIO_Mode = GPIO_Mode_IN;
   GPIO_InitStruct_2.GPIO_PuPd = GPIO_PuPd_UP;
