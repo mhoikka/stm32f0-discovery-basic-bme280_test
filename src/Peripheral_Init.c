@@ -353,10 +353,10 @@ void transmitByteNRF(uint8_t data){
  */
 void set_nrf24_SPI_CSN(uint8_t input){
   if(input == 1){
-    GPIO_SetBits(GPIOA, GPIO_Pin_15);
+    GPIO_SetBits(GPIOA, GPIO_Pin_4);
   }
   else{
-    GPIO_ResetBits(GPIOA, GPIO_Pin_15);
+    GPIO_ResetBits(GPIOA, GPIO_Pin_4);
   }
 }
 
@@ -423,7 +423,7 @@ void NRF24L01p_Init(){
   //Set up the GPIO pins
   GPIO_InitTypeDef GPIO_InitStruct_1;
   //Set up the CE and CSN pins
-  GPIO_InitStruct_1.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_15;
+  GPIO_InitStruct_1.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_4;
   GPIO_InitStruct_1.GPIO_Mode = GPIO_Mode_OUT;
   GPIO_InitStruct_1.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStruct_1.GPIO_OType = GPIO_OType_PP;
