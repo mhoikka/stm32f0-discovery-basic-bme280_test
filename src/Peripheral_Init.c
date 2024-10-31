@@ -25,7 +25,8 @@ uint8_t RX_ADDR_P0 = 0x0A;
 uint8_t RX_PW_P0 = 0x11;
 uint8_t TX_ADDR = 0x10;
 uint8_t WRITE_COMMAND = 0x20;
-uint8_t WRITE_PAYLOAD_COMMAND = 0xA0; // 0xB0 for NO ACK
+uint8_t WRITE_PAYLOAD_COMMAND = 0xA0; 
+uint8_t WRITE_PAYLOAD_NOACK = 0xB0;
 uint8_t READ_PAYLOAD_COMMAND = 0x60;
 uint8_t READ_COMMAND = 0x00;
 uint8_t STATUS_REG = 0x07;
@@ -234,11 +235,11 @@ void nrf24_multiwrite_register(uint8_t reg, uint8_t *values, uint8_t num_bytes) 
 * @param: value byte of data to be transmitted
 */
 //TODO make this capable of transmitting more than one byte
-void nrf24_write_TX_payload(uint8_t value) {
+void nrf24_write_TX_payload(uint8_t value, boolean ack) {
     uint8_t txData[2]; // Transmit data buffer
 
     // Prepare command to write (register address with write command prefix)
-    txData[0] = WRITE_PAYLOAD_COMMAND; // Write command
+    ack ? txData[0] = WRITE_PAYLOAD_COMMAND: txData[0] = WRITE_PAYLOAD_NOACK; // Write command
     txData[1] = value;                 // Data to write
 
     // Set CSN low to start communication
@@ -335,7 +336,7 @@ void transmitByteNRF(uint8_t data){
     nrf24_write_register(RF_SETUP, 0x00); //set RF Data Rate to 1Mbps, RF output power to -12dBm
     nrf24_write_register(RX_PW_P0, 0x01); //set payload size to 1 byte
     
-    nrf24_write_TX_payload(data); //write data to be transmitted into TX FIFO
+    nrf24_write_TX_payload(data, false); //write data to be transmitted into TX FIFO
     nrf24_write_register(CONFIG, 0x0A);         //set to PTX mode and turn on power bit 0x0A
     bme280_delay_microseconds(1.5*1000, NULL);  //wait for chip to go into Standby-I mode
 
