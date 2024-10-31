@@ -239,7 +239,7 @@ void nrf24_write_TX_payload(uint8_t value, int ack) {
     uint8_t txData[2]; // Transmit data buffer
 
     // Prepare command to write (register address with write command prefix)
-    ack ? txData[0] = WRITE_PAYLOAD_COMMAND: txData[0] = WRITE_PAYLOAD_NOACK; // Write command
+    txData[0] = ack ?  WRITE_PAYLOAD_COMMAND: WRITE_PAYLOAD_NOACK; // Write command
     txData[1] = value;                 // Data to write
 
     // Set CSN low to start communication
