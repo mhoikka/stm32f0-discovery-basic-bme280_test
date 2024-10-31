@@ -336,13 +336,14 @@ void transmitByteNRF(uint8_t data){
     nrf24_write_register(RF_SETUP, 0x00); //set RF Data Rate to 1Mbps, RF output power to -12dBm
     nrf24_write_register(RX_PW_P0, 0x01); //set payload size to 1 byte
     
-    nrf24_write_TX_payload(data, 0); //write data to be transmitted into TX FIFO
+    nrf24_write_TX_payload(data, 0);            //write data to be transmitted into TX FIFO
     nrf24_write_register(CONFIG, 0x0A);         //set to PTX mode and turn on power bit 0x0A
     bme280_delay_microseconds(1.5*1000, NULL);  //wait for chip to go into Standby-I mode
 
     set_nrf24_SPI_CE(1);                  //enable chip to transmit data
     bme280_delay_microseconds(130, NULL); //wait for chip to go into TX mode
     Delay(1);                             //wait for transmission to complete
+    nrf24_write_register(CONFIG, 0x0A); 
     set_nrf24_SPI_CE(0);                  //disable chip after transmission
     nrf24_write_register(CONFIG, 0x08);   //power down by setting PWR_UP bit to 0
 }
