@@ -440,6 +440,15 @@ void NRF24L01p_Init(){
   GPIO_InitStruct_2.GPIO_Mode = GPIO_Mode_IN;
   GPIO_InitStruct_2.GPIO_PuPd = GPIO_PuPd_UP;
   GPIO_Init(GPIOA, &GPIO_InitStruct_2);
+
+   GPIO_InitTypeDef GPIO_InitStruct_3;
+  //Set up the CE pin
+  GPIO_InitStruct_3.GPIO_Pin = GPIO_Pin_1;
+  GPIO_InitStruct_3.GPIO_Mode = GPIO_Mode_OUT;
+  GPIO_InitStruct_3.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStruct_3.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStruct_3.GPIO_PuPd = GPIO_PuPd_DOWN; 
+  GPIO_Init(GPIOA, &GPIO_InitStruct_3);
 }
 
 /**
