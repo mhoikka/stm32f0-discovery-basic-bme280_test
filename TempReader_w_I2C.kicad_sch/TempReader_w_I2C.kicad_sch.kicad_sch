@@ -6514,7 +6514,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "22cb7ace-b602-40f7-9adf-068eb3cf0767")
-		(property "Reference" "C5"
+		(property "Reference" "C6"
 			(at 245.11 91.4399 0)
 			(effects
 				(font
@@ -6568,7 +6568,7 @@
 		(instances
 			(project ""
 				(path "/dfa4cd9b-69e6-4963-8ce6-48aa9a425e97"
-					(reference "C5")
+					(reference "C6")
 					(unit 1)
 				)
 			)
@@ -11472,7 +11472,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "ef93348c-e019-4717-ba7c-bb7a725d6ece")
-		(property "Reference" "C6"
+		(property "Reference" "C5"
 			(at 236.22 83.312 90)
 			(effects
 				(font
@@ -11524,7 +11524,7 @@
 		(instances
 			(project ""
 				(path "/dfa4cd9b-69e6-4963-8ce6-48aa9a425e97"
-					(reference "C6")
+					(reference "C5")
 					(unit 1)
 				)
 			)
