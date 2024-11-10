@@ -250,6 +250,7 @@ void nrf24_write_TX_payload(unsigned char value, int ack) {
     // Start SPI transmission
     for (int i = 0; i < 2; i++) {
         // Transmit byte
+        while (!(SPI1->SR & SPI_SR_TXE));  // Wait for transmit buffer to be empty
         *(__IO uint8_t*)(&SPI1->DR) = txData[i]; 
 
         // Wait until transmission is complete
@@ -257,7 +258,7 @@ void nrf24_write_TX_payload(unsigned char value, int ack) {
         //while (!(SPI1->SR & SPI_SR_RXNE)); // Wait until receive buffer is not empty
 
         // Read received byte (not used, but necessary to complete the transaction) 
-        (void)SPI1->DR; 
+        (uint8_t)SPI1->DR; 
     }
 
     // Set CSN high to end communication
