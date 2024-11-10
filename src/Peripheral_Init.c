@@ -324,7 +324,7 @@ uint8_t ADDRESS_LEN = 3;
  //TODO make this much more functional
 void transmitByteNRF(uint8_t data){
     uint8_t write_address [3] = {0x93, 0xBD, 0x6B};
-    uint my_data = data;
+    uint8_t my_data = data;
     //Clear TX FIFO
     nrf24_clear_TX();
     nrf24_write_register(STATUS_REG, 0x30); //Clear MAX_RT and TX Data Sent bit from status register
