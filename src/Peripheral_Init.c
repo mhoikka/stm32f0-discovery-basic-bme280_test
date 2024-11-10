@@ -237,7 +237,7 @@ void nrf24_multiwrite_register(uint8_t reg, uint8_t *values, uint8_t num_bytes) 
 */
 //TODO make this capable of transmitting more than one byte
 void nrf24_write_TX_payload(unsigned char value, int ack) {
-    uint8_t txData[2]; // Transmit data buffer
+    unsigned char txData[2]; // Transmit data buffer
 
     // Prepare command to write (register address with write command prefix)
     txData[0] = ack ?  WRITE_PAYLOAD_COMMAND: WRITE_PAYLOAD_NOACK; // Write command
