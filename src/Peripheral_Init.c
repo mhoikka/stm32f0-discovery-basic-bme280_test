@@ -340,11 +340,13 @@ void transmitByteNRF(uint8_t data){
     nrf24_write_register(RX_PW_P0, 0x01); //set payload size to 1 byte
     nrf24_write_register(FEATURE, 0x01); //enable W_TX_PAYLOAD_NOACK command
     
+    nrf24_write_register(CONFIG, 0x0A);         //set to PTX mode and turn on power bit 0x0A
+    bme280_delay_microseconds(1.5*1000, NULL);  //wait for chip to go into Standby-I mode
+
     while(1){
       //nrf24_write_TX_payload(data, 0);            //write data to be transmitted into TX FIFO
       nrf24_write_TX_payload(my_data, 0);
-      nrf24_write_register(CONFIG, 0x0A);         //set to PTX mode and turn on power bit 0x0A
-      bme280_delay_microseconds(1.5*1000, NULL);  //wait for chip to go into Standby-I mode
+      
 
       set_nrf24_SPI_CE(1);                  //enable chip to transmit data
       bme280_delay_microseconds(130, NULL); //wait for chip to go into TX mode
