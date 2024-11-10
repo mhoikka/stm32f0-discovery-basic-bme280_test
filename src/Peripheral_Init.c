@@ -345,7 +345,7 @@ void transmitByteNRF(uint8_t data){
 
     while(1){
       //nrf24_write_TX_payload(data, 0);            //write data to be transmitted into TX FIFO
-      nrf24_write_TX_payload(my_data, 0);
+      
       
 
       set_nrf24_SPI_CE(1);                  //enable chip to transmit data
@@ -353,6 +353,7 @@ void transmitByteNRF(uint8_t data){
       Delay(1);
       Delay(5000);   //keep sending data with delay
       my_data += 1;
+      nrf24_write_TX_payload(my_data, 0);
     }
                               //wait for transmission to complete
     //nrf24_write_register(CONFIG, 0x0A); 
