@@ -330,7 +330,7 @@ void transmitByteNRF(uint8_t data){
     //Clear TX FIFO
     nrf24_clear_TX();
     nrf24_write_register(STATUS_REG, 0x30); //Clear MAX_RT and TX Data Sent bit from status register
-    nrf24_write_register(ENAA, 0x00); //enable auto ack for all pipes //0x3F
+    //nrf24_write_register(ENAA, 0x01); //enable auto ack for all pipes //0x3F
     
     //set control registers
     nrf24_write_register(SETUP_AW, 0x01); //set to 3 byte address width
