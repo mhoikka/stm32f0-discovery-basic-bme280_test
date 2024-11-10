@@ -43,6 +43,7 @@ int main(void)
       num_buf[i] = 0;
   }*/
   unsigned char data = 0x03; 
+  
 
   System_Clock_Init();
   I2C_Settings_Init();
