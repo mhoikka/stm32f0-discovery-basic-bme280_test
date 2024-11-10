@@ -253,7 +253,8 @@ void nrf24_write_TX_payload(unsigned char value, int ack) {
         *(__IO uint8_t*)(&SPI1->DR) = txData[i]; 
 
         // Wait until transmission is complete
-        while (!(SPI1->SR & SPI_SR_RXNE)); // Wait until receive buffer is not empty
+        while (!(SPI1->SR & SPI_SR_TXE)); 
+        //while (!(SPI1->SR & SPI_SR_RXNE)); // Wait until receive buffer is not empty
 
         // Read received byte (not used, but necessary to complete the transaction) 
         (void)SPI1->DR; 
