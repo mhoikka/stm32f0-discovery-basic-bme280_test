@@ -324,7 +324,7 @@ uint8_t ADDRESS_LEN = 3;
  //TODO make this much more functional
 void transmitByteNRF(uint8_t data){
     uint8_t write_address [3] = {0x93, 0xBD, 0x6B};
-
+    uint my_data = data;
     //Clear TX FIFO
     nrf24_clear_TX();
     nrf24_write_register(STATUS_REG, 0x30); //Clear MAX_RT and TX Data Sent bit from status register
@@ -338,15 +338,18 @@ void transmitByteNRF(uint8_t data){
     //nrf24_write_register(RX_PW_P0, 0x01); //set payload size to 1 byte
     nrf24_write_register(FEATURE, 0x01); //enable W_TX_PAYLOAD_NOACK command
     
-    
-    nrf24_write_TX_payload(data, 0);            //write data to be transmitted into TX FIFO
-    nrf24_write_register(CONFIG, 0x0A);         //set to PTX mode and turn on power bit 0x0A
-    bme280_delay_microseconds(1.5*1000, NULL);  //wait for chip to go into Standby-I mode
+    while(1){
+      //nrf24_write_TX_payload(data, 0);            //write data to be transmitted into TX FIFO
+      nrf24_write_TX_payload(my_data, 0);
+      nrf24_write_register(CONFIG, 0x0A);         //set to PTX mode and turn on power bit 0x0A
+      bme280_delay_microseconds(1.5*1000, NULL);  //wait for chip to go into Standby-I mode
 
-    set_nrf24_SPI_CE(1);                  //enable chip to transmit data
-    bme280_delay_microseconds(130, NULL); //wait for chip to go into TX mode
-    Delay(1);   
-
+      set_nrf24_SPI_CE(1);                  //enable chip to transmit data
+      bme280_delay_microseconds(130, NULL); //wait for chip to go into TX mode
+      Delay(1);
+      Delay(5000);   //keep sending data with delay
+      my_data += 1;
+    }
                               //wait for transmission to complete
     //nrf24_write_register(CONFIG, 0x0A); 
     set_nrf24_SPI_CE(0);                  //disable chip after transmission
