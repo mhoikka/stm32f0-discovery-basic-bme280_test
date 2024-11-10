@@ -236,7 +236,7 @@ void nrf24_multiwrite_register(uint8_t reg, uint8_t *values, uint8_t num_bytes) 
 * @param: value byte of data to be transmitted
 */
 //TODO make this capable of transmitting more than one byte
-void nrf24_write_TX_payload(uint8_t value, int ack) {
+void nrf24_write_TX_payload(unsigned char value, int ack) {
     uint8_t txData[2]; // Transmit data buffer
 
     // Prepare command to write (register address with write command prefix)
@@ -322,7 +322,7 @@ uint8_t ADDRESS_LEN = 3;
 * @param: data: byte of data to be transmitted
 */
  //TODO make this much more functional
-void transmitByteNRF(uint8_t data){
+void transmitByteNRF(unsigned char data){
     uint8_t write_address [3] = {0x93, 0xBD, 0x6B};
     uint8_t my_data = data;
     //Clear TX FIFO
@@ -335,7 +335,7 @@ void transmitByteNRF(uint8_t data){
     nrf24_multiwrite_register(TX_ADDR, write_address, ADDRESS_LEN); //set write address
     nrf24_multiwrite_register(RX_ADDR_P0, write_address, ADDRESS_LEN); //set read address
     nrf24_write_register(RF_SETUP, 0x00); //set RF Data Rate to 1Mbps, RF output power to -12dBm
-    nrf24_write_register(RX_PW_P0, 0x20); //set payload size to 32 bytes
+    nrf24_write_register(RX_PW_P0, 0x20); //set payload size to 1 byte
     nrf24_write_register(FEATURE, 0x01); //enable W_TX_PAYLOAD_NOACK command
     
     while(1){
