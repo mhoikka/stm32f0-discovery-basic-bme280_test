@@ -335,7 +335,7 @@ void transmitByteNRF(uint8_t data){
     nrf24_multiwrite_register(TX_ADDR, write_address, ADDRESS_LEN); //set write address
     nrf24_multiwrite_register(RX_ADDR_P0, write_address, ADDRESS_LEN); //set read address
     nrf24_write_register(RF_SETUP, 0x00); //set RF Data Rate to 1Mbps, RF output power to -12dBm
-    //nrf24_write_register(RX_PW_P0, 0x01); //set payload size to 1 byte
+    nrf24_write_register(RX_PW_P0, 0x01); //set payload size to 1 byte
     nrf24_write_register(FEATURE, 0x01); //enable W_TX_PAYLOAD_NOACK command
     
     while(1){
