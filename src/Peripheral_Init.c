@@ -347,7 +347,7 @@ void transmitByteNRF(uint8_t data){
       set_nrf24_SPI_CE(1);                  //enable chip to transmit data
       bme280_delay_microseconds(130, NULL); //wait for chip to go into TX mode
       Delay(1);
-      Delay(5);   //keep sending data with delay
+      Delay(5000);   //keep sending data with delay
       my_data += 1;
     }
                               //wait for transmission to complete
