@@ -376,12 +376,12 @@ void transmit(uint8_t * data, uint8_t data_len){
   int len_transmit = 32; //int len_transmit = 0;
   int len_left = 0;
   uint8_t data_seg[32];
-  //uint8_t data_send[32];
+  uint8_t data_send[32];
   while(data_len > 0){
     //len_transmit = data_len > 32 ? 32 : data_len; //length of data to be transmitted this cycle
     len_left = data_len > 32 ? 32 : data_len; //delete this later
     memcpy(&data_seg[0], &data[i], len_left); //mini array of length 32 for buffering transmitted data
-    //memcpy(&data_send[0], &data_seg[0], len_left); //mini array of length 32 for buffering transmitted data
+    memcpy(&data_send[0], &data_seg[0], len_left); //mini array of length 32 for buffering transmitted data
 
     transmitBytesNRF(data_seg, len_transmit);
     //bme280_delay_microseconds(1000, NULL); //wait for transmission to complete
