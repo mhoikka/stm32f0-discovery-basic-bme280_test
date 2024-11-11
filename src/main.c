@@ -42,7 +42,7 @@ int main(void)
   {
       num_buf[i] = 0;
   }*/
-  unsigned char data = 0x04; 
+  unsigned char data = 0x05; 
   
 
   System_Clock_Init();
