@@ -42,13 +42,13 @@ int main(void)
   {
       num_buf[i] = 0;
   }*/
-  /*unsigned char data[32] = {0x04, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+  unsigned char data[33] = {0x04, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
                                 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,      
                                 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
                                 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
                                 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-                                0xFF, 0x04}; */ 
-  unsigned char data[4] = {0x04, 0xFF, 0xFF, 0x04};  
+                                0xFF, 0xFF, 0x04}; */ 
+  //unsigned char data[4] = {0x04, 0xFF, 0xFF, 0x04};  
 
   System_Clock_Init();
   I2C_Settings_Init();
@@ -64,7 +64,8 @@ int main(void)
   Delay(1);
   test_nrf24_connection();
   bme280_delay_microseconds(100*1000, NULL);//wait for device to power on
-  transmitByteNRF(data, sizeof(data)/sizeof(unsigned char));
+  //transmitBytesNRF(data, sizeof(data)/sizeof(unsigned char));
+  transmit(data, sizeof(data)/sizeof(unsigned char));
 
   STM_EVAL_LEDInit(LED2);
   STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);  

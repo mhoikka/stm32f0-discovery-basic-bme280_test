@@ -324,10 +324,11 @@ void test_nrf24_connection() {
 uint8_t ADDRESS_LEN = 3;
 /** 
 * @brief: transmits a byte of data for testing purposes
-* @param: data: byte of data to be transmitted
+* @param: data: array of data to be transmitted
+* @param: data_len: length of the data to be transmitted
 */
  //TODO make this much more functional
-void transmitByteNRF(uint8_t * data, uint8_t data_len) {
+void transmitBytesNRF(uint8_t * data, uint8_t data_len) {
     uint8_t write_address [3] = {0x93, 0xBD, 0x6B};
     uint8_t my_data = data;
     //Clear TX FIFO
@@ -364,6 +365,25 @@ void transmitByteNRF(uint8_t * data, uint8_t data_len) {
   
 }
 
+/** 
+* @brief: transmits a byte of data for testing purposes
+* @param: data: array of data to be transmitted
+* @param: data_len: length of the data to be transmitted
+*/
+void transmit(uint8_t * data, uint8_t data_len){
+  int i = 0;
+  int len_transmit = 0;
+  uint8_t data_seg[32];
+  while(data_len > 0){
+    len_transmit = data_len > 32 ? 32 : data_len; //length of data to be transmitted this cycle
+    memcpy(data_seg, &data[i], len_transmit); //mini array of length 32 for buffering transmitted data
+
+    transmitBytesNRF(data_seg, len_transmit);
+
+    data_len-=32;
+    i+=32;
+  }
+}
 
 /**
  * @brief  Enables the CSN pin for the NRF24LO1+ module. Active low
