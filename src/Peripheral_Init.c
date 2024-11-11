@@ -5,6 +5,7 @@
 #include "bme280_defs.h"
 #include "stm32f0xx_spi.h"
 #include "Peripheral_Init.h"
+#include <string.h>
 
 typedef struct my_device_context {
     I2C_InitTypeDef *I2C_InitStruct; // Pointer to the I2C handle
