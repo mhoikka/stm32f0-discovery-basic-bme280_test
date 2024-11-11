@@ -331,7 +331,7 @@ uint8_t ADDRESS_LEN = 3;
  //TODO make this much more functional
 void transmitBytesNRF(uint8_t * data, uint8_t data_len) {
     uint8_t write_address [3] = {0x93, 0xBD, 0x6B};
-    uint8_t my_data = data;
+    //uint8_t my_data = data;
     //Clear TX FIFO
     nrf24_clear_TX();
     nrf24_write_register(STATUS_REG, 0x30); //Clear MAX_RT and TX Data Sent bit from status register
@@ -356,7 +356,7 @@ void transmitBytesNRF(uint8_t * data, uint8_t data_len) {
       bme280_delay_microseconds(130, NULL); //wait for chip to go into TX mode
       Delay(1);
       Delay(5000);   //keep sending data with delay
-      my_data += 1;
+      //my_data += 1;
       //nrf24_write_TX_payload(my_data, 0);
     }
                               //wait for transmission to complete
