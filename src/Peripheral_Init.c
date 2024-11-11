@@ -384,7 +384,7 @@ void transmit(uint8_t * data, uint8_t data_len){
     transmitBytesNRF(data_seg, len_transmit);
 
     data_len-=32;
-    i+=32;
+    i+=33;
   }
 }
 
