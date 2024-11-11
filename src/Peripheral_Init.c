@@ -379,14 +379,10 @@ void transmit(uint8_t * data, uint8_t data_len){
   while(data_len > 0){
     //len_transmit = data_len > 32 ? 32 : data_len; //length of data to be transmitted this cycle
     len_left = data_len > 32 ? 32 : data_len; //delete this later
-    //memcpy(&data_seg[0], &data[i], len_left); //mini array of length 32 for buffering transmitted data
-    //replace memcpy with a for loop
-    for(int j = 0; j < len_left; j++){
-      data_seg[j] = data[i+j];
-    }
+    memcpy(&data_seg[0], &data[i], len_left); //mini array of length 32 for buffering transmitted data
 
     transmitBytesNRF(data_seg, len_transmit);
-
+    bme280_delay_microseconds(1000, NULL); //wait for transmission to complete
     data_len-=32;
     i+=32;
   }
