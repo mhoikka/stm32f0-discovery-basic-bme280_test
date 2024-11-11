@@ -233,22 +233,25 @@ void nrf24_multiwrite_register(uint8_t reg, uint8_t *values, uint8_t num_bytes) 
 
 /** 
 * @brief: Writes a byte of data to the TX FIFO
-* @param: value byte of data to be transmitted
+* @param: value: array of data to be transmitted
+* @param: ack: 1 if the data is to be acknowledged, 0 if not
+* @param: len: length of the data to be transmitted
 */
 //TODO make this capable of transmitting more than one byte
-void nrf24_write_TX_payload(uint8_t value, int ack) {
-    uint8_t txData[2]; // Transmit data buffer
+void nrf24_write_TX_payload(uint8_t * value, int ack, int len) {
+    uint8_t txData[len+1]; // Transmit data buffer
 
     // Prepare command to write (register address with write command prefix)
     txData[0] = ack ?  WRITE_PAYLOAD_COMMAND: WRITE_PAYLOAD_NOACK; // Write command
-    txData[1] = value;                 // Data to write
-
+    //txData[1] = value;                 // Data to write
+    for (int i = 0; i < len; i++) {
+        txData[i] = value[i];
+    }
     // Set CSN low to start communication
     set_nrf24_SPI_CSN(0);
     
-    
     // Start SPI transmission
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < (len+1); i++) {
         // Transmit byte
         while (!(SPI1->SR & SPI_SR_TXE)); 
         *(__IO uint8_t*)(&SPI1->DR) = txData[i]; 
@@ -324,7 +327,7 @@ uint8_t ADDRESS_LEN = 3;
 * @param: data: byte of data to be transmitted
 */
  //TODO make this much more functional
-void transmitByteNRF(uint8_t data){
+void transmitByteNRF(uint8_t * data, uint8_t data_len) {
     uint8_t write_address [3] = {0x93, 0xBD, 0x6B};
     uint8_t my_data = data;
     //Clear TX FIFO
@@ -345,8 +348,8 @@ void transmitByteNRF(uint8_t data){
 
     while(1){
       
-      nrf24_write_TX_payload(data, 0);            //write data to be transmitted into TX FIFO
-      
+      nrf24_write_TX_payload(data, 0, data_len);            //write data to be transmitted into TX FIFO
+
       set_nrf24_SPI_CE(1);                  //enable chip to transmit data
       bme280_delay_microseconds(130, NULL); //wait for chip to go into TX mode
       Delay(1);
