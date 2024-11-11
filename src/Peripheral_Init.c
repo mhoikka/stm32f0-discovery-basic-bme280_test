@@ -245,7 +245,7 @@ void nrf24_write_TX_payload(uint8_t * value, int ack, int len) {
     txData[0] = ack ?  WRITE_PAYLOAD_COMMAND: WRITE_PAYLOAD_NOACK; // Write command
     //txData[1] = value;                 // Data to write
     for (int i = 0; i < len; i++) {
-        txData[i] = value[i];
+        txData[i+1] = value[i];
     }
     // Set CSN low to start communication
     set_nrf24_SPI_CSN(0);
