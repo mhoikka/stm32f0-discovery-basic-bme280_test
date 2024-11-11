@@ -348,17 +348,17 @@ void transmitBytesNRF(uint8_t * data, uint8_t data_len) {
     bme280_delay_microseconds(1.5*1000, NULL);  //wait for chip to go into Standby-I mode
     nrf24_write_register(FEATURE, 0x01); //enable W_TX_PAYLOAD_NOACK command
 
-    while(1){
+    //while(1){
       
       nrf24_write_TX_payload(data, 0, data_len);            //write data to be transmitted into TX FIFO
 
       set_nrf24_SPI_CE(1);                  //enable chip to transmit data
       bme280_delay_microseconds(130, NULL); //wait for chip to go into TX mode
       Delay(1);
-      Delay(5000);   //keep sending data with delay
+      Delay(500);   //keep sending data with delay
       //my_data += 1;
       //nrf24_write_TX_payload(my_data, 0);
-    }
+    //}
                               //wait for transmission to complete
     //nrf24_write_register(CONFIG, 0x0A); 
     set_nrf24_SPI_CE(0);                  //disable chip after transmission
@@ -376,12 +376,12 @@ void transmit(uint8_t * data, uint8_t data_len){
   int len_transmit = 32; //int len_transmit = 0;
   int len_left = 0;
   uint8_t data_seg[32];
-  uint8_t data_send[32];
+  //uint8_t data_send[32];
   while(data_len > 0){
     //len_transmit = data_len > 32 ? 32 : data_len; //length of data to be transmitted this cycle
     len_left = data_len > 32 ? 32 : data_len; //delete this later
     memcpy(&data_seg[0], &data[i], len_left); //mini array of length 32 for buffering transmitted data
-    memcpy(&data_send[0], &data_seg[0], len_left); //mini array of length 32 for buffering transmitted data
+    //memcpy(&data_send[0], &data_seg[0], len_left); //mini array of length 32 for buffering transmitted data
 
     transmitBytesNRF(data_seg, len_transmit);
     //bme280_delay_microseconds(1000, NULL); //wait for transmission to complete
