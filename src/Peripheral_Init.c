@@ -374,10 +374,12 @@ void transmitBytesNRF(uint8_t * data, uint8_t data_len) {
 void transmit(uint8_t * data, uint8_t data_len){
   int i = 0;
   int len_transmit = 32; //int len_transmit = 0;
+  int len_left = 0;
   uint8_t data_seg[32];
   while(data_len > 0){
     //len_transmit = data_len > 32 ? 32 : data_len; //length of data to be transmitted this cycle
-    memcpy(data_seg, &data[i], len_transmit); //mini array of length 32 for buffering transmitted data
+    len_left = data_len > 32 ? 32 : data_len; //delete this later
+    memcpy(data_seg, &data[i], len_left); //mini array of length 32 for buffering transmitted data
 
     transmitBytesNRF(data_seg, len_transmit);
 
