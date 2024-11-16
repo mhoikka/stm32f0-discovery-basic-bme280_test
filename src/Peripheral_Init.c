@@ -448,9 +448,7 @@ void transmitBytesNRF(uint8_t * data, uint8_t data_len) {
     nrf24_write_register(FEATURE, 0x01); //enable W_TX_PAYLOAD_NOACK command
 
     //while(1){
-      send_stringln("Test 2.0");
       nrf24_write_TX_payload(data, ACK, data_len);            //write data to be transmitted into TX FIFO
-      send_stringln("Test 2.1");
       set_nrf24_SPI_CE(1);                  //enable chip to transmit data
       bme280_delay_microseconds(130, NULL); //wait for chip to go into TX mode
       Delay(1);
@@ -486,14 +484,10 @@ void transmit(uint8_t * data, uint8_t data_len){
     //bme280_delay_microseconds(1000, NULL); //wait for transmission to complete
     //wait for ACK to be recieved
     while(!(SPI1->SR & SPI_SR_TXE)); //wait for TX_DS bit to be set from ACK received
-    send_stringln("Test 2.9");
     data_len = data_len > 32 ? data_len-=32 : 0; 
     //data_len-=32;
-    send_stringln("Test 2.99");
     i+=32;
-    send_stringln("Test 2.999");
   }
-  send_stringln("Test 2.9999");
 }
 
 /**
