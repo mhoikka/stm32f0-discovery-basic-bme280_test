@@ -62,7 +62,7 @@ unsigned char data[33] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
   send_stringln("Start");
 
   BME_Init();
-  bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam);  
+  //bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam);  
 
   //NRF24L01p_Init();
 
