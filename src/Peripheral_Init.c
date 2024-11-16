@@ -389,7 +389,7 @@ void transmit(uint8_t * data, uint8_t data_len){
     transmitBytesNRF(data_seg, len_transmit);
     //bme280_delay_microseconds(1000, NULL); //wait for transmission to complete
     //wait for ACK to be recieved
-    while(!(&SPI1->SR & SPI_SR_TXE)); //wait for TX_DS bit to be set from ACK received
+    while(!(SPI1->SR & SPI_SR_TXE)); //wait for TX_DS bit to be set from ACK received
 
     data_len-=32;
     i+=32;
