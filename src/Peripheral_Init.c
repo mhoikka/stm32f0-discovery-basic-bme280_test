@@ -154,7 +154,7 @@ void display_sensor_reading(){
   send_stringln("");
 }
 
-struct ambient_readings{
+struct ambient_reading{
   uint32_t temperature;
   uint32_t pressure;
   uint32_t humidity;
@@ -166,9 +166,10 @@ struct ambient_readings{
  */
 uint32_t* return_sensor_reading(){
   struct bme280_data bme280_datastruct = get_sensor_reading();
-  ambient_readings.temperature = (uint32_t)(bme280_datastruct.temperature);
-  ambient_readings.pressure = (uint32_t)(bme280_datastruct.pressure);
-  ambient_readings.humidity = (uint32_t)(bme280_datastruct.humidity);
+  struct ambient_reading current_readings;
+  current_readings.temperature = (uint32_t)(bme280_datastruct.temperature);
+  current_readings.pressure = (uint32_t)(bme280_datastruct.pressure);
+  current_readings.humidity = (uint32_t)(bme280_datastruct.humidity);
   return ambient_readings;
 }
 
