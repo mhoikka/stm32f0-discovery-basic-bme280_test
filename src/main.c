@@ -13,7 +13,12 @@ void TimingDelay_Decrement(void);
 void Delay(__IO uint32_t nTime);
 
 /* Private typedef -----------------------------------------------------------*/
-
+struct ambient_reading{
+  uint32_t temperature;
+  uint32_t pressure;
+  uint32_t humidity;
+  uint8_t len;
+};
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
