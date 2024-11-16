@@ -169,7 +169,7 @@ uint32_t* return_sensor_reading(){
   ambient_readings.temperature = (uint32_t)(bme280_datastruct.temperature);
   ambient_readings.pressure = (uint32_t)(bme280_datastruct.pressure);
   ambient_readings.humidity = (uint32_t)(bme280_datastruct.humidity);
-  return ambient_readings
+  return ambient_readings;
 }
 
 /**
