@@ -13,6 +13,14 @@ void TimingDelay_Decrement(void);
 void Delay(__IO uint32_t nTime);
 uint8_t NUM_REGISTERS_BME280 = 4;
 
+typedef struct my_device_context {
+    I2C_InitTypeDef *I2C_InitStruct; // Pointer to the I2C handle
+    uint16_t i2c_address;     // I2C address of the BME280
+} my_device_context;
+struct my_device_context ctx = {};
+struct bme280_dev bme280_initparam;
+struct bme280_data bme280_datastruct;
+
 /* Private typedef -----------------------------------------------------------*/
 
 /* Private define ------------------------------------------------------------*/
@@ -247,14 +255,6 @@ struct bme280_data get_sensor_reading(){
   bme280_get_sensor_data(BME280_ALL, &bme280_datastruct, &bme280_initparam);
   return bme280_datastruct;
 }
-
-typedef struct my_device_context {
-    I2C_InitTypeDef *I2C_InitStruct; // Pointer to the I2C handle
-    uint16_t i2c_address;     // I2C address of the BME280
-} my_device_context;
-struct my_device_context ctx = {};
-struct bme280_dev bme280_initparam;
-struct bme280_data bme280_datastruct;
 
 /**
  * @brief Initializes the BME 280 sensor
