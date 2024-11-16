@@ -486,7 +486,7 @@ void transmit(uint8_t * data, uint8_t data_len){
     //bme280_delay_microseconds(1000, NULL); //wait for transmission to complete
     //wait for ACK to be recieved
     while(!(SPI1->SR & SPI_SR_TXE)); //wait for TX_DS bit to be set from ACK received
-
+    send_stringln("Test 2.9");
     data_len-=32;
     i+=32;
   }
