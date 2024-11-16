@@ -158,7 +158,7 @@ struct ambient_reading{
   uint32_t temperature;
   uint32_t pressure;
   uint32_t humidity;
-  uint8_t len = 3;
+  uint8_t len;
 };
 /**
  * @brief return the sensor reading as an uint32_t array
@@ -170,6 +170,7 @@ uint32_t* return_sensor_reading(){
   current_readings.temperature = (uint32_t)(bme280_datastruct.temperature);
   current_readings.pressure = (uint32_t)(bme280_datastruct.pressure);
   current_readings.humidity = (uint32_t)(bme280_datastruct.humidity);
+  current_readings.len = 3;
   return current_readings;
 }
 
