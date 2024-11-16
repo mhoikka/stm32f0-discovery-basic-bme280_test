@@ -7,6 +7,16 @@
 #include "Peripheral_Init.h"
 #include <string.h>
 
+typedef struct my_device_context {
+    I2C_InitTypeDef *I2C_InitStruct; // Pointer to the I2C handle
+    uint16_t i2c_address;     // I2C address of the BME280
+} my_device_context;
+struct my_device_context ctx = {};
+struct bme280_dev bme280_initparam;
+struct bme280_data bme280_datastruct;
+
+uint8_t NUM_REGISTERS_BME280 = 4;
+
 uint8_t CONFIG = 0x00;
 uint8_t CONFIG_SETTINGS = 0x00;
 uint8_t ENAA = 0x01;
@@ -40,6 +50,177 @@ void __attribute__((optimize("O0"))) bme280_delay_microseconds(uint32_t usec, vo
     __NOP();__NOP();__NOP();__NOP();__NOP();
     //lol this is nearly perfect timing
   }
+}
+
+/**
+ * @brief Reads from the I2C bus
+ *  @param reg_addr: Address of the first register, where data is going to be read
+ * @param reg_data: Pointer to data buffer to store the read data
+ * @param cnt: Number of bytes of data to be read
+ * @param intf_ptr: Pointer to the interface pointer
+ * @retval 0 if successful, 1 if not
+ */
+int8_t BME280_I2C_bus_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, void *intf_ptr){
+ /*	\Brief: The function is used as I2C bus write
+ *	\Return : Status of the I2C read
+ *  \param *intf_ptr : Pointer to the interface pointer
+ *	\param reg_addr : Address of the first register, will data is going to be written
+ *	\param reg_data : Array for data to be read into from the sensor data register
+ *	\param cnt : The # of bytes of data to be read
+ **/
+
+	//send the register address to the sensor
+	//This is essentially a partial write operation
+  uint32_t dev_addr = BME280_I2C_ADDR_SEC;
+	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (1 << 16) | (I2C_CR2_AUTOEND);
+	I2C1->TXDR = reg_addr;
+
+  // Wait for not busy
+  while (!(I2C1->ISR & I2C_ISR_BUSY));
+	while ((I2C1->ISR & I2C_ISR_BUSY));
+
+	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (cnt << 16) | (I2C_CR2_RD_WRN) | (I2C_CR2_AUTOEND);
+
+	// Transfer all the data
+    for (int i = 0; i < cnt; i++) {
+        // Wait for RXNE
+        while (!(I2C1->ISR & I2C_ISR_RXNE));
+        reg_data[i] = I2C1->RXDR;
+    }
+
+
+	// Wait for not busy
+  while (!(I2C1->ISR & I2C_ISR_BUSY));
+	while ((I2C1->ISR & I2C_ISR_BUSY));
+	//return the status of the read operation
+
+	return 0; //BME OK
+}
+
+/**
+ * @brief Writes to the I2C bus
+ * @param reg_addr: Address of the first register, where data is going to be written
+ * @param reg_data: Pointer to data buffer that stores the data to be written
+ * @param cnt: Number of bytes of data to be written
+ * @param intf_ptr: Pointer to the interface pointer
+ * @retval 0 if successful, 1 if not
+ */
+int8_t BME280_I2C_bus_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t cnt, void *intf_ptr){
+/*	\Brief: The function is used as I2C bus write
+ *	\Return : Status of the I2C write
+ *  \param *intf_ptr : Pointer to the interface pointer
+ *	\param reg_addr : Address of the first register, where data is going to be written
+ *	\param reg_data : data to be written into the register
+ *	\param cnt : The # of bytes of data to be written
+ */
+  uint32_t dev_addr = BME280_I2C_ADDR_SEC;
+	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (cnt*2 << 16) | (I2C_CR2_AUTOEND);
+	// transfer cnt bytes of data one register data byte and register address byte pair at a time
+	// register address is not auto-incremented
+	if (cnt <= NUM_REGISTERS_BME280){
+		for(int i = 0; i < cnt; i++){
+			// send the register address as a the control byte and the register data as a data byte
+			I2C1->TXDR = reg_addr;
+			while(!(I2C1->ISR & I2C_ISR_TXE));
+			I2C1->TXDR = reg_data[i];
+			// increment register address manually
+			++reg_addr;
+			while(!(I2C1->ISR & I2C_ISR_TXE));
+		}
+	// Wait for not busy
+  while (!(I2C1->ISR & I2C_ISR_BUSY));
+	while ((I2C1->ISR & I2C_ISR_BUSY));
+	return 0;
+	}
+	else{
+		return 1;
+		//TODO Create an error function here? Maybe?
+	}
+}
+
+/**
+ * @brief return the sensor reading
+ * @retval None
+ */
+void display_sensor_reading(){
+  char num_buf[65];
+  struct bme280_data *bme280_datastruct = get_sensor_reading();
+  send_string(itoa((int)(bme280_datastruct->temperature), num_buf, 10));
+  send_stringln(" C");
+  send_string(itoa((int)(bme280_datastruct->pressure), num_buf, 10));
+  send_stringln(" Pa");
+  send_string(itoa((int)(bme280_datastruct->humidity), num_buf, 10));
+  send_stringln(" %");
+  send_stringln("");
+}
+
+/**
+ * @brief Display formatted sensor reading from BME280
+ * @param pointer to char buffer that stores the sensor readings while they are being written over UART
+ * @retval None
+ */
+struct bme280_data get_sensor_reading(){
+  bme280_get_sensor_data(BME280_ALL, &bme280_datastruct, &bme280_initparam);
+  return bme280_datastruct;
+}
+
+/**
+ * @brief Initializes the BME 280 sensor
+ * @retval None
+ */
+void BME_Init(){
+  bme280_initparam.chip_id = BME280_CHIP_ID; 
+  bme280_initparam.intf = BME280_I2C_INTF; 
+  bme280_initparam.intf_ptr = (void *)&ctx; 
+  bme280_initparam.intf_rslt = BME280_INTF_RET_SUCCESS; 
+  bme280_initparam.read = BME280_I2C_bus_read;
+  bme280_initparam.write = BME280_I2C_bus_write;
+  bme280_initparam.delay_us = bme280_delay_microseconds;
+  bme280_init(&bme280_initparam);
+
+  struct bme280_settings bme_settings;
+  bme_settings.filter = BME280_FILTER_COEFF_16;             //  Adjust as needed
+  bme_settings.osr_h = BME280_OVERSAMPLING_16X ;            // Humidity oversampling
+  bme_settings.osr_p = BME280_OVERSAMPLING_16X ;            // Pressure oversampling
+  bme_settings.osr_t = BME280_OVERSAMPLING_16X ;            // Temperature oversampling
+  bme_settings.standby_time = BME280_STANDBY_TIME_62_5_MS;  // Standby time
+
+  bme280_set_sensor_settings(BME280_SEL_FILTER | BME280_SEL_OSR_HUM | BME280_SEL_OSR_PRESS | BME280_SEL_OSR_TEMP, &bme_settings, &bme280_initparam);
+}
+
+/**
+ * @brief  Initializes the I2C1 communication
+ * @retval None
+ */
+void I2C_Settings_Init(){
+
+  // Enable peripheral clock
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1, ENABLE);
+  //RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);//
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);
+  
+  // Use pins PB6 and PB7 for I2C (STM32F030R8)
+  GPIO_InitTypeDef GPIO_InitStruct; 
+  GPIO_PinAFConfig(GPIOB, GPIO_PinSource6, GPIO_AF_1);
+  GPIO_PinAFConfig(GPIOB, GPIO_PinSource7, GPIO_AF_1); 
+  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_7;
+  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;
+  GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz; 
+  GPIO_InitStruct.GPIO_OType = GPIO_OType_OD;
+  GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;
+  GPIO_Init(GPIOB, &GPIO_InitStruct);
+	
+  // I2C configuration
+  I2C_InitTypeDef I2C_InitStruct;
+  I2C_InitStruct.I2C_Mode = I2C_Mode_I2C;
+  I2C_InitStruct.I2C_AnalogFilter = I2C_AnalogFilter_Enable;
+  I2C_InitStruct.I2C_DigitalFilter = 0x00;
+  I2C_InitStruct.I2C_Timing = 0x00901D23; 
+  I2C_Init(I2C1, &I2C_InitStruct);
+  I2C_Cmd(I2C1, ENABLE);
+
+  ctx.I2C_InitStruct = &I2C_InitStruct;
+  ctx.i2c_address = BME280_I2C_ADDR_SEC; // Set the secondary I2C address
 }
 
 uint8_t* nrf24_read_register(uint8_t reg) {
