@@ -139,7 +139,7 @@ int8_t BME280_I2C_bus_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t 
 }
 
 /**
- * @brief return the sensor reading
+ * @brief print the sensor reading
  * @retval None
  */
 void display_sensor_reading(){
@@ -152,6 +152,24 @@ void display_sensor_reading(){
   send_string(itoa((int)(bme280_datastruct.humidity), num_buf, 10));
   send_stringln(" %");
   send_stringln("");
+}
+
+struct ambient_readings{
+  uint32_t temperature;
+  uint32_t pressure;
+  uint32_t humidity;
+  uint8_t len = 3;
+};
+/**
+ * @brief return the sensor reading as an uint32_t array
+ * @retval struct ambient_readings with data populated
+ */
+uint32_t* return_sensor_reading(){
+  struct bme280_data bme280_datastruct = get_sensor_reading();
+  ambient_readings.temperature = (uint32_t)(bme280_datastruct.temperature);
+  ambient_readings.pressure = (uint32_t)(bme280_datastruct.pressure);
+  ambient_readings.humidity = (uint32_t)(bme280_datastruct.humidity);
+  return ambient_readings
 }
 
 /**

@@ -52,6 +52,7 @@ unsigned char data[33] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
                           0x07, 0x08, 0x09, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
                           0x07, 0x08, 0x09, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
                           0x07, 0x08, 0x09, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06};
+  int readings_arr[3];
   //unsigned char data[4] = {0x04, 0xFF, 0xFF, 0x04};  
 
   System_Clock_Init();
@@ -63,11 +64,11 @@ unsigned char data[33] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
   BME_Init();
   //bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam);  
 
-  //NRF24L01p_Init();
+  NRF24L01p_Init();
 
   Delay(1);
-  //test_nrf24_connection();
-  //bme280_delay_microseconds(100*1000, NULL);//wait for device to power on
+  test_nrf24_connection();
+  bme280_delay_microseconds(100*1000, NULL);//wait for device to power on
 
   //transmit(data, sizeof(data)/sizeof(unsigned char));
 
@@ -80,8 +81,9 @@ unsigned char data[33] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
   {
     // Display new sensor readings and LED2 Toggle each 1000ms
     STM_EVAL_LEDToggle(LED2);
-    display_sensor_reading();
-     
+    struct ambient_readings = return_sensor_reading();
+    readings_arr = {ambient_readings.temperature, ambient_readings.pressure, ambient_readings.humidity};
+    transmit(readings_arr, sizeof(readings_arr)/sizeof(int));
     Delay(1000);
   }
 }
