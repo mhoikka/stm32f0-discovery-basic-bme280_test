@@ -164,7 +164,7 @@ struct ambient_reading{
  * @brief return the sensor reading as an uint32_t array
  * @retval struct ambient_readings with data populated
  */
-uint32_t* return_sensor_reading(){
+struct ambient_reading* return_sensor_reading(){
   struct bme280_data bme280_datastruct = get_sensor_reading();
   struct ambient_reading current_readings;
   current_readings.temperature = (uint32_t)(bme280_datastruct.temperature);
