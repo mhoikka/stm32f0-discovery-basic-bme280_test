@@ -478,7 +478,7 @@ void transmit(uint8_t * data, uint8_t data_len){
   //uint8_t data_send[32];
   while(data_len > 0){
     //len_transmit = data_len > 32 ? 32 : data_len; //length of data to be transmitted this cycle
-    len_left = data_len > 32 ? 32 : data_len; //delete this later
+    len_left = data_len > 32 ? 32 : data_len; 
     memcpy(&data_seg[0], &data[i], len_left); //mini array of length 32 for buffering transmitted data
     //memcpy(&data_send[0], &data_seg[0], len_left); //mini array of length 32 for buffering transmitted data
 
@@ -487,7 +487,8 @@ void transmit(uint8_t * data, uint8_t data_len){
     //wait for ACK to be recieved
     while(!(SPI1->SR & SPI_SR_TXE)); //wait for TX_DS bit to be set from ACK received
     send_stringln("Test 2.9");
-    data_len-=32;
+    data_len = data_len > 32 ? data_len-=32 : 0; 
+    //data_len-=32;
     send_stringln("Test 2.99");
     i+=32;
     send_stringln("Test 2.999");
