@@ -77,7 +77,7 @@ unsigned char data[33] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
   test_nrf24_connection();
   bme280_delay_microseconds(100*1000, NULL);//wait for device to power on
 
-  //transmit(data, sizeof(data)/sizeof(unsigned char));
+  transmit(data, sizeof(data)/sizeof(unsigned char));
 
   STM_EVAL_LEDInit(LED2);
   STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);  
@@ -94,7 +94,7 @@ unsigned char data[33] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
     //readings_arr[1] = (unsigned char)curr_read.pressure;
     //readings_arr[2] = (unsigned char)curr_read.humidity;
     //transmit(readings_arr, sizeof(readings_arr)/(sizeof(unsigned char))); 
-    transmit(data, sizeof(data)/sizeof(unsigned char));
+    //transmit(data, sizeof(data)/sizeof(unsigned char));
     send_stringln("Test 3");
     Delay(1000);
   }
