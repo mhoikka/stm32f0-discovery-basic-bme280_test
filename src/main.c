@@ -81,8 +81,8 @@ unsigned char data[33] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
   {
     // Display new sensor readings and LED2 Toggle each 1000ms
     STM_EVAL_LEDToggle(LED2);
-    struct ambient_reading = return_sensor_reading();
-    readings_arr = {ambient_readings.temperature, ambient_readings.pressure, ambient_readings.humidity};
+    struct ambient_reading curr_read = return_sensor_reading();
+    readings_arr = {curr_read.temperature, curr_read.pressure, curr_read.humidity};
     transmit(readings_arr, sizeof(readings_arr)/sizeof(int));
     Delay(1000);
   }
