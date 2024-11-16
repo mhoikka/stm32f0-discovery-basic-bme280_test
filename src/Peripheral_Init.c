@@ -145,11 +145,11 @@ int8_t BME280_I2C_bus_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t 
 void display_sensor_reading(){
   char num_buf[65];
   struct bme280_data bme280_datastruct = get_sensor_reading();
-  send_string(itoa((int)(bme280_datastruct->temperature), num_buf, 10));
+  send_string(itoa((int)(bme280_datastruct.temperature), num_buf, 10));
   send_stringln(" C");
-  send_string(itoa((int)(bme280_datastruct->pressure), num_buf, 10));
+  send_string(itoa((int)(bme280_datastruct.pressure), num_buf, 10));
   send_stringln(" Pa");
-  send_string(itoa((int)(bme280_datastruct->humidity), num_buf, 10));
+  send_string(itoa((int)(bme280_datastruct.humidity), num_buf, 10));
   send_stringln(" %");
   send_stringln("");
 }
