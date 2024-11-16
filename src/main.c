@@ -26,7 +26,6 @@ static __IO uint32_t TimingDelay;
 uint8_t __IO BlinkSpeed = 0;
 /* Private function prototypes -----------------------------------------------*/
 RCC_ClocksTypeDef RCC_Clocks;
-struct ambient_reading return_sensor_reading(void);
 /* Private functions ---------------------------------------------------------*/
 
 /**
