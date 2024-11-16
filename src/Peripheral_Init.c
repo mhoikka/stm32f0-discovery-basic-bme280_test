@@ -144,7 +144,7 @@ int8_t BME280_I2C_bus_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t 
  */
 void display_sensor_reading(){
   char num_buf[65];
-  struct bme280_data *bme280_datastruct = get_sensor_reading();
+  struct bme280_data bme280_datastruct = get_sensor_reading();
   send_string(itoa((int)(bme280_datastruct->temperature), num_buf, 10));
   send_stringln(" C");
   send_string(itoa((int)(bme280_datastruct->pressure), num_buf, 10));
@@ -186,6 +186,7 @@ void BME_Init(){
   bme_settings.standby_time = BME280_STANDBY_TIME_62_5_MS;  // Standby time
 
   bme280_set_sensor_settings(BME280_SEL_FILTER | BME280_SEL_OSR_HUM | BME280_SEL_OSR_PRESS | BME280_SEL_OSR_TEMP, &bme_settings, &bme280_initparam);
+  bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam);  
 }
 
 /**
