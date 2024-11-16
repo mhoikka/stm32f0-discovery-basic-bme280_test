@@ -94,7 +94,7 @@ unsigned char data[33] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
     readings_arr[1] = curr_read.pressure;
     readings_arr[2] = curr_read.humidity;
     send_stringln("Test 2");
-    transmit(readings_arr, sizeof(readings_arr)/sizeof(int));
+    transmit(readings_arr, sizeof(readings_arr)/(sizeof(int)/4));
     send_stringln("Test 3");
     Delay(1000);
   }
