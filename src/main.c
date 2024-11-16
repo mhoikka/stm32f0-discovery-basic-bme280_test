@@ -122,6 +122,21 @@ void TimingDelay_Decrement(void)
 }
 
 /**
+ * @brief  Delay function for BME280 drivers.
+ * @param  usec: specifies the delay time length, in 1 microsecond.
+ * @retval None
+ */
+void __attribute__((optimize("O0"))) bme280_delay_microseconds(uint32_t usec, void *intf_ptr){
+  for(volatile uint32_t counter = 0; counter < usec; counter++){
+    //do nothing NOP instructions
+    __NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
+    __NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
+    __NOP();__NOP();__NOP();__NOP();__NOP();
+    //lol this is nearly perfect timing
+  }
+}
+
+/**
  * @brief return the sensor reading
  * @retval None
  */
@@ -301,20 +316,6 @@ void I2C_Settings_Init(){
   ctx.i2c_address = BME280_I2C_ADDR_SEC; // Set the secondary I2C address
 }
 
-/**
- * @brief  Delay function for BME280 drivers.
- * @param  usec: specifies the delay time length, in 1 microsecond.
- * @retval None
- */
-void __attribute__((optimize("O0"))) bme280_delay_microseconds(uint32_t usec, void *intf_ptr){
-  for(volatile uint32_t counter = 0; counter < usec; counter++){
-    //do nothing NOP instructions
-    __NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
-    __NOP();__NOP();__NOP();__NOP();__NOP();__NOP();
-    __NOP();__NOP();__NOP();__NOP();__NOP();
-    //lol this is nearly perfect timing
-  }
-}
 
 
 /**
