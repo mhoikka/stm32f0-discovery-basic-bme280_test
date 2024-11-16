@@ -179,6 +179,96 @@ void BME_Init(){
   bme280_set_sensor_settings(BME280_SEL_FILTER | BME280_SEL_OSR_HUM | BME280_SEL_OSR_PRESS | BME280_SEL_OSR_TEMP, &bme_settings, &bme280_initparam);
 }
 
+
+/**
+ * @brief Reads from the I2C bus
+ *  @param reg_addr: Address of the first register, where data is going to be read
+ * @param reg_data: Pointer to data buffer to store the read data
+ * @param cnt: Number of bytes of data to be read
+ * @param intf_ptr: Pointer to the interface pointer
+ * @retval 0 if successful, 1 if not
+ */
+int8_t BME280_I2C_bus_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, void *intf_ptr){
+ /*	\Brief: The function is used as I2C bus write
+ *	\Return : Status of the I2C read
+ *  \param *intf_ptr : Pointer to the interface pointer
+ *	\param reg_addr : Address of the first register, will data is going to be written
+ *	\param reg_data : Array for data to be read into from the sensor data register
+ *	\param cnt : The # of bytes of data to be read
+ **/
+
+	//send the register address to the sensor
+	//This is essentially a partial write operation
+  uint32_t dev_addr = BME280_I2C_ADDR_SEC;
+	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (1 << 16) | (I2C_CR2_AUTOEND);
+	I2C1->TXDR = reg_addr;
+
+  // Wait for not busy
+  while (!(I2C1->ISR & I2C_ISR_BUSY));
+	while ((I2C1->ISR & I2C_ISR_BUSY));
+
+	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (cnt << 16) | (I2C_CR2_RD_WRN) | (I2C_CR2_AUTOEND);
+
+	// Transfer all the data
+    for (int i = 0; i < cnt; i++) {
+        // Wait for RXNE
+        while (!(I2C1->ISR & I2C_ISR_RXNE));
+        reg_data[i] = I2C1->RXDR;
+    }
+
+
+	// Wait for not busy
+  while (!(I2C1->ISR & I2C_ISR_BUSY));
+	while ((I2C1->ISR & I2C_ISR_BUSY));
+	//return the status of the read operation
+
+	return 0; //BME OK
+}
+
+/**
+ * @brief Writes to the I2C bus
+ * @param reg_addr: Address of the first register, where data is going to be written
+ * @param reg_data: Pointer to data buffer that stores the data to be written
+ * @param cnt: Number of bytes of data to be written
+ * @param intf_ptr: Pointer to the interface pointer
+ * @retval 0 if successful, 1 if not
+ */
+int8_t BME280_I2C_bus_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t cnt, void *intf_ptr){
+/*	\Brief: The function is used as I2C bus write
+ *	\Return : Status of the I2C write
+ *  \param *intf_ptr : Pointer to the interface pointer
+ *	\param reg_addr : Address of the first register, where data is going to be written
+ *	\param reg_data : data to be written into the register
+ *	\param cnt : The # of bytes of data to be written
+ */
+  uint32_t dev_addr = BME280_I2C_ADDR_SEC;
+	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (cnt*2 << 16) | (I2C_CR2_AUTOEND);
+	// transfer cnt bytes of data one register data byte and register address byte pair at a time
+	// register address is not auto-incremented
+	if (cnt <= NUM_REGISTERS_BME280){
+		for(int i = 0; i < cnt; i++){
+			// send the register address as a the control byte and the register data as a data byte
+			I2C1->TXDR = reg_addr;
+			while(!(I2C1->ISR & I2C_ISR_TXE));
+			I2C1->TXDR = reg_data[i];
+			// increment register address manually
+			++reg_addr;
+			while(!(I2C1->ISR & I2C_ISR_TXE));
+		}
+	// Wait for not busy
+  while (!(I2C1->ISR & I2C_ISR_BUSY));
+	while ((I2C1->ISR & I2C_ISR_BUSY));
+	return 0;
+	}
+	else{
+		return 1;
+		//TODO Create an error function here? Maybe?
+	}
+}
+
+
+
+
 /**
 * @brief  function to reverse array
 * @param  buffer: array to be reversed
