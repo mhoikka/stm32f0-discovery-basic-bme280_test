@@ -137,65 +137,6 @@ void __attribute__((optimize("O0"))) bme280_delay_microseconds(uint32_t usec, vo
 }
 
 /**
- * @brief return the sensor reading
- * @retval None
- */
-void display_sensor_reading(){
-  char num_buf[65];
-  struct bme280_data *bme280_datastruct = get_sensor_reading();
-  send_string(itoa((int)(bme280_datastruct->temperature), num_buf, 10));
-  send_stringln(" C");
-  send_string(itoa((int)(bme280_datastruct->pressure), num_buf, 10));
-  send_stringln(" Pa");
-  send_string(itoa((int)(bme280_datastruct->humidity), num_buf, 10));
-  send_stringln(" %");
-  send_stringln("");
-}
-
-/**
- * @brief Display formatted sensor reading from BME280
- * @param pointer to char buffer that stores the sensor readings while they are being written over UART
- * @retval None
- */
-struct bme280_data get_sensor_reading(){
-  bme280_get_sensor_data(BME280_ALL, &bme280_datastruct, &bme280_initparam);
-  return bme280_datastruct;
-}
-
-typedef struct my_device_context {
-    I2C_InitTypeDef *I2C_InitStruct; // Pointer to the I2C handle
-    uint16_t i2c_address;     // I2C address of the BME280
-} my_device_context;
-struct my_device_context ctx = {};
-struct bme280_dev bme280_initparam;
-struct bme280_data bme280_datastruct;
-
-/**
- * @brief Initializes the BME 280 sensor
- * @retval None
- */
-void BME_Init(){
-  bme280_initparam.chip_id = BME280_CHIP_ID; 
-  bme280_initparam.intf = BME280_I2C_INTF; 
-  bme280_initparam.intf_ptr = (void *)&ctx; 
-  bme280_initparam.intf_rslt = BME280_INTF_RET_SUCCESS; 
-  bme280_initparam.read = BME280_I2C_bus_read;
-  bme280_initparam.write = BME280_I2C_bus_write;
-  bme280_initparam.delay_us = bme280_delay_microseconds;
-  bme280_init(&bme280_initparam);
-
-  struct bme280_settings bme_settings;
-  bme_settings.filter = BME280_FILTER_COEFF_16;             //  Adjust as needed
-  bme_settings.osr_h = BME280_OVERSAMPLING_16X ;            // Humidity oversampling
-  bme_settings.osr_p = BME280_OVERSAMPLING_16X ;            // Pressure oversampling
-  bme_settings.osr_t = BME280_OVERSAMPLING_16X ;            // Temperature oversampling
-  bme_settings.standby_time = BME280_STANDBY_TIME_62_5_MS;  // Standby time
-
-  bme280_set_sensor_settings(BME280_SEL_FILTER | BME280_SEL_OSR_HUM | BME280_SEL_OSR_PRESS | BME280_SEL_OSR_TEMP, &bme_settings, &bme280_initparam);
-}
-
-
-/**
  * @brief Reads from the I2C bus
  *  @param reg_addr: Address of the first register, where data is going to be read
  * @param reg_data: Pointer to data buffer to store the read data
@@ -279,6 +220,64 @@ int8_t BME280_I2C_bus_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t 
 		return 1;
 		//TODO Create an error function here? Maybe?
 	}
+}
+
+/**
+ * @brief return the sensor reading
+ * @retval None
+ */
+void display_sensor_reading(){
+  char num_buf[65];
+  struct bme280_data *bme280_datastruct = get_sensor_reading();
+  send_string(itoa((int)(bme280_datastruct->temperature), num_buf, 10));
+  send_stringln(" C");
+  send_string(itoa((int)(bme280_datastruct->pressure), num_buf, 10));
+  send_stringln(" Pa");
+  send_string(itoa((int)(bme280_datastruct->humidity), num_buf, 10));
+  send_stringln(" %");
+  send_stringln("");
+}
+
+/**
+ * @brief Display formatted sensor reading from BME280
+ * @param pointer to char buffer that stores the sensor readings while they are being written over UART
+ * @retval None
+ */
+struct bme280_data get_sensor_reading(){
+  bme280_get_sensor_data(BME280_ALL, &bme280_datastruct, &bme280_initparam);
+  return bme280_datastruct;
+}
+
+typedef struct my_device_context {
+    I2C_InitTypeDef *I2C_InitStruct; // Pointer to the I2C handle
+    uint16_t i2c_address;     // I2C address of the BME280
+} my_device_context;
+struct my_device_context ctx = {};
+struct bme280_dev bme280_initparam;
+struct bme280_data bme280_datastruct;
+
+/**
+ * @brief Initializes the BME 280 sensor
+ * @retval None
+ */
+void BME_Init(){
+  bme280_initparam.chip_id = BME280_CHIP_ID; 
+  bme280_initparam.intf = BME280_I2C_INTF; 
+  bme280_initparam.intf_ptr = (void *)&ctx; 
+  bme280_initparam.intf_rslt = BME280_INTF_RET_SUCCESS; 
+  bme280_initparam.read = BME280_I2C_bus_read;
+  bme280_initparam.write = BME280_I2C_bus_write;
+  bme280_initparam.delay_us = bme280_delay_microseconds;
+  bme280_init(&bme280_initparam);
+
+  struct bme280_settings bme_settings;
+  bme_settings.filter = BME280_FILTER_COEFF_16;             //  Adjust as needed
+  bme_settings.osr_h = BME280_OVERSAMPLING_16X ;            // Humidity oversampling
+  bme_settings.osr_p = BME280_OVERSAMPLING_16X ;            // Pressure oversampling
+  bme_settings.osr_t = BME280_OVERSAMPLING_16X ;            // Temperature oversampling
+  bme_settings.standby_time = BME280_STANDBY_TIME_62_5_MS;  // Standby time
+
+  bme280_set_sensor_settings(BME280_SEL_FILTER | BME280_SEL_OSR_HUM | BME280_SEL_OSR_PRESS | BME280_SEL_OSR_TEMP, &bme_settings, &bme280_initparam);
 }
 
 /**
