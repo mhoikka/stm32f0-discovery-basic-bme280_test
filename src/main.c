@@ -68,7 +68,7 @@ unsigned char data[33] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
 
   send_stringln("Start");
 
-  BME_Init();
+  //BME_Init();
   //bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam);  
 
   NRF24L01p_Init();
@@ -88,11 +88,11 @@ unsigned char data[33] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
   {
     // Display new sensor readings and LED2 Toggle each 1000ms
     STM_EVAL_LEDToggle(LED2);
-    display_sensor_reading();
-    struct ambient_reading curr_read = return_sensor_reading();
-    readings_arr[0] = (unsigned char)curr_read.temperature;
-    readings_arr[1] = (unsigned char)curr_read.pressure;
-    readings_arr[2] = (unsigned char)curr_read.humidity;
+    //display_sensor_reading();
+    //struct ambient_reading curr_read = return_sensor_reading();
+    //readings_arr[0] = (unsigned char)curr_read.temperature;
+    //readings_arr[1] = (unsigned char)curr_read.pressure;
+    //readings_arr[2] = (unsigned char)curr_read.humidity;
     //transmit(readings_arr, sizeof(readings_arr)/(sizeof(unsigned char))); 
     transmit(data, sizeof(data)/sizeof(unsigned char));
     send_stringln("Test 3");
