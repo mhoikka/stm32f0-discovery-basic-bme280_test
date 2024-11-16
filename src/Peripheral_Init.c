@@ -448,9 +448,9 @@ void transmitBytesNRF(uint8_t * data, uint8_t data_len) {
     nrf24_write_register(FEATURE, 0x01); //enable W_TX_PAYLOAD_NOACK command
 
     //while(1){
-      
+      send_stringln("Test 2.0");
       nrf24_write_TX_payload(data, ACK, data_len);            //write data to be transmitted into TX FIFO
-
+      send_stringln("Test 2.1");
       set_nrf24_SPI_CE(1);                  //enable chip to transmit data
       bme280_delay_microseconds(130, NULL); //wait for chip to go into TX mode
       Delay(1);
