@@ -88,6 +88,7 @@ unsigned char data[33] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
   {
     // Display new sensor readings and LED2 Toggle each 1000ms
     STM_EVAL_LEDToggle(LED2);
+    display_sensor_reading();
     struct ambient_reading curr_read = return_sensor_reading();
     send_stringln("Test 1");
     readings_arr[0] = (unsigned char)curr_read.temperature;
