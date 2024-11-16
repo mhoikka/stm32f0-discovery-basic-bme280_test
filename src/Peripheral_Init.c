@@ -488,8 +488,11 @@ void transmit(uint8_t * data, uint8_t data_len){
     while(!(SPI1->SR & SPI_SR_TXE)); //wait for TX_DS bit to be set from ACK received
     send_stringln("Test 2.9");
     data_len-=32;
+    send_stringln("Test 2.99");
     i+=32;
+    send_stringln("Test 2.999");
   }
+  send_stringln("Test 2.9999");
 }
 
 /**
