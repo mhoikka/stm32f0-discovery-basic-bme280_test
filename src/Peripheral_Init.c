@@ -34,6 +34,9 @@ uint8_t READ_COMMAND = 0x00;
 uint8_t STATUS_REG = 0x07;
 uint8_t FLUSH_TX = 0xE1;
 
+uint8_t NO_ACK = 0;
+uint8_t ACK = 1;
+
 /**
  * @brief Display formatted sensor reading from BME280
  * @param pointer to char buffer that stores the sensor readings while they are being written over UART
@@ -335,7 +338,7 @@ void transmitBytesNRF(uint8_t * data, uint8_t data_len) {
     //Clear TX FIFO
     nrf24_clear_TX();
     nrf24_write_register(STATUS_REG, 0x30); //Clear MAX_RT and TX Data Sent bit from status register
-    //nrf24_write_register(ENAA, 0x01); //enable auto ack for all pipes //0x3F
+    nrf24_write_register(ENAA, 0x01); //enable auto ack for pipe 0 //ALL PIPES 0x3F
     
     //set control registers
     nrf24_write_register(SETUP_AW, 0x01); //set to 3 byte address width
@@ -350,7 +353,7 @@ void transmitBytesNRF(uint8_t * data, uint8_t data_len) {
 
     //while(1){
       
-      nrf24_write_TX_payload(data, 0, data_len);            //write data to be transmitted into TX FIFO
+      nrf24_write_TX_payload(data, ACK, data_len);            //write data to be transmitted into TX FIFO
 
       set_nrf24_SPI_CE(1);                  //enable chip to transmit data
       bme280_delay_microseconds(130, NULL); //wait for chip to go into TX mode
@@ -385,6 +388,9 @@ void transmit(uint8_t * data, uint8_t data_len){
 
     transmitBytesNRF(data_seg, len_transmit);
     //bme280_delay_microseconds(1000, NULL); //wait for transmission to complete
+    //wait for ACK to be recieved
+    while(STATUS_REG & 1 << 5); //wait for TX_DS bit to be set from ACK
+
     data_len-=32;
     i+=32;
   }

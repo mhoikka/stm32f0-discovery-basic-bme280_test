@@ -485,7 +485,7 @@
       "gencad": "",
       "idf": "",
       "netlist": "",
-      "plot": "",
+      "plot": "antenna_test_grb",
       "pos_files": "",
       "specctra_dsn": "",
       "step": "",
