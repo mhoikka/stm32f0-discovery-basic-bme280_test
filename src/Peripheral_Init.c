@@ -7,16 +7,6 @@
 #include "Peripheral_Init.h"
 #include <string.h>
 
-typedef struct my_device_context {
-    I2C_InitTypeDef *I2C_InitStruct; // Pointer to the I2C handle
-    uint16_t i2c_address;     // I2C address of the BME280
-} my_device_context;
-struct my_device_context ctx = {};
-struct bme280_dev bme280_initparam;
-struct bme280_data bme280_datastruct;
-
-uint8_t NUM_REGISTERS_BME280 = 4;
-
 uint8_t CONFIG = 0x00;
 uint8_t CONFIG_SETTINGS = 0x00;
 uint8_t ENAA = 0x01;
@@ -36,16 +26,6 @@ uint8_t FLUSH_TX = 0xE1;
 
 uint8_t NO_ACK = 0;
 uint8_t ACK = 1;
-
-/**
- * @brief Display formatted sensor reading from BME280
- * @param pointer to char buffer that stores the sensor readings while they are being written over UART
- * @retval None
- */
-struct bme280_data get_sensor_reading(){
-  bme280_get_sensor_data(BME280_ALL, &bme280_datastruct, &bme280_initparam);
-  return bme280_datastruct;
-}
 
 /**
  * @brief  Delay function for BME280 drivers.
@@ -496,31 +476,6 @@ void NRF24L01p_Init(){
   GPIO_InitStruct_3.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStruct_3.GPIO_PuPd = GPIO_PuPd_DOWN; 
   GPIO_Init(GPIOA, &GPIO_InitStruct_3);
-}
-
-/**
- * @brief Initializes the BME 280 sensor
- * @retval None
- */
-void BME_Init(){
-  bme280_initparam.chip_id = BME280_CHIP_ID; 
-  bme280_initparam.intf = BME280_I2C_INTF; 
-  bme280_initparam.intf_ptr = (void *)&ctx; 
-  bme280_initparam.intf_rslt = BME280_INTF_RET_SUCCESS; 
-  bme280_initparam.read = BME280_I2C_bus_read;
-  bme280_initparam.write = BME280_I2C_bus_write;
-  bme280_initparam.delay_us = bme280_delay_microseconds;
-  bme280_init(&bme280_initparam);
-
-  struct bme280_settings bme_settings;
-  bme_settings.filter = BME280_FILTER_COEFF_16;             //  Adjust as needed
-  bme_settings.osr_h = BME280_OVERSAMPLING_16X ;            // Humidity oversampling
-  bme_settings.osr_p = BME280_OVERSAMPLING_16X ;            // Pressure oversampling
-  bme_settings.osr_t = BME280_OVERSAMPLING_16X ;            // Temperature oversampling
-  bme_settings.standby_time = BME280_STANDBY_TIME_62_5_MS;  // Standby time
-
-  bme280_set_sensor_settings(BME280_SEL_FILTER | BME280_SEL_OSR_HUM | BME280_SEL_OSR_PRESS | BME280_SEL_OSR_TEMP, &bme_settings, &bme280_initparam);
-  bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam);
 }
 
 /**
