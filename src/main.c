@@ -25,6 +25,8 @@ struct ambient_reading{
 static __IO uint32_t TimingDelay;
 uint8_t __IO BlinkSpeed = 0;
 /* Private function prototypes -----------------------------------------------*/
+extern struct ambient_reading return_sensor_reading(void);  // Declare the function prototype
+
 RCC_ClocksTypeDef RCC_Clocks;
 /* Private functions ---------------------------------------------------------*/
 
