@@ -59,10 +59,7 @@ int main(void)
                             0x07, 0x08, 0x09, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
                             0x07, 0x08, 0x09, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
                             0x07, 0x08, 0x09, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06};
-  unsigned char data2[33] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
-                            0x07, 0x08, 0x09, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
-                            0x07, 0x08, 0x09, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
-                            0x07, 0x08, 0x09, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06};
+
   unsigned char readings_arr[3];
   //unsigned char data[4] = {0x04, 0xFF, 0xFF, 0x04};  
 
@@ -72,8 +69,8 @@ int main(void)
 
   send_stringln("Start");
 
-  //BME_Init();
-  //bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam);  
+  BME_Init();
+  bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam);  
 
   NRF24L01p_Init();
 
@@ -94,14 +91,14 @@ int main(void)
 
     //STM_EVAL_LEDToggle(LED2);
 
-    //display_sensor_reading();
-    //struct ambient_reading curr_read = return_sensor_reading();
-    //readings_arr[0] = (unsigned char)curr_read.temperature;
-    //readings_arr[1] = (unsigned char)curr_read.pressure;
-    //readings_arr[2] = (unsigned char)curr_read.humidity;
-    //transmit(readings_arr, sizeof(readings_arr)/(sizeof(unsigned char))); 
+    display_sensor_reading();
+    struct ambient_reading curr_read = return_sensor_reading();
+    readings_arr[0] = (unsigned char)curr_read.temperature;
+    readings_arr[1] = (unsigned char)curr_read.pressure;
+    readings_arr[2] = (unsigned char)curr_read.humidity;
+    transmit(readings_arr, sizeof(readings_arr)/(sizeof(unsigned char))); 
     //transmit(data, sizeof(data)/sizeof(unsigned char));
-    transmit(data2, sizeof(data2)/sizeof(unsigned char));
+    //transmit(data2, sizeof(data2)/sizeof(unsigned char));
     send_stringln("Test 3");
     Delay(1000);
   }
