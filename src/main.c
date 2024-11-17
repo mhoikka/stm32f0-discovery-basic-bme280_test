@@ -83,15 +83,17 @@ int main(void)
 
   transmit(data, sizeof(data)/sizeof(unsigned char));
 
-  STM_EVAL_LEDInit(LED2);
-  STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);  
+  //STM_EVAL_LEDInit(LED2);
+  //STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);  
 
   BlinkSpeed = 0;
 
   while (1)
   {
     // Display new sensor readings and LED2 Toggle each 1000ms
-    STM_EVAL_LEDToggle(LED2);
+
+    //STM_EVAL_LEDToggle(LED2);
+
     //display_sensor_reading();
     //struct ambient_reading curr_read = return_sensor_reading();
     //readings_arr[0] = (unsigned char)curr_read.temperature;
