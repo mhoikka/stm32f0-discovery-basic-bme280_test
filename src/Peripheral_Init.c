@@ -441,24 +441,15 @@ void transmitBytesNRF(uint8_t * data, uint8_t data_len) {
     nrf24_write_register(RF_SETUP, 0x00); //set RF Data Rate to 1Mbps, RF output power to -18dBm
     nrf24_write_register(RX_PW_P0, 0x01); //set payload size to 1 byte
     
-    //nrf24_write_register(CONFIG, 0x0A);         //set to PTX mode and turn on power bit 0x0A
-    //bme280_delay_microseconds(1.5*1000, NULL);  //wait for chip to go into Standby-I mode
     nrf24_write_register(FEATURE, 0x01); //enable W_TX_PAYLOAD_NOACK command
 
-    //while(1){
     nrf24_write_TX_payload(data, ACK, data_len);            //write data to be transmitted into TX FIFO
     set_nrf24_SPI_CE(1);                  //enable chip to transmit data
     bme280_delay_microseconds(130, NULL); //wait for chip to go into TX mode
     Delay(1);
-    Delay(50);   //keep sending data with delay
-      //my_data += 1;
-      //nrf24_write_TX_payload(my_data, 0);
-    //}
-                              //wait for transmission to complete
-    //nrf24_write_register(CONFIG, 0x0A); 
+    Delay(50);   // Not sure how long this delay needs to be
+
     set_nrf24_SPI_CE(0);                  //disable chip after transmission
-    //nrf24_write_register(CONFIG, 0x08);   //power down by setting PWR_UP bit to 0
-  
 }
 
 /** 
@@ -480,7 +471,7 @@ void transmit(uint8_t * data, uint8_t data_len){
 
     transmitBytesNRF(data_seg, len_transmit);
 
-    //while(!(SPI1->SR & ((uint16_t)(1 << 5)))); //wait for TX_DS bit to be set from ACK received// TODO don't think this is working, need to reset TX interrupt here
+    while(!(SPI1->SR & ((uint16_t)(1 << 5)))); //wait for TX_DS bit to be set from ACK received// TODO don't think this is working, need to reset TX interrupt here
     data_len = data_len > 32 ? data_len-=32 : 0; 
     i+=32;
   }
