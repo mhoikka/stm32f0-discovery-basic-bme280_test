@@ -69,7 +69,7 @@ int main(void)
 
   send_stringln("Start");
 
-  //BME_Init();
+  //BME_Init(); Not enough current to run both NRF and BME at the same time
 
   NRF24L01p_Init();
 
@@ -97,9 +97,9 @@ int main(void)
     readings_arr[1] = (unsigned char)curr_read.pressure;
     readings_arr[2] = (unsigned char)curr_read.humidity;
     */
-    transmit(readings_arr, sizeof(readings_arr)/(sizeof(unsigned char))); 
-    //transmit(data, sizeof(data)/sizeof(unsigned char));
-    //transmit(data2, sizeof(data2)/sizeof(unsigned char));
+    //transmit(readings_arr, sizeof(readings_arr)/(sizeof(unsigned char))); 
+    transmit(data, sizeof(data)/sizeof(unsigned char));
+
     send_stringln("Test 3");
     Delay(1000);
   }
