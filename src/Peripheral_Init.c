@@ -397,11 +397,8 @@ void nrf24_clear_TX(){
 }
 
 void test_nrf24_connection() {
-    char num_buf[10];
-    char num_buf2[10];
-    char num_buf3[10];
 
-    set_nrf24_SPI_CSN(1);
+    set_nrf24_SPI_CSN(1); //make sure these pins are at the right level
     set_nrf24_SPI_CE(0);
     Delay(100); //Let the chip power up and down
     /*
@@ -444,8 +441,8 @@ void transmitBytesNRF(uint8_t * data, uint8_t data_len) {
     nrf24_write_register(RF_SETUP, 0x00); //set RF Data Rate to 1Mbps, RF output power to -18dBm
     nrf24_write_register(RX_PW_P0, 0x01); //set payload size to 1 byte
     
-    nrf24_write_register(CONFIG, 0x0A);         //set to PTX mode and turn on power bit 0x0A
-    bme280_delay_microseconds(1.5*1000, NULL);  //wait for chip to go into Standby-I mode
+    //nrf24_write_register(CONFIG, 0x0A);         //set to PTX mode and turn on power bit 0x0A
+    //bme280_delay_microseconds(1.5*1000, NULL);  //wait for chip to go into Standby-I mode
     nrf24_write_register(FEATURE, 0x01); //enable W_TX_PAYLOAD_NOACK command
 
     //while(1){
@@ -460,7 +457,7 @@ void transmitBytesNRF(uint8_t * data, uint8_t data_len) {
                               //wait for transmission to complete
     //nrf24_write_register(CONFIG, 0x0A); 
     set_nrf24_SPI_CE(0);                  //disable chip after transmission
-    nrf24_write_register(CONFIG, 0x08);   //power down by setting PWR_UP bit to 0
+    //nrf24_write_register(CONFIG, 0x08);   //power down by setting PWR_UP bit to 0
   
 }
 
@@ -475,6 +472,8 @@ void transmit(uint8_t * data, uint8_t data_len){
   int len_left = 0;
   uint8_t data_seg[32];
   //uint8_t data_send[32];
+  nrf24_write_register(CONFIG, 0x0A);         //set to PTX mode and turn on power bit 0x0A
+  bme280_delay_microseconds(2*1000, NULL);  //wait for chip to go into Standby-I mode
   while(data_len > 0){
     //len_transmit = data_len > 32 ? 32 : data_len; //length of data to be transmitted this cycle
     len_left = data_len > 32 ? 32 : data_len; 
@@ -489,6 +488,7 @@ void transmit(uint8_t * data, uint8_t data_len){
     //data_len-=32;
     i+=32;
   }
+  nrf24_write_register(CONFIG, 0x08);   //power down by setting PWR_UP bit to 0
 }
 
 /**
