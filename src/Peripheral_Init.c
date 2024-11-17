@@ -471,7 +471,7 @@ void transmit(uint8_t * data, uint8_t data_len){
 
     transmitBytesNRF(data_seg, len_transmit);
 
-    while(!(SPI1->SR & ((uint16_t)(1 << 5)))); //wait for TX_DS bit to be set from ACK received// TODO don't think this is working, need to reset TX interrupt here
+    //while(!(SPI1->SR & ((uint16_t)(1 << 5)))); //wait for TX_DS bit to be set from ACK received// TODO don't think this is working, maybe not enough current?
     data_len = data_len > 32 ? data_len-=32 : 0; 
     i+=32;
   }
