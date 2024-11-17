@@ -483,7 +483,7 @@ void transmit(uint8_t * data, uint8_t data_len){
     transmitBytesNRF(data_seg, len_transmit);
     //bme280_delay_microseconds(1000, NULL); //wait for transmission to complete
     //wait for ACK to be recieved
-    while(!(SPI1->SR & ((uint16_t)(1 << 5)))); //wait for TX_DS bit to be set from ACK received// TODO don't think this is working, need to reset TX interrupt here
+    //while(!(SPI1->SR & ((uint16_t)(1 << 5)))); //wait for TX_DS bit to be set from ACK received// TODO don't think this is working, need to reset TX interrupt here
     data_len = data_len > 32 ? data_len-=32 : 0; 
     //data_len-=32;
     i+=32;
