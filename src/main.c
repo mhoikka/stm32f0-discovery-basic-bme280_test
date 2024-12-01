@@ -69,13 +69,13 @@ int main(void)
 
   send_stringln("Start");
 
-  //BME_Init(); Not enough current to run both NRF and BME at the same time
+  BME_Init(); Not enough current to run both NRF and BME at the same time
 
   NRF24L01p_Init();
 
   Delay(1);
   test_nrf24_connection();
-  bme280_delay_microseconds(100*1000, NULL);  //wait for device to power on
+  bme280_delay_microseconds(100*1000, NULL);  //wait for NRF24L01+ to power on
 
   transmit(data, sizeof(data)/sizeof(unsigned char));
 
