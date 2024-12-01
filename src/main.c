@@ -69,7 +69,7 @@ int main(void)
 
   send_stringln("Start");
 
-  BME_Init(); Not enough current to run both NRF and BME at the same time
+  BME_Init(); //Not enough current to run both NRF and BME at the same time
 
   NRF24L01p_Init();
 
