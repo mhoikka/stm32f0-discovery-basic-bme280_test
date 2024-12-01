@@ -60,7 +60,7 @@ int main(void)
                             0x07, 0x08, 0x09, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
                             0x07, 0x08, 0x09, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06};
 
-  unsigned char readings_arr[3];
+  int readings_arr[3];
   //unsigned char data[4] = {0x04, 0xFF, 0xFF, 0x04};  
 
   System_Clock_Init();
@@ -93,11 +93,11 @@ int main(void)
     
     display_sensor_reading();
     struct ambient_reading curr_read = return_sensor_reading();
-    readings_arr[0] = (unsigned char)curr_read.temperature;
-    readings_arr[1] = (unsigned char)curr_read.pressure;
-    readings_arr[2] = (unsigned char)curr_read.humidity;
+    readings_arr[0] = (int)curr_read.temperature;
+    readings_arr[1] = (int)curr_read.pressure; // value is unsigned int
+    readings_arr[2] = (int)curr_read.humidity; // value is unsigned int
     
-    transmit(readings_arr, sizeof(readings_arr)/(sizeof(unsigned char))); 
+    transmit(readings_arr, sizeof(readings_arr)/(sizeof(unsigned char)), 1); 
     //transmit(data, sizeof(data)/sizeof(unsigned char));
 
     //send_stringln("Test 3");

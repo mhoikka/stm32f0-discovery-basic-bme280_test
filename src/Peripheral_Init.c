@@ -421,8 +421,8 @@ void test_nrf24_connection() {
 
 uint8_t ADDRESS_LEN = 3;
 /** 
-* @brief: transmits a byte of data for testing purposes
-* @param: data: array of data to be transmitted
+* @brief: transmits data for testing purposes
+* @param: data: array of data to be transmitted, up to 32 bytes long
 * @param: data_len: length of the data to be transmitted
 */
  //TODO make this much more functional
@@ -453,11 +453,16 @@ void transmitBytesNRF(uint8_t * data, uint8_t data_len) {
 }
 
 /** 
-* @brief: transmits a byte of data for testing purposes
+* @brief: transmits data for testing purposes
 * @param: data: array of data to be transmitted
 * @param: data_len: length of the data to be transmitted
+* @param: data_size: size of the data type to be transmitted
 */
-void transmit(uint8_t * data, uint8_t data_len){
+void transmit(void * data, uint8_t data_len, uint8_t data_size){ 
+  //data_size must divide data_len and 32 without a remainder and be at least 1
+  if (data_len % data_size != 0 || 32 % data_size != 0 || data_size < 1){
+    return;
+  }
   int i = 0;
   int len_transmit = 32; 
   int len_left = 0;
@@ -466,14 +471,14 @@ void transmit(uint8_t * data, uint8_t data_len){
   nrf24_write_register(CONFIG, 0x0A);         //set to PTX mode and turn on power bit 0x0A
   bme280_delay_microseconds(2*1000, NULL);  //wait for chip to go into Standby-I mode
   while(data_len > 0){
-    len_left = data_len > 32 ? 32 : data_len; 
+    len_left = data_len > 32 ? 32 : (data_len*data_size)%32; 
     memcpy(&data_seg[0], &data[i], len_left); //mini array of length 32 for buffering transmitted data
 
     transmitBytesNRF(data_seg, len_transmit);
 
     //while(!(SPI1->SR & ((uint16_t)(1 << 5)))); //wait for TX_DS bit to be set from ACK received// TODO don't think this is working, maybe not enough current?
-    data_len = data_len > 32 ? data_len-=32 : 0; 
-    i+=32;
+    data_len = data_len*data_size > 32 ? data_len-=32/data_size : 0; 
+    i+=32/data_size;
   }
   nrf24_write_register(CONFIG, 0x08);   //power down by setting PWR_UP bit to 0
 }
