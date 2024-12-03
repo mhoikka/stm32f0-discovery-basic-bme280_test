@@ -76,7 +76,7 @@ int8_t BME280_I2C_bus_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, vo
   uint32_t dev_addr = BME280_I2C_ADDR_SEC;
 	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (1 << 16) | (I2C_CR2_AUTOEND);
 	I2C1->TXDR = reg_addr;
-
+  
   // Wait for not busy
   while (!(I2C1->ISR & I2C_ISR_BUSY));
 	while ((I2C1->ISR & I2C_ISR_BUSY));
@@ -214,7 +214,10 @@ int BME_Init(){
   //check if the bme280 chip is connected and ready
   uint8_t bme_id = 0;
   send_stringln("Start 3");
-  BME280_I2C_bus_read(BME_ID_REG, &bme_id, 1, NULL);
+  uint32_t dev_addr = BME280_I2C_ADDR_SEC;
+	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (1 << 16) | (I2C_CR2_AUTOEND);
+	I2C1->TXDR = BME_ID_REG;
+  int bme_id = I2C1->RXDR;
   send_stringln("Start 4");
   if (bme_id != 0x60){
     return 0;
