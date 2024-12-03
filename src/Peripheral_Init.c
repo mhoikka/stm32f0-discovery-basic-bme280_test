@@ -206,43 +206,6 @@ void BME_setup(){
   bme_settings.standby_time = BME280_STANDBY_TIME_62_5_MS;  // Standby time
 }
 
-// Function to read data from I2C
-void I2C_Read(uint8_t address, uint8_t reg, uint8_t* data, uint8_t length) {
-    // Wait until the I2C is not busy
-    while (I2C1->SR2 & I2C_SR2_BUSY);
-    
-    // Send start condition
-    I2C1->CR1 |= I2C_CR1_START;
-    while (!(I2C1->SR1 & I2C_SR1_SB));  // Wait for start condition to be transmitted
-    
-    // Send device address (write mode)
-    I2C1->DR = (address << 1) & ~0x01;
-    while (!(I2C1->SR1 & I2C_SR1_ADDR));  // Wait for address transmission
-    (void)I2C1->SR2;  // Clear the ADDR flag
-    
-    // Send register address
-    I2C1->DR = reg;
-    while (!(I2C1->SR1 & I2C_SR1_TXE));  // Wait for data to be transmitted
-    
-    // Send repeated start for read
-    I2C1->CR1 |= I2C_CR1_START;
-    while (!(I2C1->SR1 & I2C_SR1_SB));  // Wait for start condition
-    
-    // Send device address (read mode)
-    I2C1->DR = (address << 1) | 0x01;
-    while (!(I2C1->SR1 & I2C_SR1_ADDR));  // Wait for address transmission
-    (void)I2C1->SR2;  // Clear the ADDR flag
-    
-    // Read data
-    for (uint8_t i = 0; i < length; i++) {
-        while (!(I2C1->SR1 & I2C_SR1_RXNE));  // Wait for data to be received
-        data[i] = I2C1->DR;
-    }
-
-    // Send stop condition
-    I2C1->CR1 |= I2C_CR1_STOP;
-}
-
 /**
  * @brief Initializes the BME 280 sensor
  * @retval int 1 if successful, 0 if not
@@ -251,7 +214,7 @@ int BME_Init(){
   //check if the bme280 chip is connected and ready
   uint8_t device_id = 0;
   send_stringln("Start 3");
-  I2C_Read(BME280_I2C_ADDR_SEC, BME_ID_REG, &device_id, 1);  // Read device ID
+  bme280_get_regs(BME_ID_REG, &device_id, 1, &bme280_initparam);
   send_stringln("Start 4");
   char * buffer3[10];
   send_stringln(  itoa((int)bme_id, buffer3, 10));
