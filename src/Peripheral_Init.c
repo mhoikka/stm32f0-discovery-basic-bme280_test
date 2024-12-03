@@ -225,7 +225,6 @@ void BME_setup(){
   bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam); 
 }
 
-void BMEsetup()
 /**
  * @brief  Initializes the I2C1 communication
  * @retval None
