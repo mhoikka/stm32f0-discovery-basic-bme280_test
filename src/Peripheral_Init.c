@@ -214,7 +214,7 @@ int BME_Init(){
   //check if the bme280 chip is connected and ready
   uint8_t bme_id = 0;
   send_stringln("Start 3");
-  BME280_I2C_bus_read(BME_ID_REG, &bme_id, 1, NULL)
+  BME280_I2C_bus_read(BME_ID_REG, &bme_id, 1, NULL);
   send_stringln("Start 4");
   char * buffer3[10];
   send_stringln(  itoa((int)bme_id, buffer3, 10));
