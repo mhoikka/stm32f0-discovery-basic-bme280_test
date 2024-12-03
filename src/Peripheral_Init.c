@@ -212,9 +212,12 @@ void BME_setup(){
  */
 int BME_Init(){
   //check if the bme280 chip is connected and ready
-  if (bme280_init(&bme280_initparam) != BME280_OK){
+  uint8_t i2c_address = 0;
+  BME280_I2C_bus_read(BME_ID_REG, &i2c_address, 1, NULL);
+  if (i2c_address != 0x77){
     return 0;
   }
+  bme280_init(&bme280_initparam);
   bme280_set_sensor_settings(BME280_SEL_FILTER | BME280_SEL_OSR_HUM | BME280_SEL_OSR_PRESS | BME280_SEL_OSR_TEMP, &bme_settings, &bme280_initparam);
   bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam); 
   return 1; //TODO check more here
