@@ -211,12 +211,10 @@ void BME_setup(){
  * @retval int 1 if successful, 0 if not
  */
 int BME_Init(){
-  uint8_t chip_id = 0;
-  bme280_get_regs(BME_ID_REG, &chip_id, 1, &bme280_initparam);
-  if(chip_id != BME280_CHIP_ID){ //check if chip is connected and ready
+  //check if the bme280 chip is connected and ready
+  if (bme280_init(&bme280_initparam) != BME280_OK){
     return 0;
-  } 
-  bme280_init(&bme280_initparam);
+  }
   bme280_set_sensor_settings(BME280_SEL_FILTER | BME280_SEL_OSR_HUM | BME280_SEL_OSR_PRESS | BME280_SEL_OSR_TEMP, &bme_settings, &bme280_initparam);
   bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam); 
   return 1; //TODO check more here
