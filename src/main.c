@@ -55,9 +55,7 @@ int main(void)
   I2C_Settings_Init();
   UART_Settings_Init();
 
-  send_stringln("Start");
   BME_setup();
-  send_stringln("Start 1");
   while(!BME_Init()); // Wait for the BME280 to be ready
 
   NRF24L01p_Init();

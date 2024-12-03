@@ -74,20 +74,14 @@ int8_t BME280_I2C_bus_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, vo
 	//send the register address to the sensor
 	//This is essentially a partial write operation
   uint32_t dev_addr = BME280_I2C_ADDR_SEC;
-  send_stringln("Start 4.1");
 	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (1 << 16) | (I2C_CR2_AUTOEND);
-  send_stringln("Start 4.2");
 	I2C1->TXDR = reg_addr;
-  send_stringln("Start 4.3");
   
   // Wait for not busy
   while (!(I2C1->ISR & I2C_ISR_BUSY));
-  send_stringln("Start 4.4");
-	//while ((I2C1->ISR & I2C_ISR_BUSY));
-  send_stringln("Start 4.5");
+	while ((I2C1->ISR & I2C_ISR_BUSY));
 
 	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (cnt << 16) | (I2C_CR2_RD_WRN) | (I2C_CR2_AUTOEND);
-  send_stringln("Start 4.6");
 
 	// Transfer all the data
     for (int i = 0; i < cnt; i++) {
@@ -95,12 +89,10 @@ int8_t BME280_I2C_bus_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, vo
         while (!(I2C1->ISR & I2C_ISR_RXNE));
         reg_data[i] = I2C1->RXDR;
     }
-send_stringln("Start 4.6");
 
 	// Wait for not busy
   while (!(I2C1->ISR & I2C_ISR_BUSY));
-	//while ((I2C1->ISR & I2C_ISR_BUSY));
-  send_stringln("Start 4.7");
+	while ((I2C1->ISR & I2C_ISR_BUSY));
 	//return the status of the read operation
 
 	return 0; //BME OK
@@ -218,17 +210,6 @@ void BME_setup(){
  * @retval int 1 if successful, 0 if not
  */
 int BME_Init(){
-  //check if the bme280 chip is connected and ready
-  uint8_t device_id = 0;
-  send_stringln("Start 3");
-  BME280_I2C_bus_read(BME_ID_REG, &device_id, 1, NULL);
-  char * buffer3[10];
-  send_stringln(  itoa((int)device_id, buffer3, 10));
-  bme280_delay_microseconds(1000000, NULL);
-  if (device_id != 0x60) {
-    return 0;
-  }
-
   bme280_init(&bme280_initparam);
   bme280_set_sensor_settings(BME280_SEL_FILTER | BME280_SEL_OSR_HUM | BME280_SEL_OSR_PRESS | BME280_SEL_OSR_TEMP, &bme_settings, &bme280_initparam);
   bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam); 
