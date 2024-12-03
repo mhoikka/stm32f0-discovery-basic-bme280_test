@@ -56,9 +56,9 @@ int main(void)
   UART_Settings_Init();
 
   send_stringln("Start");
-  while(!BME_Init()); // Wait for the BME280 to be ready{
   BME_setup();
-  
+  while(!BME_Init()); // Wait for the BME280 to be ready
+
   NRF24L01p_Init();
   Delay(1);
   while(!test_nrf24_connection()); // Wait for the NRF24 to be ready
