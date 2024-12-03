@@ -56,9 +56,9 @@ int main(void)
   UART_Settings_Init();
 
   send_stringln("Start");
-  while(!(bme280_initparam.chip_id == BME280_CHIP_ID)){ // Wait for the BME280 to be ready
+  //while(!(bme280_initparam.chip_id == BME280_CHIP_ID)){ // Wait for the BME280 to be ready
     BME_Init(); 
-  }
+  //}
   
   NRF24L01p_Init();
   Delay(1);
