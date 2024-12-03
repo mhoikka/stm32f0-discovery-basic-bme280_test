@@ -17,6 +17,7 @@ int8_t BME280_I2C_bus_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, vo
 int8_t BME280_I2C_bus_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t cnt, void *intf_ptr);
 uint8_t* nrf24_read_register(uint8_t reg);
 void nrf24_write_register(uint8_t reg, uint8_t value);
+int test_BME280_connection();
 int test_nrf24_connection();
 void set_nrf24_SPI_CSN(uint8_t input);
 void set_nrf24_SPI_CE(uint8_t input);

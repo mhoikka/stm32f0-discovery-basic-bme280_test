@@ -210,6 +210,21 @@ void BME_Init(){
 }
 
 /**
+ * @brief  Initializes the SPI1 communication
+ * @retval int 1 if successful, 0 if not
+ */
+int test_BME280_connection(){
+  uint8_t chip_id = 0;
+  bme280_get_regs(BME280_CHIP_ID_ADDR, &chip_id, 1, &bme280_initparam);
+  if(chip_id == BME280_CHIP_ID){
+    return 1;
+  }
+  else{
+    return 0;
+  }
+}
+
+/**
  * @brief  Initializes the I2C1 communication
  * @retval None
  */
