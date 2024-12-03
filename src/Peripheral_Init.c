@@ -215,7 +215,7 @@ void BME_Init(){
  */
 int test_BME280_connection(){
   uint8_t chip_id = 0;
-  bme280_get_regs(BME280_CHIP_ID_ADDR, &chip_id, 1, &bme280_initparam);
+  bme280_get_regs(BME280_CHIP_ID, &chip_id, 1, &bme280_initparam);
   if(chip_id == BME280_CHIP_ID){
     return 1;
   }
