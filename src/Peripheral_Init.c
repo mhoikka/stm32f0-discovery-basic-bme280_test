@@ -219,7 +219,7 @@ int BME_Init(){
 	I2C1->TXDR = BME_ID_REG;
   bme_id = I2C1->RXDR;
   send_stringln("Start 4");
-  send_stringln("%d", bme_id);
+  send_stringln(  itoa((int)bme_id, (char*)NULL, 10));
   bme280_delay_microseconds(1000000, NULL);
   if (bme_id != 0x60){
     return 0;
