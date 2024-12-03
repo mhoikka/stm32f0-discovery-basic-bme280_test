@@ -214,7 +214,7 @@ int BME_Init(){
   //check if the bme280 chip is connected and ready
   uint8_t bme_id = 0;
   BME280_I2C_bus_read(BME_ID_REG, &bme_id, 1, NULL);
-  if (bme_id != 0x60){
+  if (bme_id != 96){
     return 0;
   }
 
