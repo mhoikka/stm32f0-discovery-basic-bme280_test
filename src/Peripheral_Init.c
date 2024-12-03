@@ -219,7 +219,7 @@ int BME_Init(){
   char * buffer3[10];
   send_stringln(  itoa((int)bme_id, buffer3, 10));
   bme280_delay_microseconds(1000000, NULL);
-  if (device_id != BME280_EXPECTED_ID) {
+  if (device_id != 0x60) {
     return 0;
   }
 
