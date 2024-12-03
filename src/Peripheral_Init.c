@@ -396,27 +396,27 @@ void nrf24_clear_TX(){
     set_nrf24_SPI_CSN(1);
 }
 
-void test_nrf24_connection() {
+/** 
+* @brief:  tests NRF24 connection
+* @return: int 0 if successful, 1 if not
+*/
+int test_nrf24_connection() {
 
-    set_nrf24_SPI_CSN(1); //make sure these pins are at the right level
+    set_nrf24_SPI_CSN(1); //Make sure these pins are set at the right level
     set_nrf24_SPI_CE(0);
     Delay(100); //Let the chip power up and down
-    /*
-    uint8_t configValue = nrf24_read_register(STATUS_REG); 
-    nrf24_write_register(STATUS_REG, CONFIG_SETTINGS); 
     
-    uint8_t configValue2 = nrf24_read_register(STATUS_REG); 
-
-    //set_nrf24_SPI_CE(1); //enables chip to receive data
-    //Delay(2);
+    uint8_t configValue = nrf24_read_register(CONFIG); 
+    nrf24_write_register(CONFIG, 0x02); 
+    bme280_delay_microseconds(2000, NULL); //wait for chip to go into Standby-I mode
+    uint8_t configValue2 = nrf24_read_register(CONFIG); 
 
     // Check if expected bits are set
-    if ((configValue & CONFIG_SETTINGS) == CONFIG_SETTINGS) {
-        send_stringln("Successful: READ bits match WRITE bits");
+    if (configValue == configValue2) {
+        return 1;
     } else {
-        send_stringln("Failure: READ bits do not match WRITE bits");
-    }
-    */
+        return 0;
+    } 
 }
 
 uint8_t ADDRESS_LEN = 3;
@@ -467,7 +467,6 @@ void transmit(void * data, uint8_t data_len, uint8_t data_size){
   int len_transmit = 32; 
   int len_left = 0;
   uint8_t data_seg[32];
-  //uint8_t data_send[32];
   nrf24_write_register(CONFIG, 0x0A);         //set to PTX mode and turn on power bit 0x0A
   bme280_delay_microseconds(2*1000, NULL);  //wait for chip to go into Standby-I mode
   while(data_len > 0){
