@@ -216,7 +216,7 @@ int BME_Init(){
   send_stringln("Start 3");
   BME280_I2C_bus_read(BME_ID_REG, &bme_id, 1, NULL);
   send_stringln("Start 4");
-  //char * buffer3[10];
+  char * buffer3[10];
   send_stringln(  itoa((int)bme_id, buffer3, 10));
   bme280_delay_microseconds(1000000, NULL);
   if (bme_id != 0x60){
