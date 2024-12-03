@@ -217,7 +217,7 @@ int BME_Init(){
   bme280_get_regs(BME_ID_REG, &device_id, 1, &bme280_initparam);
   send_stringln("Start 4");
   char * buffer3[10];
-  send_stringln(  itoa((int)bme_id, buffer3, 10));
+  send_stringln(  itoa((int)device_id, buffer3, 10));
   bme280_delay_microseconds(1000000, NULL);
   if (device_id != 0x60) {
     return 0;
