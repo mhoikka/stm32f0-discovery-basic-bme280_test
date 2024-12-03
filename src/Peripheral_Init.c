@@ -14,6 +14,7 @@ typedef struct my_device_context {
 struct my_device_context ctx = {};
 struct bme280_dev bme280_initparam;
 struct bme280_data bme280_datastruct;
+struct bme280_settings bme_settings;
 
 uint8_t NUM_REGISTERS_BME280 = 4;
 
@@ -187,14 +188,9 @@ struct bme280_data get_sensor_reading(){
 
 /**
  * @brief Initializes the BME 280 sensor
- * @retval None
+ * @retval int 1 if successful, 0 if not
  */
-void BME_Init(){
-  uint8_t chip_id = 0;
-  bme280_get_regs(BME_ID_REG, &chip_id, 1, &bme280_initparam);
-  if(chip_id != BME280_CHIP_ID){ //check if chip is connected and ready
-    return 0;
-  }
+int BME_Init(){
   bme280_initparam.chip_id = BME280_CHIP_ID; 
   bme280_initparam.intf = BME280_I2C_INTF; 
   bme280_initparam.intf_ptr = (void *)&ctx; 
@@ -204,18 +200,32 @@ void BME_Init(){
   bme280_initparam.delay_us = bme280_delay_microseconds;
   bme280_init(&bme280_initparam);
 
-  struct bme280_settings bme_settings;
   bme_settings.filter = BME280_FILTER_COEFF_16;             //  Adjust as needed
   bme_settings.osr_h = BME280_OVERSAMPLING_16X ;            // Humidity oversampling
   bme_settings.osr_p = BME280_OVERSAMPLING_16X ;            // Pressure oversampling
   bme_settings.osr_t = BME280_OVERSAMPLING_16X ;            // Temperature oversampling
   bme_settings.standby_time = BME280_STANDBY_TIME_62_5_MS;  // Standby time
-
-  bme280_set_sensor_settings(BME280_SEL_FILTER | BME280_SEL_OSR_HUM | BME280_SEL_OSR_PRESS | BME280_SEL_OSR_TEMP, &bme_settings, &bme280_initparam);
-  bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam);  
-  return 1; //TODO check if setup was successful before returning
+ 
+  uint8_t chip_id = 0;
+  bme280_get_regs(BME_ID_REG, &chip_id, 1, &bme280_initparam);
+  if(chip_id != BME280_CHIP_ID){ //check if chip is connected and ready
+    return 0;
+  } 
+  else{
+    return 1;
+  }
 }
 
+/**
+ * @brief Sets up the BME 280 sensor
+ * @retval None
+ */
+void BME_setup(){
+  bme280_set_sensor_settings(BME280_SEL_FILTER | BME280_SEL_OSR_HUM | BME280_SEL_OSR_PRESS | BME280_SEL_OSR_TEMP, &bme_settings, &bme280_initparam);
+  bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam); 
+}
+
+void BMEsetup()
 /**
  * @brief  Initializes the I2C1 communication
  * @retval None

@@ -25,3 +25,5 @@ void MySPI_Init();
 void NRF24L01p_Init();
 void I2C_Settings_Init();
 void UART_Settings_Init();
+void BME_setup();
+int BME_init();

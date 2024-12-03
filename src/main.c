@@ -57,6 +57,7 @@ int main(void)
 
   send_stringln("Start");
   while(!BME_Init()); // Wait for the BME280 to be ready{
+  BME_setup();
   
   NRF24L01p_Init();
   Delay(1);
