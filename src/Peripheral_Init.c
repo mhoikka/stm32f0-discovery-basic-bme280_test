@@ -83,7 +83,7 @@ int8_t BME280_I2C_bus_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, vo
   // Wait for not busy
   while (!(I2C1->ISR & I2C_ISR_BUSY));
   send_stringln("Start 4.4");
-	while ((I2C1->ISR & I2C_ISR_BUSY));
+	//while ((I2C1->ISR & I2C_ISR_BUSY));
   send_stringln("Start 4.5");
 
 	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (cnt << 16) | (I2C_CR2_RD_WRN) | (I2C_CR2_AUTOEND);
@@ -99,7 +99,7 @@ send_stringln("Start 4.6");
 
 	// Wait for not busy
   while (!(I2C1->ISR & I2C_ISR_BUSY));
-	while ((I2C1->ISR & I2C_ISR_BUSY));
+	//while ((I2C1->ISR & I2C_ISR_BUSY));
   send_stringln("Start 4.7");
 	//return the status of the read operation
 
