@@ -213,8 +213,13 @@ void BME_setup(){
 int BME_Init(){
   //check if the bme280 chip is connected and ready
   uint8_t bme_id = 0;
+  send_stringln("Start 3");
   BME280_I2C_bus_read(BME_ID_REG, &bme_id, 1, NULL);
-  if (bme_id != 96){
+  send_stringln("Start 4");
+  //char * buffer3[10];
+  send_stringln(  itoa((int)bme_id, buffer3, 10));
+  bme280_delay_microseconds(1000000, NULL);
+  if (bme_id != 0x60){
     return 0;
   }
 
