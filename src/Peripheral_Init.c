@@ -212,7 +212,9 @@ void BME_setup(){
  */
 int BME_Init(){
   //check if the bme280 chip is connected and ready
-  if (bme280_init(&bme280_initparam) == BME280_E_DEV_NOT_FOUND){
+  try{
+    bme280_init(&bme280_initparam);
+  }catch(...){
     return 0;
   }
   bme280_set_sensor_settings(BME280_SEL_FILTER | BME280_SEL_OSR_HUM | BME280_SEL_OSR_PRESS | BME280_SEL_OSR_TEMP, &bme_settings, &bme280_initparam);
