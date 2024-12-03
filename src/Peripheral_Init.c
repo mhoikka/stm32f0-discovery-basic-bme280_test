@@ -33,6 +33,7 @@ uint8_t READ_PAYLOAD_COMMAND = 0x60;
 uint8_t READ_COMMAND = 0x00;
 uint8_t STATUS_REG = 0x07;
 uint8_t FLUSH_TX = 0xE1;
+uint8_t BME_ID_REG = 0xD0;
 
 uint8_t NO_ACK = 0;
 uint8_t ACK = 1;
@@ -210,12 +211,12 @@ void BME_Init(){
 }
 
 /**
- * @brief  Initializes the SPI1 communication
+ * @brief  Tests if BME280 is turned on and connected
  * @retval int 1 if successful, 0 if not
  */
 int test_BME280_connection(){
   uint8_t chip_id = 0;
-  bme280_get_regs(BME280_CHIP_ID, &chip_id, 1, &bme280_initparam);
+  bme280_get_regs(BME_ID_REG, &chip_id, 1, &bme280_initparam);
   if(chip_id == BME280_CHIP_ID){
     return 1;
   }
