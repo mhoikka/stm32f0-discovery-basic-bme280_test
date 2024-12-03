@@ -217,7 +217,7 @@ int BME_Init(){
   uint32_t dev_addr = BME280_I2C_ADDR_SEC;
 	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (1 << 16) | (I2C_CR2_AUTOEND);
 	I2C1->TXDR = BME_ID_REG;
-  int bme_id = I2C1->RXDR;
+  bme_id = I2C1->RXDR;
   send_stringln("Start 4");
   if (bme_id != 0x60){
     return 0;
