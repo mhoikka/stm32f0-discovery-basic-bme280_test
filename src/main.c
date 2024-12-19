@@ -67,7 +67,7 @@ int main(void)
 
   while (1)
   {
-    // Display new sensor readings and LED2 Toggle each 1000ms
+    // Display new sensor readings and LED2 Toggle every ~10 seconds
     STM_EVAL_LEDToggle(LED2);
     
     display_sensor_reading();
@@ -78,7 +78,12 @@ int main(void)
     
     transmit(readings_arr, sizeof(readings_arr)/(sizeof(unsigned char)), 1); 
 
-    Delay(1000);
+    //switch to standby-I mode by setting CE low
+    set_nrf24_SPI_CE(0);
+    
+    Delay(10000);
+    //switch to TX mode by setting CE high
+    set_nrf24_SPI_CE(1);
   }
 }
 

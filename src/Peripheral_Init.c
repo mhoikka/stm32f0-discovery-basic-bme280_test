@@ -210,6 +210,8 @@ void BME_setup(){
  * @retval int 1 if successful, 0 if not
  */
 int BME_Init(){
+  // Check if power is on for bme280
+  
   bme280_init(&bme280_initparam);
   bme280_set_sensor_settings(BME280_SEL_FILTER | BME280_SEL_OSR_HUM | BME280_SEL_OSR_PRESS | BME280_SEL_OSR_TEMP, &bme_settings, &bme280_initparam);
   bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam); 
