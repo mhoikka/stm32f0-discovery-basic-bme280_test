@@ -51,9 +51,9 @@ int main(void)
 
   int readings_arr[3];
 
-  System_Clock_Init();
   I2C_Settings_Init();
   UART_Settings_Init();
+  System_Clock_Init();
 
   BME_setup();
   while(!BME_Init()); // Wait for the BME280 to be ready
