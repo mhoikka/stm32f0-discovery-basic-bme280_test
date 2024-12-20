@@ -59,7 +59,7 @@ int main(void)
   while(!BME_Init()); // Wait for the BME280 to be ready
 
   NRF24L01p_Init();
-  //Delay(1); TODO reenable this later or remove it
+  Delay(1); 
   while(!test_nrf24_connection()); // Wait for the NRF24 to be ready
 
   //transmit(data, sizeof(data)/sizeof(unsigned char)); 
@@ -80,8 +80,8 @@ int main(void)
 
     set_nrf24_SPI_CE(0); //switch NRF24 to standby-I mode by setting CE low
 
-    //Delay(1); // Delay for 10 seconds - BME wakeup time (113 ms max) + NRF24L01+ standby I mode wakeup (130 us)
-    PWR_EnterSleepMode(PWR_SLEEPEntry_WFI); //switch STM32 into sleep power mode
+    Delay(9887); // Delay for 10 seconds - BME wakeup time (113 ms max) + NRF24L01+ standby I mode wakeup (130 us)
+    //PWR_EnterSleepMode(PWR_SLEEPEntry_WFI); //switch STM32 into sleep power mode CAN'T YET, NO TIMER PERIPHERAL
 
     set_nrf24_SPI_CE(1); //switch NRF24 to TX mode by setting CE high
   }
@@ -93,9 +93,7 @@ int main(void)
  */
 void System_Clock_Init(){
   RCC_GetClocksFreq(&RCC_Clocks);
-  SysTick_Config((uint32_t)(RCC_Clocks.HCLK_Frequency*1)); // SysTick end of count event each 1s
-
-  //RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE); //Enable the RCC for PWR peripheral
+  SysTick_Config(RCC_Clocks.HCLK_Frequency/1000); // SysTick end of count event each 1ms
 }
 
 /**
