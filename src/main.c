@@ -92,9 +92,10 @@ int main(void)
  * @retval None
  */
 void System_Clock_Init(){
+  char arr[10];
   RCC_GetClocksFreq(&RCC_Clocks);
   //SysTick_Config(RCC_Clocks.HCLK_Frequency/1000); // SysTick end of count event each 1ms
-  send_stringln(itoa(SysTick_Config(RCC_Clocks.HCLK_Frequency/1000), (char*)malloc(1), 10));
+  send_stringln(itoa(SysTick_Config(RCC_Clocks.HCLK_Frequency/1000), arr, 10));
 }
 
 /**
