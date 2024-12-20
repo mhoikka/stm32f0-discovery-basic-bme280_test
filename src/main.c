@@ -82,10 +82,16 @@ int main(void)
 
     Delay(1); // Delay for 10 seconds - BME wakeup time (113 ms max) + NRF24L01+ standby I mode wakeup (130 us)
     
-    //SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk; // Disable SysTick by clearing the ENABLE bit (bit 0)
+    SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk; // Disable SysTick by clearing the ENABLE bit (bit 0)
 
     PWR_EnterSleepMode(PWR_SLEEPEntry_WFI); //switch STM32 into sleep power mode 
-    //SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk; // Enable SysTick by clearing the ENABLE bit (bit 0)
+    
+    //use RTC to wake up from sleep mode in 9887 ms 9887
+    RTC_SetAlarm(RTC_Alarm_A, RTC_GetCounter() + 1000); // Set the alarm to 9887 ms from now
+    RTC_AlarmCmd(RTC_Alarm_A, ENABLE); // Enable the alarm
+    PWR_EnterSTANDBYMode(); //switch STM32 into standby power mode
+
+    SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk; // Enable SysTick by clearing the ENABLE bit (bit 0)
 
     set_nrf24_SPI_CE(1); //switch NRF24 to TX mode by setting CE high
   }
@@ -97,7 +103,7 @@ int main(void)
  */
 void System_Clock_Init(){
   RCC_GetClocksFreq(&RCC_Clocks);
-  SysTick_Config(RCC_Clocks.HCLK_Frequency/100); // SysTick end of count event
+  SysTick_Config(RCC_Clocks.HCLK_Frequency/1000);  // SysTick 1 msec interrupts
 }
 
 /**
