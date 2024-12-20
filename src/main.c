@@ -96,6 +96,7 @@ void System_Clock_Init(){
   RCC_GetClocksFreq(&RCC_Clocks);
   SysTick_Config(RCC_Clocks.HCLK_Frequency / 1000);
   send_stringln(itoa((int)(RCC_Clocks.HCLK_Frequency), temp, 10));
+  send_stringln("Test");
 }
 
 /**
