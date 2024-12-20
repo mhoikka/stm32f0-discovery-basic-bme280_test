@@ -80,7 +80,7 @@ int main(void)
 
     set_nrf24_SPI_CE(0); //switch NRF24 to standby-I mode by setting CE low
 
-    Delay(1); // Delay for 10 seconds - BME wakeup time (113 ms max) + NRF24L01+ standby I mode wakeup (130 us)
+    //Delay(1); // Delay for 10 seconds - BME wakeup time (113 ms max) + NRF24L01+ standby I mode wakeup (130 us)
     PWR_EnterSleepMode(PWR_SLEEPEntry_WFI); //switch STM32 into sleep power mode
 
     set_nrf24_SPI_CE(1); //switch NRF24 to TX mode by setting CE high
@@ -93,11 +93,8 @@ int main(void)
  */
 void System_Clock_Init(){
   RCC_GetClocksFreq(&RCC_Clocks);
-  SysTick_Config((uint32_t)(RCC_Clocks.HCLK_Frequency*1)); // SysTick end of count event each 1ms
-  //generate an interrupt every SysTick
-  NVIC_SetPriority(SysTick_IRQn, 0); //highest priority
-  NVIC_EnableIRQ(SysTick_IRQn);
-  //SysTick->CTRL  |= SysTick_CTRL_ENABLE_Msk; 
+  SysTick_Config((uint32_t)(RCC_Clocks.HCLK_Frequency*1)); // SysTick end of count event each 1s
+
   //RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE); //Enable the RCC for PWR peripheral
 }
 
