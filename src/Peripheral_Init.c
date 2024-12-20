@@ -416,7 +416,7 @@ int test_nrf24_connection() {
     set_nrf24_SPI_CSN(1); //Make sure these pins are set at the right level
     set_nrf24_SPI_CE(0);
     //Delay(100); //Let the chip power up and down
-    bme280_delay_microseconds(100*1000, NULL)
+    bme280_delay_microseconds(100*1000, NULL);
 
     uint8_t configValue = nrf24_read_register(CONFIG); 
     nrf24_write_register(CONFIG, 0x02); 
