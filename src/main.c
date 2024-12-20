@@ -78,8 +78,8 @@ int main(void)
     
     transmit(readings_arr, sizeof(readings_arr)/(sizeof(unsigned char)), 1); 
 
-    //switch to standby-I mode by setting CE low
-    set_nrf24_SPI_CE(0);
+    set_nrf24_SPI_CE(0); //switch to standby-I mode by setting CE low
+    PWR_EnterSleepMode(PWR_SLEEPEntry_WFI); //switch STM32 into sleep power mode
     
     Delay(9887); // Delay for 10 seconds - BME wakeup time (113 ms max) + NRF24L01+ standby I mode wakeup (130 us)
     //switch to TX mode by setting CE high
@@ -93,11 +93,8 @@ int main(void)
  */
 void System_Clock_Init(){
   char temp[10];
-  send_stringln("Test before");
   RCC_GetClocksFreq(&RCC_Clocks);
-  SysTick_Config(RCC_Clocks.HCLK_Frequency / 1000);
-  send_stringln(itoa((int)(RCC_Clocks.HCLK_Frequency), temp, 10));
-  send_stringln("Test after");
+  SysTick_Config((int)RCC_Clocks.HCLK_Frequency * 9.887); // Interrupt delay = 10 s - BME wakeup time (113 ms max) + NRF24L01+ standby I mode wakeup (130 us)
 }
 
 /**
