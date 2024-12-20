@@ -98,7 +98,8 @@ int main(void)
  */
 void System_Clock_Init(){
   RCC_GetClocksFreq(&RCC_Clocks);
-  SysTick_Config((uint32_t)(RCC_Clocks.HCLK_Frequency*9.887)); // SysTick end of count event each 1ms
+  SysTick_Config((uint32_t)(RCC_Clocks.HCLK_Frequency*1)); // SysTick end of count event each 1ms
+  SysTick->CTRL  |= SysTick_CTRL_ENABLE_Msk; 
 }
 
 /**
