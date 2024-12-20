@@ -59,7 +59,7 @@ int main(void)
   while(!BME_Init()); // Wait for the BME280 to be ready
 
   NRF24L01p_Init();
-  Delay(1); 
+  //Delay(1); TODO change back 
   while(!test_nrf24_connection()); // Wait for the NRF24 to be ready
 
   //transmit(data, sizeof(data)/sizeof(unsigned char)); 
@@ -81,7 +81,11 @@ int main(void)
     set_nrf24_SPI_CE(0); //switch NRF24 to standby-I mode by setting CE low
 
     Delay(1); // Delay for 10 seconds - BME wakeup time (113 ms max) + NRF24L01+ standby I mode wakeup (130 us)
+    
+    SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk; // Disable SysTick by clearing the ENABLE bit (bit 0)
+
     PWR_EnterSleepMode(PWR_SLEEPEntry_WFI); //switch STM32 into sleep power mode 
+    SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk; // Enable SysTick by clearing the ENABLE bit (bit 0)
 
     set_nrf24_SPI_CE(1); //switch NRF24 to TX mode by setting CE high
   }
@@ -92,9 +96,8 @@ int main(void)
  * @retval None
  */
 void System_Clock_Init(){
-  char arr[10];
   RCC_GetClocksFreq(&RCC_Clocks);
-  SysTick_Config(RCC_Clocks.HCLK_Frequency*9); // SysTick end of count event each 1ms
+  SysTick_Config(474576000); // SysTick end of count event
 }
 
 /**
@@ -117,7 +120,7 @@ void Delay(__IO uint32_t nTime)
 void TimingDelay_Decrement(void)
 {
   if (TimingDelay != 0x00)
-  { 
+  {
     TimingDelay--;
   }
 }
