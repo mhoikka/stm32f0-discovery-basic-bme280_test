@@ -82,10 +82,10 @@ int main(void)
 
     Delay(1); // Delay for 10 seconds - BME wakeup time (113 ms max) + NRF24L01+ standby I mode wakeup (130 us)
     
-    SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk; // Disable SysTick by clearing the ENABLE bit (bit 0)
+    //SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk; // Disable SysTick by clearing the ENABLE bit (bit 0)
 
     PWR_EnterSleepMode(PWR_SLEEPEntry_WFI); //switch STM32 into sleep power mode 
-    SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk; // Enable SysTick by clearing the ENABLE bit (bit 0)
+    //SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk; // Enable SysTick by clearing the ENABLE bit (bit 0)
 
     set_nrf24_SPI_CE(1); //switch NRF24 to TX mode by setting CE high
   }
