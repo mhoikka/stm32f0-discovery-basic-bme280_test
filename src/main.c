@@ -78,17 +78,12 @@ int main(void)
     
     transmit(readings_arr, sizeof(readings_arr)/(sizeof(unsigned char)), 1); 
 
-    set_nrf24_SPI_CE(0); //switch to standby-I mode by setting CE low
+    set_nrf24_SPI_CE(0); //switch NRF24 to standby-I mode by setting CE low
 
-    //disable SysTick timer
-    //SysTick->CTRL  &= ~SysTick_CTRL_ENABLE_Msk;
-    PWR_EnterSleepMode(PWR_SLEEPEntry_WFI); //switch STM32 into sleep power mode
-    //generate an interrupt to the STM32F030K6T6 to wake up from sleep mode after 10 seconds
     Delay(1); // Delay for 10 seconds - BME wakeup time (113 ms max) + NRF24L01+ standby I mode wakeup (130 us)
-    //enable SysTick timer
-    //SysTick->CTRL  |= SysTick_CTRL_ENABLE_Msk;
+    PWR_EnterSleepMode(PWR_SLEEPEntry_WFI); //switch STM32 into sleep power mode
 
-    set_nrf24_SPI_CE(1); //switch to TX mode by setting CE high
+    set_nrf24_SPI_CE(1); //switch NRF24 to TX mode by setting CE high
   }
 }
 
@@ -99,7 +94,8 @@ int main(void)
 void System_Clock_Init(){
   RCC_GetClocksFreq(&RCC_Clocks);
   SysTick_Config((uint32_t)(RCC_Clocks.HCLK_Frequency*1)); // SysTick end of count event each 1ms
-  SysTick->CTRL  |= SysTick_CTRL_ENABLE_Msk; 
+  //SysTick->CTRL  |= SysTick_CTRL_ENABLE_Msk; 
+  //RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE); //Enable the RCC for PWR peripheral
 }
 
 /**
