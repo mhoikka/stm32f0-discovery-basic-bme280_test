@@ -97,7 +97,7 @@ int main(void)
  */
 void System_Clock_Init(){
   RCC_GetClocksFreq(&RCC_Clocks);
-  SysTick_Config(474576000); // SysTick end of count event
+  SysTick_Config(16777215); // SysTick end of count event
 }
 
 /**
