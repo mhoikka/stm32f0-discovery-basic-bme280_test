@@ -81,12 +81,12 @@ int main(void)
     set_nrf24_SPI_CE(0); //switch to standby-I mode by setting CE low
 
     //disable SysTick timer
-    SysTick->CTRL  &= ~SysTick_CTRL_ENABLE_Msk;
+    //SysTick->CTRL  &= ~SysTick_CTRL_ENABLE_Msk;
     PWR_EnterSleepMode(PWR_SLEEPEntry_WFI); //switch STM32 into sleep power mode
     //generate an interrupt to the STM32F030K6T6 to wake up from sleep mode after 10 seconds
     Delay(1); // Delay for 10 seconds - BME wakeup time (113 ms max) + NRF24L01+ standby I mode wakeup (130 us)
     //enable SysTick timer
-    SysTick->CTRL  |= SysTick_CTRL_ENABLE_Msk;
+    //SysTick->CTRL  |= SysTick_CTRL_ENABLE_Msk;
 
     set_nrf24_SPI_CE(1); //switch to TX mode by setting CE high
   }
