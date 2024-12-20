@@ -59,12 +59,11 @@ int main(void)
   while(!BME_Init()); // Wait for the BME280 to be ready
 
   NRF24L01p_Init();
-  //Delay(1); TODO change back 
+  Delay(1); //not 1 ms anymore, closer to 0.34 sec
   while(!test_nrf24_connection()); // Wait for the NRF24 to be ready
 
-  //transmit(data, sizeof(data)/sizeof(unsigned char)); 
   BlinkSpeed = 0;
-
+  uint8_t powerinc = 0;
   while (1)
   {
     // Display new sensor readings and LED2 Toggle every ~10 seconds
@@ -80,19 +79,16 @@ int main(void)
 
     set_nrf24_SPI_CE(0); //switch NRF24 to standby-I mode by setting CE low
 
-    Delay(1); // Delay for 10 seconds - BME wakeup time (113 ms max) + NRF24L01+ standby I mode wakeup (130 us)
-    
+    //Delay(1); // Delay for 10 seconds - BME wakeup time (113 ms max) + NRF24L01+ standby I mode wakeup (130 us)
     SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk; // Disable SysTick by clearing the ENABLE bit (bit 0)
-
     PWR_EnterSleepMode(PWR_SLEEPEntry_WFI); //switch STM32 into sleep power mode 
-    
-    //use RTC to wake up from sleep mode in 9887 ms 9887
-    RTC_SetAlarm(RTC_Alarm_A, RTC_GetCounter() + 1000); // Set the alarm to 9887 ms from now
-    RTC_AlarmCmd(RTC_Alarm_A, ENABLE); // Enable the alarm
-    PWR_EnterSTANDBYMode(); //switch STM32 into standby power mode
 
-    SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk; // Enable SysTick by clearing the ENABLE bit (bit 0)
-
+    while(powerinc != 29){ //check if system should be re-enabled every loop
+      ++powerinc;
+      PWR_EnterSleepMode(PWR_SLEEPEntry_WFI); //switch STM32 into sleep power mode 
+    }
+    SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk; // Enable SysTick by setting the ENABLE bit (bit 0)
+    powerinc = 0; //reset powerinc to 0
     set_nrf24_SPI_CE(1); //switch NRF24 to TX mode by setting CE high
   }
 }
@@ -103,7 +99,7 @@ int main(void)
  */
 void System_Clock_Init(){
   RCC_GetClocksFreq(&RCC_Clocks);
-  SysTick_Config(RCC_Clocks.HCLK_Frequency/1000);  // SysTick 1 msec interrupts
+  SysTick_Config(16777215); // 2^24 - 1 ticks per systick (~0.34 s) // SysTick 1 msec interrupts RCC_Clocks.HCLK_Frequency/1000
 }
 
 /**
