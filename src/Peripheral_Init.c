@@ -415,11 +415,12 @@ int test_nrf24_connection() {
 
     set_nrf24_SPI_CSN(1); //Make sure these pins are set at the right level
     set_nrf24_SPI_CE(0);
-    Delay(100); //Let the chip power up and down
-    
+    //Delay(100); //Let the chip power up and down
+    bme280_delay_microseconds(100*1000, NULL)
+
     uint8_t configValue = nrf24_read_register(CONFIG); 
     nrf24_write_register(CONFIG, 0x02); 
-    bme280_delay_microseconds(2000, NULL); //wait for chip to go into Standby-I mode
+    bme280_delay_microseconds(2*1000, NULL); //wait for chip to go into Standby-I mode
     uint8_t configValue2 = nrf24_read_register(CONFIG); 
 
     // Check if expected bits are set
@@ -457,8 +458,8 @@ void transmitBytesNRF(uint8_t * data, uint8_t data_len) {
     nrf24_write_TX_payload(data, ACK, data_len);            //write data to be transmitted into TX FIFO
     set_nrf24_SPI_CE(1);                  //enable chip to transmit data
     bme280_delay_microseconds(130, NULL); //wait for chip to go into TX mode
-    Delay(1);
-    Delay(50);   // Not sure how long this delay needs to be
+    bme280_delay_microseconds(1*1000, NULL);
+    bme280_delay_microseconds(50*1000, NULL);   // Not sure how long this delay needs to be
 
     set_nrf24_SPI_CE(0);                  //disable chip after transmission
 }
