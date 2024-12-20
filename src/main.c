@@ -97,7 +97,7 @@ int main(void)
  */
 void System_Clock_Init(){
   RCC_GetClocksFreq(&RCC_Clocks);
-  SysTick_Config(16777215); // SysTick end of count event
+  SysTick_Config(RCC_Clocks.HCLK_Frequency/100); // SysTick end of count event
 }
 
 /**
