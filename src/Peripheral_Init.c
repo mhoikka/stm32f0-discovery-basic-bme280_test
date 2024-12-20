@@ -181,7 +181,8 @@ struct ambient_reading return_sensor_reading(){
  * @retval None
  */
 struct bme280_data get_sensor_reading(){
-  bme280_set_sensor_mode(BME280_POWERMODE_FORCED, &bme280_initparam); //Activate forced mode again for a new reading
+  //bme280_set_sensor_mode(BME280_POWERMODE_FORCED, &bme280_initparam); //Activate forced mode again for a new reading
+  //bme280_delay_microseconds(113000, &ctx); //Wait for the sensor to take the reading
   bme280_get_sensor_data(BME280_ALL, &bme280_datastruct, &bme280_initparam);
   return bme280_datastruct;
 }
@@ -215,7 +216,7 @@ int BME_Init(){
   
   bme280_init(&bme280_initparam);
   bme280_set_sensor_settings(BME280_SEL_FILTER | BME280_SEL_OSR_HUM | BME280_SEL_OSR_PRESS | BME280_SEL_OSR_TEMP, &bme_settings, &bme280_initparam);
-  //bme280_set_sensor_mode(BME280_POWERMODE_FORCED, &bme280_initparam); //Using forced mode, don't need this for now
+  bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &bme280_initparam); //Using forced mode, don't need this for now
   return 1; //TODO check more here
 }
 
