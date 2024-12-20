@@ -88,15 +88,16 @@ int main(void)
 }
 
 /**
- * @brief  Initializes the STM32F030R8 clock
+ * @brief  Initializes the STM32F030 clock
  * @retval None
  */
 void System_Clock_Init(){
   char temp[10];
+  send_stringln("Test before");
   RCC_GetClocksFreq(&RCC_Clocks);
   SysTick_Config(RCC_Clocks.HCLK_Frequency / 1000);
   send_stringln(itoa((int)(RCC_Clocks.HCLK_Frequency), temp, 10));
-  send_stringln("Test");
+  send_stringln("Test after");
 }
 
 /**
