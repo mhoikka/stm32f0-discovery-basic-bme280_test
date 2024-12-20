@@ -94,6 +94,9 @@ int main(void)
 void System_Clock_Init(){
   RCC_GetClocksFreq(&RCC_Clocks);
   SysTick_Config((uint32_t)(RCC_Clocks.HCLK_Frequency*1)); // SysTick end of count event each 1ms
+  //generate an interrupt every SysTick
+  NVIC_SetPriority(SysTick_IRQn, 0); //highest priority
+  NVIC_EnableIRQ(SysTick_IRQn);
   //SysTick->CTRL  |= SysTick_CTRL_ENABLE_Msk; 
   //RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE); //Enable the RCC for PWR peripheral
 }
