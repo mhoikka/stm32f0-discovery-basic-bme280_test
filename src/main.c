@@ -94,7 +94,7 @@ int main(void)
 void System_Clock_Init(){
   char temp[10];
   RCC_GetClocksFreq(&RCC_Clocks);
-  SysTick_Config((int)RCC_Clocks.HCLK_Frequency * 9.887); // Interrupt delay = 10 s - BME wakeup time (113 ms max) + NRF24L01+ standby I mode wakeup (130 us)
+  SysTick_Config((int)(RCC_Clocks.HCLK_Frequency * 9.887)); // Interrupt delay = 10 s - BME wakeup time (113 ms max) + NRF24L01+ standby I mode wakeup (130 us)
 }
 
 /**
