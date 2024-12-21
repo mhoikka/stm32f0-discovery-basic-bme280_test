@@ -84,11 +84,15 @@ while(RCC_GetFlagStatus(RCC_FLAG_LSIRDY) == RESET); //Wait for LSI to be ready
 RCC_RTCCLKConfig(RCC_RTCCLKSource_LSI); //Select LSI as RTC clock source
 RCC_RTCCLKCmd(ENABLE);
 
+RTC_WriteProtectionCmd(DISABLE);
+
 RTC_InitTypeDef RTC_InitStruct;
 RTC_InitStruct.RTC_HourFormat = RTC_HourFormat_24;
 RTC_InitStruct.RTC_AsynchPrediv = 0x7F;
 RTC_InitStruct.RTC_SynchPrediv = 0xFF;
 RTC_Init(&RTC_InitStruct);
+
+
 
 RTC_TimeTypeDef RTC_TimeStruct;
 RTC_TimeStruct.RTC_H12 = RTC_H12_AM;
@@ -104,6 +108,8 @@ RTC_DateStruct.RTC_Date = 0x01;
 RTC_DateStruct.RTC_Year = 0x00;
 RTC_SetDate(RTC_Format_BIN, &RTC_DateStruct);
 
+
+RTC_WaitForSynchro();
 
 //Give alarm interrupt priority
 NVIC_InitTypeDef NVIC_InitStruct;
@@ -130,6 +136,7 @@ RTC_SetAlarm(RTC_Format_BIN, RTC_Alarm_A, &RTC_AlarmStruct);
 RTC_ITConfig(RTC_IT_ALRA, ENABLE);
 send_stringln(itoa(RTC_AlarmCmd(RTC_Alarm_A, ENABLE), bufery, 10));
 
+RTC_WriteProtectionCmd(ENABLE);
 
 
 
