@@ -124,7 +124,7 @@ send_stringln(itoa(RTC_TimeStruct2.RTC_Seconds, buffery, 10));
 //Give alarm interrupt priority
 NVIC_InitTypeDef NVIC_InitStruct;
 NVIC_InitStruct.NVIC_IRQChannel = RTC_IRQn;
-NVIC_InitStruct.NVIC_IRQChannelPriority = 3;
+NVIC_InitStruct.NVIC_IRQChannelPriority = 0;
 NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
 NVIC_Init(&NVIC_InitStruct);
 
