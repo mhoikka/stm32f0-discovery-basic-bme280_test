@@ -103,15 +103,13 @@ void System_Clock_Init(){
   RCC_GetClocksFreq(&RCC_Clocks);
   SysTick_Config(RCC_Clocks.HCLK_Frequency/1000); //SysTick_Config(16777215); // 2^24 - 1 ticks per systick (~0.34 s) // SysTick 1 msec interrupts RCC_Clocks.HCLK_Frequency/1000
   //set up RTC
-  
+
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
   PWR_BackupAccessCmd(ENABLE);
-  char buffert[10];
+
   RCC_LSICmd(ENABLE); //Enable LSI 
   RCC_RTCCLKConfig(RCC_RTCCLKSource_LSI); //Select LSI as RTC clock source
-  send_stringln("Before");
   while(RCC_GetFlagStatus(RCC_FLAG_LSIRDY) == RESET); //Wait for LSI to be ready
-  send_stringln("After");
   RCC_RTCCLKCmd(ENABLE);
   RTC_InitTypeDef RTC_InitStruct;
   RTC_InitStruct.RTC_HourFormat = RTC_HourFormat_24;
@@ -145,17 +143,33 @@ void System_Clock_Init(){
   RTC_AlarmStruct.RTC_AlarmMask = RTC_AlarmMask_DateWeekDay | RTC_AlarmMask_Hours | RTC_AlarmMask_Minutes; //TODO Don't mask minutes later
   RTC_AlarmStruct.RTC_AlarmDateWeekDaySel = RTC_AlarmDateWeekDaySel_Date;
   RTC_AlarmStruct.RTC_AlarmDateWeekDay = 0x01;
-  RTC_SetAlarm(RTC_Format_BIN, RTC_Alarm_A, &RTC_AlarmStruct);
-  send_stringln(itoa((RTC_Alarm_A, ENABLE), buffert, 10));
+  RTC_SetAlarm(RTC_Format_BIN, RTC_Alarm_A, &RTC_AlarmStruct); 
+
   //Give alarm interrupt priority
   NVIC_InitTypeDef NVIC_InitStruct;
   NVIC_InitStruct.NVIC_IRQChannel = RTC_IRQn;
   NVIC_InitStruct.NVIC_IRQChannelPriority = 0;
   NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
+  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);
   NVIC_Init(&NVIC_InitStruct);
   RTC_ITConfig(RTC_IT_ALRA, ENABLE);
   RTC_AlarmCmd(RTC_Alarm_A, ENABLE);
+
+  //enable rtc interrupt
+  //RTC_ITConfig(RTC_IT_ALRA, ENABLE);
+  //RTC_AlarmCmd(RTC_Alarm_A, ENABLE);
+  RTC_IRQn interrupt handler
 }
+
+//Create a handler for the RTC alarm interrupt and reset the alarm
+void RTC_IRQHandler(void){
+  if(RTC_GetITStatus(RTC_IT_ALRA) != RESET){
+    RTC_ClearITPendingBit(RTC_IT_ALRA);
+    RTC_AlarmCmd(RTC_Alarm_A, DISABLE);
+    RTC_AlarmCmd(RTC_Alarm_A, ENABLE);
+  }
+}
+
 
 /**
 * @brief  Inserts a delay time.
