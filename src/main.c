@@ -73,55 +73,62 @@ int main(void)
 
 
 RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
-  PWR_BackupAccessCmd(ENABLE);
+PWR_BackupAccessCmd(ENABLE);
 
-  RCC_LSICmd(ENABLE); //Enable LSI 
-  RCC_RTCCLKConfig(RCC_RTCCLKSource_LSI); //Select LSI as RTC clock source
-  while(RCC_GetFlagStatus(RCC_FLAG_LSIRDY) == RESET); //Wait for LSI to be ready
-  RCC_RTCCLKCmd(ENABLE);
-  RTC_InitTypeDef RTC_InitStruct;
-  RTC_InitStruct.RTC_HourFormat = RTC_HourFormat_24;
-  RTC_InitStruct.RTC_AsynchPrediv = 0x7F;
-  RTC_InitStruct.RTC_SynchPrediv = 0xFF;
-  RTC_Init(&RTC_InitStruct);
-  RTC_TimeTypeDef RTC_TimeStruct;
-  RTC_TimeStruct.RTC_H12 = RTC_H12_AM;
-  RTC_TimeStruct.RTC_Hours = 0x00;
-  RTC_TimeStruct.RTC_Minutes = 0x00;
-  RTC_TimeStruct.RTC_Seconds = 0x00;
-  RTC_SetTime(RTC_Format_BIN, &RTC_TimeStruct);
-  RTC_DateTypeDef RTC_DateStruct;
-  RTC_DateStruct.RTC_WeekDay = 0x01;
-  RTC_DateStruct.RTC_Month = 0x01;
-  RTC_DateStruct.RTC_Date = 0x01;
-  RTC_DateStruct.RTC_Year = 0x00;
-  RTC_SetDate(RTC_Format_BIN, &RTC_DateStruct);
-  RTC_TimeTypeDef RTC_TimeStruct_current;
-  RTC_DateTypeDef RTC_DateStruct_current;
-  RTC_GetTime(RTC_Format_BIN, &RTC_TimeStruct_current);
-  RTC_GetDate(RTC_Format_BIN, &RTC_DateStruct_current);
+RCC_LSICmd(ENABLE); //Enable LSI 
+while(RCC_GetFlagStatus(RCC_FLAG_LSIRDY) == RESET); //Wait for LSI to be ready
+RCC_RTCCLKConfig(RCC_RTCCLKSource_LSI); //Select LSI as RTC clock source
+RCC_RTCCLKCmd(ENABLE);
 
-  RTC_TimeTypeDef RTC_TimeStruct_alarm;
-  RTC_TimeStruct_alarm.RTC_H12 = RTC_H12_AM;
-  RTC_TimeStruct_alarm.RTC_Hours = 0x00;
-  RTC_TimeStruct_alarm.RTC_Minutes = 0x00;
-  RTC_TimeStruct_alarm.RTC_Seconds = 0x10;
-  RTC_AlarmTypeDef RTC_AlarmStruct;
-  RTC_AlarmStruct.RTC_AlarmTime = RTC_TimeStruct_alarm;
-  RTC_AlarmStruct.RTC_AlarmMask = RTC_AlarmMask_DateWeekDay | RTC_AlarmMask_Hours | RTC_AlarmMask_Minutes; //TODO Don't mask minutes later
-  RTC_AlarmStruct.RTC_AlarmDateWeekDaySel = RTC_AlarmDateWeekDaySel_Date;
-  RTC_AlarmStruct.RTC_AlarmDateWeekDay = 0x01;
-  RTC_SetAlarm(RTC_Format_BIN, RTC_Alarm_A, &RTC_AlarmStruct); 
-  RTC_AlarmCmd(RTC_Alarm_A, ENABLE);
+RTC_InitTypeDef RTC_InitStruct;
+RTC_InitStruct.RTC_HourFormat = RTC_HourFormat_24;
+RTC_InitStruct.RTC_AsynchPrediv = 0x7F;
+RTC_InitStruct.RTC_SynchPrediv = 0xFF;
+RTC_Init(&RTC_InitStruct);
 
-  //Give alarm interrupt priority
-  NVIC_InitTypeDef NVIC_InitStruct;
-  NVIC_InitStruct.NVIC_IRQChannel = RTC_IRQn;
-  NVIC_InitStruct.NVIC_IRQChannelPriority = 0;
-  NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
+RTC_TimeTypeDef RTC_TimeStruct;
+RTC_TimeStruct.RTC_H12 = RTC_H12_AM;
+RTC_TimeStruct.RTC_Hours = 0x00;
+RTC_TimeStruct.RTC_Minutes = 0x00;
+RTC_TimeStruct.RTC_Seconds = 0x00;
+RTC_SetTime(RTC_Format_BIN, &RTC_TimeStruct);
 
-  NVIC_Init(&NVIC_InitStruct);
-  RTC_ITConfig(RTC_IT_ALRA, ENABLE);
+RTC_DateTypeDef RTC_DateStruct;
+RTC_DateStruct.RTC_WeekDay = 0x01;
+RTC_DateStruct.RTC_Month = 0x01;
+RTC_DateStruct.RTC_Date = 0x01;
+RTC_DateStruct.RTC_Year = 0x00;
+RTC_SetDate(RTC_Format_BIN, &RTC_DateStruct);
+
+RTC_TimeTypeDef RTC_TimeStruct_alarm;
+RTC_TimeStruct_alarm.RTC_H12 = RTC_H12_AM;
+RTC_TimeStruct_alarm.RTC_Hours = 0x00;
+RTC_TimeStruct_alarm.RTC_Minutes = 0x00;
+RTC_TimeStruct_alarm.RTC_Seconds = 0x10;
+
+EXTI_InitTypeDef EXTI_Struct;
+EXTI_Struct.EXTI_Line = EXTI_Line17;
+EXTI_Struct.EXTI_Mode = EXTI_Mode_Interrupt;
+EXTI_Struct.EXTI_Trigger = EXTI_Trigger_Rising;
+EXTI_Struct.EXTI_LineCmd = ENABLE;
+EXTI_Init(&EXTI_Struct);
+
+//Give alarm interrupt priority
+NVIC_InitTypeDef NVIC_InitStruct;
+NVIC_InitStruct.NVIC_IRQChannel = RTC_IRQn;
+NVIC_InitStruct.NVIC_IRQChannelPriority = 0;
+NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
+NVIC_Init(&NVIC_InitStruct);
+
+RTC_AlarmTypeDef RTC_AlarmStruct;
+RTC_AlarmStruct.RTC_AlarmTime = RTC_TimeStruct_alarm;
+RTC_AlarmStruct.RTC_AlarmMask = RTC_AlarmMask_DateWeekDay | RTC_AlarmMask_Hours | RTC_AlarmMask_Minutes; //TODO Don't mask minutes later
+RTC_AlarmStruct.RTC_AlarmDateWeekDaySel = RTC_AlarmDateWeekDaySel_Date;
+RTC_AlarmStruct.RTC_AlarmDateWeekDay = 0x01;
+RTC_SetAlarm(RTC_Format_BIN, RTC_Alarm_A, &RTC_AlarmStruct); 
+RTC_AlarmCmd(RTC_Alarm_A, ENABLE);
+
+RTC_ITConfig(RTC_IT_ALRA, ENABLE);
 
 
 
