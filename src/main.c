@@ -111,13 +111,13 @@ EXTI_Struct.EXTI_LineCmd = ENABLE;
 EXTI_Init(&EXTI_Struct);
 */
 
-RTC_TimeTypeDef RTC_TimeStruct;
-RTC_TimeStruct.RTC_H12 = RTC_H12_AM;
-RTC_TimeStruct.RTC_Hours = 0x00;
-RTC_TimeStruct.RTC_Minutes = 0x00;
-RTC_TimeStruct.RTC_Seconds = 0x00;
-RTC_SetTime(RTC_Format_BIN, &RTC_TimeStruct);
-send_stringln("Time: %d:%d:%d", RTC_TimeStruct.RTC_Hours, RTC_TimeStruct.RTC_Minutes, RTC_TimeStruct.RTC_Seconds);
+RTC_TimeTypeDef RTC_TimeStruct2;
+RTC_TimeStruct2.RTC_H12 = RTC_H12_AM;
+RTC_TimeStruct2.RTC_Hours = 0x00;
+RTC_TimeStruct2.RTC_Minutes = 0x00;
+RTC_TimeStruct2.RTC_Seconds = 0x00;
+RTC_SetTime(RTC_Format_BIN, &RTC_TimeStruct2);
+send_stringln("Time: %d:%d:%d", RTC_TimeStruct2.RTC_Hours, RTC_TimeStruct2.RTC_Minutes, RTC_TimeStruct2.RTC_Seconds);
 
 //Give alarm interrupt priority
 NVIC_InitTypeDef NVIC_InitStruct;
