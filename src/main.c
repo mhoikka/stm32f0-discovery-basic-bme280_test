@@ -6,6 +6,8 @@
 #include "bme280.h"
 #include "bme280_defs.h"
 #include "stm32f0xx_spi.h"
+#include "stm32f0xx_rtc.h"
+#include "Peripheral_Init.h"
 
 
 /* Exported functions ------------------------------------------------------- */
