@@ -80,15 +80,15 @@ int main(void)
     set_nrf24_SPI_CE(0); //switch NRF24 to standby-I mode by setting CE low
 
     //Delay(1); // Delay for 10 seconds - BME wakeup time (113 ms max) + NRF24L01+ standby I mode wakeup (130 us)
-    //SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk; // Disable SysTick by clearing the ENABLE bit (bit 0)
+    SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk; // Disable SysTick by clearing the ENABLE bit (bit 0)
     PWR_EnterSleepMode(PWR_SLEEPEntry_WFI); //switch STM32 into sleep power mode 
-
-    while(powerinc != 29){ //check if system should be re-enabled every loop
+    //MCU should wake up automatically after some time due to RTC alarm
+    /*while(powerinc != 29){ //check if system should be re-enabled every loop
       ++powerinc;
       PWR_EnterSleepMode(PWR_SLEEPEntry_WFI); //switch STM32 into sleep power mode 
-    }
-    //SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk; // Enable SysTick by setting the ENABLE bit (bit 0)
-    powerinc = 0; //reset powerinc to 0
+    }*/
+    SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk; // Enable SysTick by setting the ENABLE bit (bit 0)
+    //powerinc = 0; //reset powerinc to 0
     set_nrf24_SPI_CE(1); //switch NRF24 to TX mode by setting CE high
   }
 }
@@ -99,7 +99,47 @@ int main(void)
  */
 void System_Clock_Init(){
   RCC_GetClocksFreq(&RCC_Clocks);
-  SysTick_Config(16777215); // 2^24 - 1 ticks per systick (~0.34 s) // SysTick 1 msec interrupts RCC_Clocks.HCLK_Frequency/1000
+  SysTick_Config(RCC_Clocks.HCLK_Frequency/1000); //SysTick_Config(16777215); // 2^24 - 1 ticks per systick (~0.34 s) // SysTick 1 msec interrupts RCC_Clocks.HCLK_Frequency/1000
+  //set up RTC
+  
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
+  PWR_BackupAccessCmd(ENABLE);
+  RCC_RTCCLKConfig(RCC_RTCCLKSource_LSI);
+  RCC_RTCCLKCmd(ENABLE);
+  struct RTC_InitTypeDef RTC_InitStruct;
+  RTC_InitStruct.RTC_HourFormat = RTC_HourFormat_24;
+  RTC_InitStruct.RTC_AsynchPrediv = 0x7F;
+  RTC_InitStruct.RTC_SynchPrediv = 0xFF;
+  RTC_Init(RTC_InitStruct);
+  RTC_TimeTypeDef RTC_TimeStruct;
+  RTC_TimeStruct.RTC_H12 = RTC_H12_AM;
+  RTC_TimeStruct.RTC_Hours = 0x00;
+  RTC_TimeStruct.RTC_Minutes = 0x00;
+  RTC_TimeStruct.RTC_Seconds = 0x00;
+  RTC_SetTime(RTC_Format_BIN, &RTC_TimeStruct);
+  RTC_DateTypeDef RTC_DateStruct;
+  RTC_DateStruct.RTC_WeekDay = 0x01;
+  RTC_DateStruct.RTC_Month = 0x01;
+  RTC_DateStruct.RTC_Date = 0x01;
+  RTC_DateStruct.RTC_Year = 0x00;
+  RTC_SetDate(RTC_Format_BIN, &RTC_DateStruct);
+  RTC_TimeTypeDef RTC_TimeStruct_current;
+  RTC_DateTypeDef RTC_DateStruct_current;
+  RTC_GetTime(RTC_Format_BIN, &RTC_TimeStruct_current);
+  RTC_GetDate(RTC_Format_BIN, &RTC_DateStruct_current);
+
+  RTC_TimeTypeDef RTC_TimeStruct_alarm;
+  RTC_TimeStruct_alarm.RTC_H12 = RTC_H12_AM;
+  RTC_TimeStruct_alarm.RTC_Hours = 0x00;
+  RTC_TimeStruct_alarm.RTC_Minutes = 0x00;
+  RTC_TimeStruct_alarm.RTC_Seconds = 0x10;
+  RTC_AlarmTypeDef RTC_AlarmStruct;
+  RTC_AlarmStruct.RTC_AlarmTime = RTC_TimeStruct_alarm;
+  RTC_AlarmStruct.RTC_AlarmMask = RTC_AlarmMask_DateWeekDay | RTC_AlarmMask_Hours | RTC_AlarmMask_Minutes; //TODO Don't mask minutes later
+  RTC_AlarmStruct.RTC_AlarmDateWeekDaySel = RTC_AlarmDateWeekDaySel_Date;
+  RTC_AlarmStruct.RTC_AlarmDateWeekDay = 0x01;
+  RTC_SetAlarm(RTC_Format_BIN, RTC_Alarm_A, &RTC_AlarmStruct);
+  RTC_AlarmCmd(RTC_Alarm_A, ENABLE);
 }
 
 /**
