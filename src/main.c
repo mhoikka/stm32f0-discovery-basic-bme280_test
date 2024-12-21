@@ -100,18 +100,24 @@ RTC_DateStruct.RTC_Date = 0x01;
 RTC_DateStruct.RTC_Year = 0x00;
 RTC_SetDate(RTC_Format_BIN, &RTC_DateStruct);
 
-RTC_TimeTypeDef RTC_TimeStruct_alarm;
-RTC_TimeStruct_alarm.RTC_H12 = RTC_H12_AM;
-RTC_TimeStruct_alarm.RTC_Hours = 0x00;
-RTC_TimeStruct_alarm.RTC_Minutes = 0x00;
-RTC_TimeStruct_alarm.RTC_Seconds = 0x10;
 
+
+/*
 EXTI_InitTypeDef EXTI_Struct;
 EXTI_Struct.EXTI_Line = EXTI_Line17;
 EXTI_Struct.EXTI_Mode = EXTI_Mode_Interrupt;
 EXTI_Struct.EXTI_Trigger = EXTI_Trigger_Rising;
 EXTI_Struct.EXTI_LineCmd = ENABLE;
 EXTI_Init(&EXTI_Struct);
+*/
+
+RTC_TimeTypeDef RTC_TimeStruct;
+RTC_TimeStruct.RTC_H12 = RTC_H12_AM;
+RTC_TimeStruct.RTC_Hours = 0x00;
+RTC_TimeStruct.RTC_Minutes = 0x00;
+RTC_TimeStruct.RTC_Seconds = 0x00;
+RTC_SetTime(RTC_Format_BIN, &RTC_TimeStruct);
+send_stringln("Time: %d:%d:%d", RTC_TimeStruct.RTC_Hours, RTC_TimeStruct.RTC_Minutes, RTC_TimeStruct.RTC_Seconds);
 
 //Give alarm interrupt priority
 NVIC_InitTypeDef NVIC_InitStruct;
@@ -120,6 +126,12 @@ NVIC_InitStruct.NVIC_IRQChannelPriority = 3;
 NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
 NVIC_Init(&NVIC_InitStruct);
 
+RTC_TimeTypeDef RTC_TimeStruct_alarm;
+RTC_TimeStruct_alarm.RTC_H12 = RTC_H12_AM;
+RTC_TimeStruct_alarm.RTC_Hours = 0x00;
+RTC_TimeStruct_alarm.RTC_Minutes = 0x00;
+RTC_TimeStruct_alarm.RTC_Seconds = 0x10;
+
 RTC_AlarmTypeDef RTC_AlarmStruct;
 RTC_AlarmStruct.RTC_AlarmTime = RTC_TimeStruct_alarm;
 RTC_AlarmStruct.RTC_AlarmMask = RTC_AlarmMask_DateWeekDay | RTC_AlarmMask_Hours | RTC_AlarmMask_Minutes; //TODO Don't mask minutes later
@@ -127,8 +139,9 @@ RTC_AlarmStruct.RTC_AlarmDateWeekDaySel = RTC_AlarmDateWeekDaySel_Date;
 RTC_AlarmStruct.RTC_AlarmDateWeekDay = 0x01;
 RTC_SetAlarm(RTC_Format_BIN, RTC_Alarm_A, &RTC_AlarmStruct); 
 RTC_AlarmCmd(RTC_Alarm_A, ENABLE);
+RTC_ITConfig(RTC_IT_ALRA, ENABLE);
 
-//RTC_ITConfig(RTC_IT_ALRA, ENABLE);
+//RTC_AlarmStructInit(&RTC_AlarmStruct);
 
 
 
@@ -137,7 +150,7 @@ RTC_AlarmCmd(RTC_Alarm_A, ENABLE);
 
   
   BlinkSpeed = 0;
-  uint8_t powerinc = 0;
+  //uint8_t powerinc = 0;
   while (1)
   {
     // Display new sensor readings and LED2 Toggle every ~10 seconds
@@ -167,6 +180,15 @@ RTC_AlarmCmd(RTC_Alarm_A, ENABLE);
     //powerinc = 0; //reset powerinc to 0
     set_nrf24_SPI_CE(1); //switch NRF24 to TX mode by setting CE high
   }
+}
+
+void RTC_IRQHandler(void)
+{
+    if (RTC_GetITStatus(RTC_IT_ALRA) != RESET)
+    {
+        RTC_ClearITPendingBit(RTC_IT_ALRA);
+        // Handle the alarm interrupt
+    }
 }
 
 /**
