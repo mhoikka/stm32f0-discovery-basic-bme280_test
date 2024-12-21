@@ -12,7 +12,6 @@
 #include "stm32f0xx_pwr.h"
 #include "stm32f0xx_rtc.h"
 #include "stm32f0xx_exti.h"
-#include "stm32f0xx_nvic.h"
 
 
 /* Exported functions ------------------------------------------------------- */
