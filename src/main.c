@@ -117,7 +117,7 @@ RTC_TimeStruct2.RTC_H12 = RTC_H12_AM;
 RTC_TimeStruct2.RTC_Hours = 0x00;
 RTC_TimeStruct2.RTC_Minutes = 0x00;
 RTC_TimeStruct2.RTC_Seconds = 0x00;
-RTC_SetTime(RTC_Format_BIN, &RTC_TimeStruct2);
+RTC_GetTime(RTC_Format_BIN, &RTC_TimeStruct2);
 send_stringln(itoa(RTC_TimeStruct2.RTC_Hours, buffery, 10));
 send_stringln(itoa(RTC_TimeStruct2.RTC_Minutes, buffery, 10));
 send_stringln(itoa(RTC_TimeStruct2.RTC_Seconds, buffery, 10));
@@ -136,7 +136,7 @@ RTC_TimeStruct_alarm.RTC_Seconds = 0x10;
 
 RTC_AlarmTypeDef RTC_AlarmStruct;
 RTC_AlarmStruct.RTC_AlarmTime = RTC_TimeStruct_alarm;
-RTC_AlarmStruct.RTC_AlarmMask = RTC_AlarmMask_DateWeekDay | RTC_AlarmMask_Hours | RTC_AlarmMask_Minutes; //TODO Don't mask minutes later
+RTC_AlarmStruct.RTC_AlarmMask = RTC_AlarmMask_DateWeekDay | RTC_AlarmMask_Hours | RTC_AlarmMask_Minutes; 
 RTC_AlarmStruct.RTC_AlarmDateWeekDaySel = RTC_AlarmDateWeekDaySel_Date;
 RTC_AlarmStruct.RTC_AlarmDateWeekDay = 0x01;
 RTC_SetAlarm(RTC_Format_BIN, RTC_Alarm_A, &RTC_AlarmStruct); 
