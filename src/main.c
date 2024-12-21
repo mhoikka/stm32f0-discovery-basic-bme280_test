@@ -64,47 +64,15 @@ int main(void)
   Delay(1); //not 1 ms anymore, closer to 0.34 sec
   while(!test_nrf24_connection()); // Wait for the NRF24 to be ready
 
-  BlinkSpeed = 0;
-  uint8_t powerinc = 0;
-  while (1)
-  {
-    // Display new sensor readings and LED2 Toggle every ~10 seconds
-    STM_EVAL_LEDToggle(LED2);
-    
-    display_sensor_reading();
-    struct ambient_reading curr_read = return_sensor_reading();
-    readings_arr[0] = (int)curr_read.temperature;
-    readings_arr[1] = (int)curr_read.pressure; // value is unsigned int
-    readings_arr[2] = (int)curr_read.humidity; // value is unsigned int
-    
-    transmit(readings_arr, sizeof(readings_arr)/(sizeof(unsigned char)), 1); 
 
-    set_nrf24_SPI_CE(0); //switch NRF24 to standby-I mode by setting CE low
 
-    //Delay(1); // Delay for 10 seconds - BME wakeup time (113 ms max) + NRF24L01+ standby I mode wakeup (130 us)
-    SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk; // Disable SysTick by clearing the ENABLE bit (bit 0)
-    PWR_EnterSleepMode(PWR_SLEEPEntry_WFI); //switch STM32 into sleep power mode 
-    //MCU should wake up automatically after some time due to RTC alarm
-    /*while(powerinc != 29){ //check if system should be re-enabled every loop
-      ++powerinc;
-      PWR_EnterSleepMode(PWR_SLEEPEntry_WFI); //switch STM32 into sleep power mode 
-    }*/
-    SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk; // Enable SysTick by setting the ENABLE bit (bit 0)
-    //powerinc = 0; //reset powerinc to 0
-    set_nrf24_SPI_CE(1); //switch NRF24 to TX mode by setting CE high
-  }
-}
 
-/**
- * @brief  Initializes the STM32F030 clock
- * @retval None
- */
-void System_Clock_Init(){
-  RCC_GetClocksFreq(&RCC_Clocks);
-  SysTick_Config(RCC_Clocks.HCLK_Frequency/1000); //SysTick_Config(16777215); // 2^24 - 1 ticks per systick (~0.34 s) // SysTick 1 msec interrupts RCC_Clocks.HCLK_Frequency/1000
-  //set up RTC
 
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
+
+
+
+
+RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
   PWR_BackupAccessCmd(ENABLE);
 
   RCC_LSICmd(ENABLE); //Enable LSI 
@@ -154,17 +122,52 @@ void System_Clock_Init(){
 
   NVIC_Init(&NVIC_InitStruct);
   RTC_ITConfig(RTC_IT_ALRA, ENABLE);
-}
 
-//Create a handler for the RTC alarm interrupt and reset the alarm
-void RTC_IRQHandler(void){
-  if(RTC_GetITStatus(RTC_IT_ALRA) != RESET){
-    RTC_ClearITPendingBit(RTC_IT_ALRA);
-    RTC_AlarmCmd(RTC_Alarm_A, DISABLE);
-    RTC_AlarmCmd(RTC_Alarm_A, ENABLE);
+
+
+
+
+
+  
+  BlinkSpeed = 0;
+  uint8_t powerinc = 0;
+  while (1)
+  {
+    // Display new sensor readings and LED2 Toggle every ~10 seconds
+    STM_EVAL_LEDToggle(LED2);
+    
+    display_sensor_reading();
+    struct ambient_reading curr_read = return_sensor_reading();
+    readings_arr[0] = (int)curr_read.temperature;
+    readings_arr[1] = (int)curr_read.pressure; // value is unsigned int
+    readings_arr[2] = (int)curr_read.humidity; // value is unsigned int
+    
+    transmit(readings_arr, sizeof(readings_arr)/(sizeof(unsigned char)), 1); 
+
+    set_nrf24_SPI_CE(0); //switch NRF24 to standby-I mode by setting CE low
+
+    //Delay(1); // Delay for 10 seconds - BME wakeup time (113 ms max) + NRF24L01+ standby I mode wakeup (130 us)
+    SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk; // Disable SysTick by clearing the ENABLE bit (bit 0)
+    PWR_EnterSleepMode(PWR_SLEEPEntry_WFI); //switch STM32 into sleep power mode 
+    //MCU should wake up automatically after some time due to RTC alarm
+    /*while(powerinc != 29){ //check if system should be re-enabled every loop
+      ++powerinc;
+      PWR_EnterSleepMode(PWR_SLEEPEntry_WFI); //switch STM32 into sleep power mode 
+    }*/
+    SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk; // Enable SysTick by setting the ENABLE bit (bit 0)
+    //powerinc = 0; //reset powerinc to 0
+    set_nrf24_SPI_CE(1); //switch NRF24 to TX mode by setting CE high
   }
 }
 
+/**
+ * @brief  Initializes the STM32F030 clock
+ * @retval None
+ */
+void System_Clock_Init(){
+  RCC_GetClocksFreq(&RCC_Clocks);
+  SysTick_Config(RCC_Clocks.HCLK_Frequency/1000); //SysTick_Config(16777215); // 2^24 - 1 ticks per systick (~0.34 s) // SysTick 1 msec interrupts RCC_Clocks.HCLK_Frequency/1000
+}
 
 /**
 * @brief  Inserts a delay time.
