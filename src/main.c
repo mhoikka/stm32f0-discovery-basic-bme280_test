@@ -128,7 +128,7 @@ RTC_AlarmStruct.RTC_AlarmDateWeekDay = 0x01;
 RTC_SetAlarm(RTC_Format_BIN, RTC_Alarm_A, &RTC_AlarmStruct); 
 RTC_AlarmCmd(RTC_Alarm_A, ENABLE);
 
-RTC_ITConfig(RTC_IT_ALRA, ENABLE);
+//RTC_ITConfig(RTC_IT_ALRA, ENABLE);
 
 
 
