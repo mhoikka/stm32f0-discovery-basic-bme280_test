@@ -177,6 +177,18 @@ RTC_ITConfig(RTC_IT_ALRA, ENABLE);
   }
 }
 
+void RTC_IRQHandler(void)
+{
+    // Check if the interrupt is due to Alarm A
+    if (RTC_GetITStatus(RTC_IT_ALRA) != RESET)
+    {
+        // Clear the interrupt flag
+        RTC_ClearITPendingBit(RTC_IT_ALRA);
+
+        // Optionally, you can add other logic here, such as logging the event or resetting counters
+    }
+}
+
 /**
  * @brief  Initializes the STM32F030 clock
  * @retval None
