@@ -8,6 +8,11 @@
 #include "stm32f0xx_spi.h"
 #include "stm32f0xx_rtc.h"
 #include "Peripheral_Init.h"
+#include "stm32f0xx_rcc.h"
+#include "stm32f0xx_pwr.h"
+#include "stm32f0xx_rtc.h"
+#include "stm32f0xx_exti.h"
+#include "stm32f0xx_nvic.h"
 
 
 /* Exported functions ------------------------------------------------------- */
@@ -111,16 +116,6 @@ EXTI_Struct.EXTI_LineCmd = ENABLE;
 EXTI_Init(&EXTI_Struct);
 */
 
-char buffery[10];
-RTC_TimeTypeDef RTC_TimeStruct2;
-RTC_TimeStruct2.RTC_H12 = RTC_H12_AM;
-RTC_TimeStruct2.RTC_Hours = 0x00;
-RTC_TimeStruct2.RTC_Minutes = 0x00;
-RTC_TimeStruct2.RTC_Seconds = 0x00;
-RTC_GetTime(RTC_Format_BIN, &RTC_TimeStruct2);
-send_stringln(itoa(RTC_TimeStruct2.RTC_Hours, buffery, 10));
-send_stringln(itoa(RTC_TimeStruct2.RTC_Minutes, buffery, 10));
-send_stringln(itoa(RTC_TimeStruct2.RTC_Seconds, buffery, 10));
 //Give alarm interrupt priority
 NVIC_InitTypeDef NVIC_InitStruct;
 NVIC_InitStruct.NVIC_IRQChannel = RTC_IRQn;
