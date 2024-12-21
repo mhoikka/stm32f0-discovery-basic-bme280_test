@@ -147,6 +147,14 @@ void System_Clock_Init(){
   RTC_AlarmStruct.RTC_AlarmDateWeekDay = 0x01;
   RTC_SetAlarm(RTC_Format_BIN, RTC_Alarm_A, &RTC_AlarmStruct);
   send_stringln(itoa((RTC_Alarm_A, ENABLE), buffert, 10));
+  //Give alarm interrupt priority
+  NVIC_InitTypeDef NVIC_InitStruct;
+  NVIC_InitStruct.NVIC_IRQChannel = RTC_IRQn;
+  NVIC_InitStruct.NVIC_IRQChannelPriority = 0;
+  NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
+  NVIC_Init(&NVIC_InitStruct);
+  RTC_ITConfig(RTC_IT_ALRA, ENABLE);
+  RTC_AlarmCmd(RTC_Alarm_A, ENABLE);
 }
 
 /**
