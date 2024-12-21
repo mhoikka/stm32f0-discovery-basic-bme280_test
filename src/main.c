@@ -77,6 +77,7 @@ int main(void)
 
 
 RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
+PWR_RTCAccessCmd(ENABLE);
 PWR_BackupAccessCmd(ENABLE);
 
 RCC_LSICmd(ENABLE); //Enable LSI 
@@ -104,23 +105,14 @@ RTC_DateStruct.RTC_Date = 0x01;
 RTC_DateStruct.RTC_Year = 0x00;
 RTC_SetDate(RTC_Format_BIN, &RTC_DateStruct);
 
-
-
-/*
-EXTI_InitTypeDef EXTI_Struct;
-EXTI_Struct.EXTI_Line = EXTI_Line17;
-EXTI_Struct.EXTI_Mode = EXTI_Mode_Interrupt;
-EXTI_Struct.EXTI_Trigger = EXTI_Trigger_Rising;
-EXTI_Struct.EXTI_LineCmd = ENABLE;
-EXTI_Init(&EXTI_Struct);
-*/
-
 //Give alarm interrupt priority
 NVIC_InitTypeDef NVIC_InitStruct;
 NVIC_InitStruct.NVIC_IRQChannel = RTC_IRQn;
 NVIC_InitStruct.NVIC_IRQChannelPriority = 0;
 NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
 NVIC_Init(&NVIC_InitStruct);
+//Any peripheral interrupt acknowledged by the nested vectored interrupt 
+             //controller (NVIC) can wake up the device from Sleep mode.
 
 RTC_TimeTypeDef RTC_TimeStruct_alarm;
 RTC_TimeStruct_alarm.RTC_H12 = RTC_H12_AM;
@@ -128,14 +120,22 @@ RTC_TimeStruct_alarm.RTC_Hours = 0x00;
 RTC_TimeStruct_alarm.RTC_Minutes = 0x00;
 RTC_TimeStruct_alarm.RTC_Seconds = 0x10;
 
+char bufery[10];
 RTC_AlarmTypeDef RTC_AlarmStruct;
 RTC_AlarmStruct.RTC_AlarmTime = RTC_TimeStruct_alarm;
 RTC_AlarmStruct.RTC_AlarmMask = RTC_AlarmMask_DateWeekDay | RTC_AlarmMask_Hours | RTC_AlarmMask_Minutes; 
 RTC_AlarmStruct.RTC_AlarmDateWeekDaySel = RTC_AlarmDateWeekDaySel_Date;
 RTC_AlarmStruct.RTC_AlarmDateWeekDay = 0x01;
 RTC_SetAlarm(RTC_Format_BIN, RTC_Alarm_A, &RTC_AlarmStruct); 
-RTC_AlarmCmd(RTC_Alarm_A, ENABLE);
 RTC_ITConfig(RTC_IT_ALRA, ENABLE);
+send_stringln(itoa((RTC_Alarm_A, ENABLE), bufery, 10));
+
+
+
+
+
+
+
 
 
 
