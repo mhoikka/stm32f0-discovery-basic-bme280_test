@@ -106,11 +106,12 @@ void System_Clock_Init(){
   
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
   PWR_BackupAccessCmd(ENABLE);
-
+  char buffert[10];
   RCC_LSICmd(ENABLE); //Enable LSI 
   RCC_RTCCLKConfig(RCC_RTCCLKSource_LSI); //Select LSI as RTC clock source
+  send_stringln("Before");
   while(RCC_GetFlagStatus(RCC_FLAG_LSIRDY) == RESET); //Wait for LSI to be ready
-
+  send_stringln("After");
   RCC_RTCCLKCmd(ENABLE);
   RTC_InitTypeDef RTC_InitStruct;
   RTC_InitStruct.RTC_HourFormat = RTC_HourFormat_24;
@@ -145,7 +146,7 @@ void System_Clock_Init(){
   RTC_AlarmStruct.RTC_AlarmDateWeekDaySel = RTC_AlarmDateWeekDaySel_Date;
   RTC_AlarmStruct.RTC_AlarmDateWeekDay = 0x01;
   RTC_SetAlarm(RTC_Format_BIN, RTC_Alarm_A, &RTC_AlarmStruct);
-  send_stringln(itoa((RTC_Alarm_A, ENABLE), "RTC Alarm A enabled: ", 10));
+  send_stringln(itoa((RTC_Alarm_A, ENABLE), buffert, 10));
 }
 
 /**
