@@ -143,7 +143,6 @@ RTC_SetAlarm(RTC_Format_BIN, RTC_Alarm_A, &RTC_AlarmStruct);
 RTC_AlarmCmd(RTC_Alarm_A, ENABLE);
 RTC_ITConfig(RTC_IT_ALRA, ENABLE);
 
-//RTC_AlarmStructInit(&RTC_AlarmStruct);
 
 
 
@@ -182,15 +181,6 @@ RTC_ITConfig(RTC_IT_ALRA, ENABLE);
     //powerinc = 0; //reset powerinc to 0
     set_nrf24_SPI_CE(1); //switch NRF24 to TX mode by setting CE high
   }
-}
-
-void RTC_IRQHandler(void)
-{
-    if (RTC_GetITStatus(RTC_IT_ALRA) != RESET)
-    {
-        RTC_ClearITPendingBit(RTC_IT_ALRA);
-        // Handle the alarm interrupt
-    }
 }
 
 /**

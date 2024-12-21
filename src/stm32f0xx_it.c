@@ -172,6 +172,9 @@ void EXTI4_15_IRQHandler(void)
   }	
 }
 
+void RTC_IRQHandler(void)
+{
+}
 
 /**
   * @brief  This function handles PPP interrupt request.
