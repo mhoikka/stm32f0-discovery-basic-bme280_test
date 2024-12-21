@@ -77,7 +77,6 @@ int main(void)
 
 
 RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
-PWR_RTCAccessCmd(ENABLE);
 PWR_BackupAccessCmd(ENABLE);
 
 RCC_LSICmd(ENABLE); //Enable LSI 
