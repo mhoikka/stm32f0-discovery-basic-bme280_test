@@ -112,7 +112,7 @@ void System_Clock_Init(){
   RTC_InitStruct.RTC_HourFormat = RTC_HourFormat_24;
   RTC_InitStruct.RTC_AsynchPrediv = 0x7F;
   RTC_InitStruct.RTC_SynchPrediv = 0xFF;
-  RTC_Init(RTC_InitStruct);
+  RTC_Init(&RTC_InitStruct);
   RTC_TimeTypeDef RTC_TimeStruct;
   RTC_TimeStruct.RTC_H12 = RTC_H12_AM;
   RTC_TimeStruct.RTC_Hours = 0x00;
