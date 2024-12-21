@@ -116,7 +116,7 @@ EXTI_Init(&EXTI_Struct);
 //Give alarm interrupt priority
 NVIC_InitTypeDef NVIC_InitStruct;
 NVIC_InitStruct.NVIC_IRQChannel = RTC_IRQn;
-NVIC_InitStruct.NVIC_IRQChannelPriority = 0;
+NVIC_InitStruct.NVIC_IRQChannelPriority = 3;
 NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
 NVIC_Init(&NVIC_InitStruct);
 
@@ -161,6 +161,8 @@ RTC_ITConfig(RTC_IT_ALRA, ENABLE);
       ++powerinc;
       PWR_EnterSleepMode(PWR_SLEEPEntry_WFI); //switch STM32 into sleep power mode 
     }*/
+   //wake up from sleep mode
+
     SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk; // Enable SysTick by setting the ENABLE bit (bit 0)
     //powerinc = 0; //reset powerinc to 0
     set_nrf24_SPI_CE(1); //switch NRF24 to TX mode by setting CE high
