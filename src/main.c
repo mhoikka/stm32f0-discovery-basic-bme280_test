@@ -144,21 +144,16 @@ void System_Clock_Init(){
   RTC_AlarmStruct.RTC_AlarmDateWeekDaySel = RTC_AlarmDateWeekDaySel_Date;
   RTC_AlarmStruct.RTC_AlarmDateWeekDay = 0x01;
   RTC_SetAlarm(RTC_Format_BIN, RTC_Alarm_A, &RTC_AlarmStruct); 
+  RTC_AlarmCmd(RTC_Alarm_A, ENABLE);
 
   //Give alarm interrupt priority
   NVIC_InitTypeDef NVIC_InitStruct;
   NVIC_InitStruct.NVIC_IRQChannel = RTC_IRQn;
   NVIC_InitStruct.NVIC_IRQChannelPriority = 0;
   NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);
+
   NVIC_Init(&NVIC_InitStruct);
   RTC_ITConfig(RTC_IT_ALRA, ENABLE);
-  RTC_AlarmCmd(RTC_Alarm_A, ENABLE);
-
-  //enable rtc interrupt
-  //RTC_ITConfig(RTC_IT_ALRA, ENABLE);
-  //RTC_AlarmCmd(RTC_Alarm_A, ENABLE);
-  RTC_IRQn interrupt handler
 }
 
 //Create a handler for the RTC alarm interrupt and reset the alarm
