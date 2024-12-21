@@ -107,9 +107,9 @@ void System_Clock_Init(){
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
   PWR_BackupAccessCmd(ENABLE);
 
-  RCC_RTCCLKConfig(RCC_RTCCLKSource_LSE);
-  RCC_LSEConfig(RCC_LSE_ON);
-  while(RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET);
+  RCC_RTCCLKConfig(RCC_RTCCLKSource_LSI);
+  RCC_LSICmd(ENABLE);
+  while(RCC_GetFlagStatus(RCC_FLAG_LSIRDY) == RESET);
 
   RCC_RTCCLKCmd(ENABLE);
   RTC_InitTypeDef RTC_InitStruct;
