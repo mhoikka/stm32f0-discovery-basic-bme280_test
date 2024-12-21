@@ -79,6 +79,15 @@ int main(void)
 RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
 PWR_BackupAccessCmd(ENABLE);
 
+EXTI_InitTypeDef EXTI_Struct;
+EXTI_Struct.EXTI_Line = EXTI_Line17;
+EXTI_Struct.EXTI_Mode = EXTI_Mode_Interrupt;
+EXTI_Struct.EXTI_Trigger = EXTI_Trigger_Rising;
+EXTI_Struct.EXTI_LineCmd = ENABLE;
+EXTI_Init(&EXTI_Struct);
+//enable internal wakeup timer
+//PWR_WakeUpPinCmd(ENABLE);
+
 RCC_LSICmd(ENABLE); //Enable LSI 
 while(RCC_GetFlagStatus(RCC_FLAG_LSIRDY) == RESET); //Wait for LSI to be ready
 RCC_RTCCLKConfig(RCC_RTCCLKSource_LSI); //Select LSI as RTC clock source
