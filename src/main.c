@@ -108,7 +108,7 @@ void System_Clock_Init(){
   PWR_BackupAccessCmd(ENABLE);
   RCC_RTCCLKConfig(RCC_RTCCLKSource_LSI);
   RCC_RTCCLKCmd(ENABLE);
-  struct RTC_InitTypeDef RTC_InitStruct;
+  RTC_InitTypeDef RTC_InitStruct;
   RTC_InitStruct.RTC_HourFormat = RTC_HourFormat_24;
   RTC_InitStruct.RTC_AsynchPrediv = 0x7F;
   RTC_InitStruct.RTC_SynchPrediv = 0xFF;
