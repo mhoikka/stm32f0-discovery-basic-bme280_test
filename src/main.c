@@ -104,6 +104,7 @@ RTC_DateStruct.RTC_Date = 0x01;
 RTC_DateStruct.RTC_Year = 0x00;
 RTC_SetDate(RTC_Format_BIN, &RTC_DateStruct);
 
+
 //Give alarm interrupt priority
 NVIC_InitTypeDef NVIC_InitStruct;
 NVIC_InitStruct.NVIC_IRQChannel = RTC_IRQn;
@@ -127,9 +128,7 @@ RTC_AlarmStruct.RTC_AlarmDateWeekDaySel = RTC_AlarmDateWeekDaySel_Date;
 RTC_AlarmStruct.RTC_AlarmDateWeekDay = 0x01;
 RTC_SetAlarm(RTC_Format_BIN, RTC_Alarm_A, &RTC_AlarmStruct); 
 RTC_ITConfig(RTC_IT_ALRA, ENABLE);
-send_stringln(itoa((RTC_Alarm_A, ENABLE), bufery, 10));
-
-
+send_stringln(itoa(RTC_AlarmCmd(RTC_Alarm_A, ENABLE), bufery, 10));
 
 
 
