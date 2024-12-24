@@ -76,17 +76,11 @@ int main(void)
 
 
 
-RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
-PWR_BackupAccessCmd(ENABLE);
-
-EXTI_InitTypeDef EXTI_Struct;
-EXTI_Struct.EXTI_Line = EXTI_Line17;
-EXTI_Struct.EXTI_Mode = EXTI_Mode_Interrupt;
-EXTI_Struct.EXTI_Trigger = EXTI_Trigger_Rising;
-EXTI_Struct.EXTI_LineCmd = ENABLE;
-EXTI_Init(&EXTI_Struct);
-//enable internal wakeup timer
-//PWR_WakeUpPinCmd(ENABLE);
+//(RCC_APB1Periph_PWR, ENABLE);
+//PWR_BackupAccessCmd(ENABLE);
+/*
+RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE); // Enable PWR clock
+PWR_BackupAccessCmd(ENABLE); // Enable access to the RTC
 
 RCC_LSICmd(ENABLE); //Enable LSI 
 while(RCC_GetFlagStatus(RCC_FLAG_LSIRDY) == RESET); //Wait for LSI to be ready
@@ -102,7 +96,6 @@ RTC_InitStruct.RTC_SynchPrediv = 0xFF;
 RTC_Init(&RTC_InitStruct);
 
 
-
 RTC_TimeTypeDef RTC_TimeStruct;
 RTC_TimeStruct.RTC_H12 = RTC_H12_AM;
 RTC_TimeStruct.RTC_Hours = 0x00;
@@ -116,9 +109,18 @@ RTC_DateStruct.RTC_Month = 0x01;
 RTC_DateStruct.RTC_Date = 0x01;
 RTC_DateStruct.RTC_Year = 0x00;
 RTC_SetDate(RTC_Format_BIN, &RTC_DateStruct);
-
-
 RTC_WaitForSynchro();
+
+EXTI_InitTypeDef EXTI_Struct;
+EXTI_Struct.EXTI_Line = EXTI_Line17;
+EXTI_Struct.EXTI_Mode = EXTI_Mode_Interrupt;
+EXTI_Struct.EXTI_Trigger = EXTI_Trigger_Rising;
+EXTI_Struct.EXTI_LineCmd = ENABLE;
+EXTI_Init(&EXTI_Struct);
+//enable the EXT17 interrupt in the NVIC
+
+//enable internal wakeup timer
+//PWR_WakeUpPinCmd(ENABLE);
 
 //Give alarm interrupt priority
 NVIC_InitTypeDef NVIC_InitStruct;
@@ -126,16 +128,13 @@ NVIC_InitStruct.NVIC_IRQChannel = RTC_IRQn;
 NVIC_InitStruct.NVIC_IRQChannelPriority = 0;
 NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
 NVIC_Init(&NVIC_InitStruct);
-//Any peripheral interrupt acknowledged by the nested vectored interrupt 
-             //controller (NVIC) can wake up the device from Sleep mode.
 
 RTC_TimeTypeDef RTC_TimeStruct_alarm;
 RTC_TimeStruct_alarm.RTC_H12 = RTC_H12_AM;
 RTC_TimeStruct_alarm.RTC_Hours = 0x00;
 RTC_TimeStruct_alarm.RTC_Minutes = 0x00;
-RTC_TimeStruct_alarm.RTC_Seconds = 0x10;
+RTC_TimeStruct_alarm.RTC_Seconds = 0x01;
 
-char bufery[10];
 RTC_AlarmTypeDef RTC_AlarmStruct;
 RTC_AlarmStruct.RTC_AlarmTime = RTC_TimeStruct_alarm;
 RTC_AlarmStruct.RTC_AlarmMask = RTC_AlarmMask_DateWeekDay | RTC_AlarmMask_Hours | RTC_AlarmMask_Minutes; 
@@ -143,10 +142,10 @@ RTC_AlarmStruct.RTC_AlarmDateWeekDaySel = RTC_AlarmDateWeekDaySel_Date;
 RTC_AlarmStruct.RTC_AlarmDateWeekDay = 0x01;
 RTC_SetAlarm(RTC_Format_BIN, RTC_Alarm_A, &RTC_AlarmStruct); 
 RTC_ITConfig(RTC_IT_ALRA, ENABLE);
-send_stringln(itoa(RTC_AlarmCmd(RTC_Alarm_A, ENABLE), bufery, 10));
+RTC_AlarmCmd(RTC_Alarm_A, ENABLE);
 
 RTC_WriteProtectionCmd(ENABLE);
-
+*/
 
 
 
@@ -159,7 +158,6 @@ RTC_WriteProtectionCmd(ENABLE);
 
   
   BlinkSpeed = 0;
-  //uint8_t powerinc = 0;
   while (1)
   {
     // Display new sensor readings and LED2 Toggle every ~10 seconds
@@ -175,9 +173,10 @@ RTC_WriteProtectionCmd(ENABLE);
 
     set_nrf24_SPI_CE(0); //switch NRF24 to standby-I mode by setting CE low
 
-    //Delay(1); // Delay for 10 seconds - BME wakeup time (113 ms max) + NRF24L01+ standby I mode wakeup (130 us)
-    SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk; // Disable SysTick by clearing the ENABLE bit (bit 0)
-    PWR_EnterSleepMode(PWR_SLEEPEntry_WFI); //switch STM32 into sleep power mode 
+    Delay(9887); // Delay for 10 seconds - BME wakeup time (113 ms max) + NRF24L01+ standby I mode wakeup (130 us)
+    //SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk; // Disable SysTick by clearing the ENABLE bit (bit 0)
+    //PWR_EnterSleepMode(PWR_SLEEPEntry_WFI); //switch STM32 into sleep power mode 
+
     //MCU should wake up automatically after some time due to RTC alarm
     /*while(powerinc != 29){ //check if system should be re-enabled every loop
       ++powerinc;
@@ -185,12 +184,12 @@ RTC_WriteProtectionCmd(ENABLE);
     }*/
    //wake up from sleep mode
 
-    SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk; // Enable SysTick by setting the ENABLE bit (bit 0)
-    //powerinc = 0; //reset powerinc to 0
+    //SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk; // Enable SysTick by setting the ENABLE bit (bit 0)
     set_nrf24_SPI_CE(1); //switch NRF24 to TX mode by setting CE high
   }
 }
 
+/*
 void RTC_IRQHandler(void)
 {
     // Check if the interrupt is due to Alarm A
@@ -202,6 +201,7 @@ void RTC_IRQHandler(void)
         // Optionally, you can add other logic here, such as logging the event or resetting counters
     }
 }
+*/
 
 /**
  * @brief  Initializes the STM32F030 clock
