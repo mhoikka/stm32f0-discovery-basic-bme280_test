@@ -173,7 +173,7 @@ RTC_WriteProtectionCmd(ENABLE);
 
     set_nrf24_SPI_CE(0); //switch NRF24 to standby-I mode by setting CE low
 
-    Delay(9887); // Delay for 10 seconds - BME wakeup time (113 ms max) + NRF24L01+ standby I mode wakeup (130 us)
+    Delay(1000);//Delay(9887); // Delay for 10 seconds - BME wakeup time (113 ms max) + NRF24L01+ standby I mode wakeup (130 us)
     //SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk; // Disable SysTick by clearing the ENABLE bit (bit 0)
     //PWR_EnterSleepMode(PWR_SLEEPEntry_WFI); //switch STM32 into sleep power mode 
 

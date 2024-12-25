@@ -2364,7 +2364,7 @@
 		(descr "Capacitor SMD 0402 (1005 Metric), square (rectangular) end terminal, IPC_7351 nominal with elongated pad for handsoldering. (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
 		(tags "capacitor handsolder")
 		(property "Reference" "C11"
-			(at -0.1025 -2.2 180)
+			(at -0.1025 -2.2 -90)
 			(layer "F.SilkS")
 			(uuid "791beea9-a8aa-45ac-8aef-bb46c2692270")
 			(effects
