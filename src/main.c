@@ -61,13 +61,15 @@ int main(void)
   UART_Settings_Init();
   System_Clock_Init();
 
+  sendstringln("Hello World!");
   BME_setup();
   while(!BME_Init()); // Wait for the BME280 to be ready
+  sendstringln("BME 280 setup complete");
 
   NRF24L01p_Init();
   Delay(1); //not 1 ms anymore, closer to 0.34 sec
   while(!test_nrf24_connection()); // Wait for the NRF24 to be ready
-
+  sendstringln("NRF24L01+ setup complete");
 
 
 
