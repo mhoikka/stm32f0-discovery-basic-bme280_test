@@ -473,7 +473,7 @@ void transmitBytesNRF(uint8_t * data, uint8_t data_len) {
 * @param: data_len: length of the data to be transmitted
 * @param: data_size: size of the data type to be transmitted
 */
-void transmit(uint8_t * data, uint8_t data_len, uint8_t data_size){ 
+void transmit(void * data, uint8_t data_len, uint8_t data_size){ 
   //data_size must divide data_len and 32 without a remainder and be at least 1
   if (data_len % data_size != 0 || 32 % data_size != 0 || data_size < 1){
     return;
