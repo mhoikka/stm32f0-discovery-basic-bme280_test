@@ -59,9 +59,9 @@ int main(void)
 
   int readings_arr[3];
 
-  I2C_Settings_Init();
+  //I2C_Settings_Init();
   UART_Settings_Init();
-  System_Clock_Init();
+  //System_Clock_Init();
 
   send_stringln("Hello World!");
   BME_setup();

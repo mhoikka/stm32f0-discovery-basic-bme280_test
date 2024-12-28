@@ -1,4 +1,4 @@
-23741809085240180
+23752220356955777
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -56650,6 +56650,13 @@ One digit LED 7 segment SA39-11 SC39-11 SA39-12 SC39-12
 0
 10
 10
+ECS-160-12-4X-GM
+XTAL_ECS-160-12-4X-GM
+
+
+0
+2
+2
 Ferrite_THT
 LairdTech_28C0236-0JW-10
 Ferrite, vertical, LairdTech 28C0236-0JW-10, https://assets.lairdtech.com/home/brandworld/files/28C0236-0JW-10.pdf, JW Miller core https://www.bourns.com/products/magnetic-products/j.w.-miller-through-hole-ferrite-beads-emi-filters
@@ -96624,6 +96631,41 @@ Varistor
 Varistor_Panasonic_VF
 Panasonic VF series varistor, 6x8mm body, 3.2mm height, https://mediap.industry.panasonic.eu/assets/imported/industrial.panasonic.com/cdbs/www-data/pdf/AWA0000/AWA0000C4.pdf
 Varistor VF
+0
+2
+2
+footprints
+BS-3_MPD
+
+BS-3 
+0
+2
+2
+footprints
+CON8_2X4_TU_SSQ
+
+SSW-104-01-T-D-LL 
+0
+8
+8
+footprints
+D6R90_CNK
+
+D6R90F2LFS 
+0
+4
+4
+footprints
+ESB335_PAN
+
+ESB-33535A 
+0
+7
+7
+footprints
+WL-SMCW_0603
+<B>WL-SMCW SMT Mono-color Chip LED Waterclear<Br><Br></B>Size: 0603, SMT, 2pins<Br>1.6x0.8x0.7mm(LXWXH)
+
 0
 2
 2
