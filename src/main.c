@@ -61,7 +61,7 @@ int main(void)
 
   //I2C_Settings_Init();
   UART_Settings_Init();
-  //System_Clock_Init();
+  System_Clock_Init();
 
   send_stringln("Hello World!");
   BME_setup();
