@@ -82,7 +82,7 @@ int8_t BME280_I2C_bus_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, vo
 	I2C1->TXDR = reg_addr;
   
   // Wait for not busy
-  while (!(I2C1->ISR & I2C_ISR_BUSY));
+  while (!(I2C1->ISR & I2C_ISR_BUSY)){};
 	while ((I2C1->ISR & I2C_ISR_BUSY));
 
 	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (cnt << 16) | (I2C_CR2_RD_WRN) | (I2C_CR2_AUTOEND);
@@ -284,7 +284,7 @@ uint8_t* nrf24_read_register(uint8_t reg) {
 
     // Set CSN high to end communication
     set_nrf24_SPI_CSN(1);
-    return rxData[1]; // Return the value read from the register
+    return &rxData[1]; // Return the value read from the register
 }
 
 void nrf24_write_register(uint8_t reg, uint8_t value) {
@@ -422,10 +422,10 @@ int test_nrf24_connection() {
     //Delay(100); //Let the chip power up and down
     bme280_delay_microseconds(100*1000, NULL);
 
-    uint8_t configValue = nrf24_read_register(CONFIG); 
+    uint8_t configValue = *nrf24_read_register(CONFIG); 
     nrf24_write_register(CONFIG, 0x02); 
     bme280_delay_microseconds(2*1000, NULL); //wait for chip to go into Standby-I mode
-    uint8_t configValue2 = nrf24_read_register(CONFIG); 
+    uint8_t configValue2 = *nrf24_read_register(CONFIG); 
 
     // Check if expected bits are set
     if (configValue == configValue2) {
@@ -487,7 +487,7 @@ void transmit(void * data, uint8_t data_len, uint8_t data_size){
   bme280_delay_microseconds(2*1000, NULL);  //wait for chip to go into Standby-I mode
   while(data_len > 0){
     len_left = data_len > 32 ? 32 : (data_len*data_size)%32; 
-    memcpy(&data_seg[0], &data[i], len_left); //mini array of length 32 for buffering transmitted data
+    memcpy(&data_seg, &data[i], len_left); //mini array of length 32 for buffering transmitted data
 
     transmitBytesNRF(data_seg, len_transmit);
 
