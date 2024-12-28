@@ -83,7 +83,7 @@ int8_t BME280_I2C_bus_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, vo
   
   // Wait for not busy
   while (!(I2C1->ISR & I2C_ISR_BUSY)){};
-	while ((I2C1->ISR & I2C_ISR_BUSY));
+	while ((I2C1->ISR & I2C_ISR_BUSY)){};
 
 	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (cnt << 16) | (I2C_CR2_RD_WRN) | (I2C_CR2_AUTOEND);
 
@@ -95,8 +95,8 @@ int8_t BME280_I2C_bus_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, vo
   }
 
 	// Wait for not busy
-  while (!(I2C1->ISR & I2C_ISR_BUSY));
-	while ((I2C1->ISR & I2C_ISR_BUSY));
+  while (!(I2C1->ISR & I2C_ISR_BUSY)){};
+	while ((I2C1->ISR & I2C_ISR_BUSY)){};
 	//return the status of the read operation
 
 	return 0; //BME OK
@@ -487,12 +487,15 @@ void transmit(void * data, uint8_t data_len, uint8_t data_size){
   bme280_delay_microseconds(2*1000, NULL);  //wait for chip to go into Standby-I mode
   while(data_len > 0){
     len_left = data_len > 32 ? 32 : (data_len*data_size)%32; 
-    memcpy(&data_seg[0], &((int *)data[i]), len_left); //mini array of length 32 for buffering transmitted data
+    memcpy(&data_seg, &data[i], len_left); //mini array of length 32 for buffering transmitted data
 
     transmitBytesNRF(data_seg, len_transmit);
 
-    //while(!(SPI1->SR & ((uint16_t)(1 << 5)))); //wait for TX_DS bit to be set from ACK received// TODO don't think this is working, maybe not enough current?
-    data_len = data_len*data_size > 32 ? data_len-=32/data_size : 0; 
+    if(data_len*data_size > 32){
+      data_len =  data_len-=32/data_size;
+    }else{
+      data_len =  0; 
+    }
     i+=32/data_size;
   }
   nrf24_write_register(CONFIG, 0x08);   //power down by setting PWR_UP bit to 0
