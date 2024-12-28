@@ -259,7 +259,7 @@ void I2C_Settings_Init(){
   ctx.i2c_address = BME280_I2C_ADDR_SEC; // Set the secondary I2C address
 }
 
-uint8_t* nrf24_read_register(uint8_t reg) {
+uint8_t nrf24_read_register(uint8_t reg) {
     uint8_t txData[2]; // Transmit data buffer
     uint8_t rxData[2]; // Receive data buffer
 
@@ -281,10 +281,9 @@ uint8_t* nrf24_read_register(uint8_t reg) {
         // Read received byte
         rxData[i] = SPI1->DR; // Read received data
     }
-
     // Set CSN high to end communication
     set_nrf24_SPI_CSN(1);
-    return &rxData[1]; // Return the value read from the register
+    return rxData[1]; // Return the value read from the register
 }
 
 void nrf24_write_register(uint8_t reg, uint8_t value) {
@@ -422,10 +421,10 @@ int test_nrf24_connection() {
     //Delay(100); //Let the chip power up and down
     bme280_delay_microseconds(100*1000, NULL);
 
-    uint8_t configValue = *nrf24_read_register(CONFIG); 
+    uint8_t configValue = nrf24_read_register(CONFIG); 
     nrf24_write_register(CONFIG, 0x02); 
     bme280_delay_microseconds(2*1000, NULL); //wait for chip to go into Standby-I mode
-    uint8_t configValue2 = *nrf24_read_register(CONFIG); 
+    uint8_t configValue2 = nrf24_read_register(CONFIG); 
 
     // Check if expected bits are set
     if (configValue == configValue2) {
