@@ -606,12 +606,12 @@ void UART_Settings_Init(){
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE); //USART 1 for stm32f030k6t6 RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);, USART 2 for stm32f030r8t6 STLINK RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
 
-  GPIO_PinAFConfig(GPIOA, GPIO_PinSource9, GPIO_AF_1); //Pin PA9 for stm32f030k6t6, Pins PA2 for stm32f030r8t6 
-  GPIO_PinAFConfig(GPIOA, GPIO_PinSource10, GPIO_AF_1); //Pin PA10 for stm32f030k6t6, Pins PA3 for stm32f030r8t6 
+  GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_1); 
+  GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_1); 
 
   GPIO_InitTypeDef GPIO_InitStruct;
 
-  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_9 | GPIO_Pin_10; //Pins PA9,10 for stm32f030k6t6, Pins PA2,3 for stm32f030r8t6 
+  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_2 | GPIO_Pin_3;
   GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;
   GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz; 
   GPIO_InitStruct.GPIO_OType = GPIO_OType_PP; 
