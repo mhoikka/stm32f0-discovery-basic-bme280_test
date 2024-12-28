@@ -473,7 +473,7 @@ void transmitBytesNRF(uint8_t * data, uint8_t data_len) {
 * @param: data_len: length of the data to be transmitted
 * @param: data_size: size of the data type to be transmitted
 */
-void transmit(void * data, uint8_t data_len, uint8_t data_size){ 
+void transmit(uint8_t * data, uint8_t data_len, uint8_t data_size){ 
   //data_size must divide data_len and 32 without a remainder and be at least 1
   if (data_len % data_size != 0 || 32 % data_size != 0 || data_size < 1){
     return;
@@ -490,11 +490,7 @@ void transmit(void * data, uint8_t data_len, uint8_t data_size){
 
     transmitBytesNRF(data_seg, len_transmit);
 
-    if(data_len*data_size > 32){
-      data_len =  data_len-=32/data_size;
-    }else{
-      data_len =  0; 
-    }
+    data_len = data_len*data_size > 32 ? (data_len - 32)/data_size : 0;
     i+=32/data_size;
   }
   nrf24_write_register(CONFIG, 0x08);   //power down by setting PWR_UP bit to 0
