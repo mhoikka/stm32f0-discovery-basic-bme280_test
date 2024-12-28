@@ -7,6 +7,10 @@
 #include "Peripheral_Init.h"
 #include <string.h>
 
+void send_string(char *string);
+void send_stringln(char *string);
+char* itoa(int value, char* buffer, int base);
+
 typedef struct my_device_context {
     I2C_InitTypeDef *I2C_InitStruct; // Pointer to the I2C handle
     uint16_t i2c_address;     // I2C address of the BME280
@@ -84,11 +88,11 @@ int8_t BME280_I2C_bus_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, vo
 	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (cnt << 16) | (I2C_CR2_RD_WRN) | (I2C_CR2_AUTOEND);
 
 	// Transfer all the data
-    for (int i = 0; i < cnt; i++) {
-        // Wait for RXNE
-        while (!(I2C1->ISR & I2C_ISR_RXNE));
-        reg_data[i] = I2C1->RXDR;
-    }
+  for (int i = 0; i < cnt; i++) {
+    // Wait for RXNE
+    while (!(I2C1->ISR & I2C_ISR_RXNE));
+    reg_data[i] = I2C1->RXDR;
+  }
 
 	// Wait for not busy
   while (!(I2C1->ISR & I2C_ISR_BUSY));
@@ -128,10 +132,10 @@ int8_t BME280_I2C_bus_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t 
 			++reg_addr;
 			while(!(I2C1->ISR & I2C_ISR_TXE));
 		}
-	// Wait for not busy
-  while (!(I2C1->ISR & I2C_ISR_BUSY));
-	while ((I2C1->ISR & I2C_ISR_BUSY));
-	return 0;
+    // Wait for not busy
+    while (!(I2C1->ISR & I2C_ISR_BUSY));
+    while ((I2C1->ISR & I2C_ISR_BUSY));
+    return 0;
 	}
 	else{
 		return 1;
