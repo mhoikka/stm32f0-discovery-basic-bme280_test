@@ -487,7 +487,7 @@ void transmit(void * data, uint8_t data_len, uint8_t data_size){
   bme280_delay_microseconds(2*1000, NULL);  //wait for chip to go into Standby-I mode
   while(data_len > 0){
     len_left = data_len > 32 ? 32 : (data_len*data_size)%32; 
-    memcpy(&data_seg, &data[i], len_left); //mini array of length 32 for buffering transmitted data
+    memcpy(&data_seg[0], &(int *)data[i], len_left); //mini array of length 32 for buffering transmitted data
 
     transmitBytesNRF(data_seg, len_transmit);
 
