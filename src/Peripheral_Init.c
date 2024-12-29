@@ -6,6 +6,7 @@
 #include "stm32f0xx_spi.h"
 #include "Peripheral_Init.h"
 #include <string.h>
+#include <time.h>
 
 void send_string(char *string);
 void send_stringln(char *string);
@@ -48,6 +49,7 @@ uint8_t ACK = 1;
  * @param  usec: specifies the delay time length, in 1 microsecond.
  * @retval None
  */
+/*
 void __attribute__((optimize("O0"))) bme280_delay_microseconds(uint32_t usec, void *intf_ptr){
   for(volatile uint32_t counter = 0; counter < usec; counter++){
     //do nothing NOP instructions
@@ -57,6 +59,14 @@ void __attribute__((optimize("O0"))) bme280_delay_microseconds(uint32_t usec, vo
     //lol this is nearly perfect timing
   }
 }
+*/
+void bme280_delay_microseconds(uint32_t usec, void *intf_ptr){
+  struct timespec tim1, tim2;
+  tim1 = (usec*1000)/1000000000;
+  tim2 = (usec*1000)%1000000000;
+  nanosleep(tim1, tim2);
+}
+
 
 /**
  * @brief Reads from the I2C bus
@@ -233,7 +243,7 @@ void I2C_Settings_Init(){
   // Enable peripheral clock
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1, ENABLE);
   //RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);//
-  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE); 
   
   // Use pins PB6 and PB7 for I2C (STM32F030R8)
   GPIO_InitTypeDef GPIO_InitStruct; 
