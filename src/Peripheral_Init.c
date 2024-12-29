@@ -62,9 +62,10 @@ void __attribute__((optimize("O0"))) bme280_delay_microseconds(uint32_t usec, vo
 */
 void bme280_delay_microseconds(uint32_t usec, void *intf_ptr){
   struct timespec tim1, tim2;
-  tim1 = (usec*1000)/1000000000;
-  tim2 = (usec*1000)%1000000000;
-  nanosleep(tim1, tim2);
+
+  tim1.tv_sec = (usec*1000)/1000000000;
+  tim1.tv_nsec = (usec*1000)%1000000000;
+  nanosleep(&tim1, &tim2);
 }
 
 
