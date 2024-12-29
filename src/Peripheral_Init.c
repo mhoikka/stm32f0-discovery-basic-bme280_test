@@ -49,7 +49,6 @@ uint8_t ACK = 1;
  * @param  usec: specifies the delay time length, in 1 microsecond.
  * @retval None
  */
-/*
 void __attribute__((optimize("O0"))) bme280_delay_microseconds(uint32_t usec, void *intf_ptr){
   for(volatile uint32_t counter = 0; counter < usec; counter++){
     //do nothing NOP instructions
@@ -59,14 +58,7 @@ void __attribute__((optimize("O0"))) bme280_delay_microseconds(uint32_t usec, vo
     //lol this is nearly perfect timing
   }
 }
-*/
-void bme280_delay_microseconds(uint32_t usec, void *intf_ptr){
-  struct timespec tim1, tim2;
 
-  tim1.tv_sec = (usec*1000)/1000000000;
-  tim1.tv_nsec = (usec*1000)%1000000000;
-  nanosleep(&tim1, &tim2);
-}
 
 
 /**
