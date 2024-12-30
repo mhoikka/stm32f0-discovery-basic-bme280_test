@@ -606,7 +606,7 @@ void NRF24L01p_Init(){
  * @retval None
  */
 void UART_Settings_Init(){
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE); //USART 1 for stm32f030k6t6 RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);, USART 2 for stm32f030r8t6 STLINK RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART2, ENABLE); //USART 1 for stm32f030k6t6 RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);, USART 2 for stm32f030r8t6 STLINK RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
 
   GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_1); 
@@ -629,7 +629,7 @@ void UART_Settings_Init(){
   USART_InitStruct.USART_Parity = USART_Parity_No;
   USART_InitStruct.USART_Mode = USART_Mode_Tx;
   USART_InitStruct.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-  USART_Init(USART1, &USART_InitStruct); //USART 1 for stm32f030k6t6, USART 2 for stm32f030r8t6 
+  USART_Init(USART2, &USART_InitStruct); //USART 1 for stm32f030k6t6, USART 2 for stm32f030r8t6 
   //No synchronous mode yet
-  USART_Cmd(USART1, ENABLE); //USART 1 for stm32f030k6t6, USART 2 for stm32f030r8t6 
+  USART_Cmd(USART2, ENABLE); //USART 1 for stm32f030k6t6, USART 2 for stm32f030r8t6 
 } 
