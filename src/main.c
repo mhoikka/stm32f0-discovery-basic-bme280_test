@@ -249,9 +249,14 @@ void TimingDelay_Decrement(void)
 */
 char* reverse(char *buffer, int i, int j)
 {
-	while (i < j)
-		swap(&buffer[i++], &buffer[j--]); 
-	return buffer;
+  char temp;
+    while (i < j)
+  {
+    temp = buffer[i];
+    buffer[i++] = buffer[j];
+    buffer[j--] = temp;
+  }
+    return buffer;
 }
 
 /**
@@ -311,10 +316,10 @@ void send_string(char *string)
 {
     while (*string != 0)
     {
-        while (USART_GetFlagStatus(USART2,USART_FLAG_TXE) == 0);
-        USART_SendData(USART2, (uint16_t) *string++);
+        while (USART_GetFlagStatus(USART1,USART_FLAG_TXE) == 0);
+        USART_SendData(USART1, (uint16_t) *string++);
     }
-    while (USART_GetFlagStatus(USART2,USART_FLAG_TXE) == 0);
+    while (USART_GetFlagStatus(USART1,USART_FLAG_TXE) == 0);
 }
 
 /**
