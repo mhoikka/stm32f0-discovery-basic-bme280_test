@@ -235,7 +235,6 @@ void I2C_Settings_Init(){
 
   // Enable peripheral clock
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1, ENABLE);
-  //RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);//
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE); 
   
   // Use pins PB6 and PB7 for I2C (STM32F030R8)
@@ -604,7 +603,7 @@ void NRF24L01p_Init(){
  * @retval None
  */
 void UART_Settings_Init(){
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART2, ENABLE); //USART 1 for stm32f030k6t6 RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);, USART 2 for stm32f030r8t6 STLINK RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE); //USART 1 for stm32f030k6t6 RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);, USART 2 for stm32f030r8t6 STLINK RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
 
   GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_1); 
