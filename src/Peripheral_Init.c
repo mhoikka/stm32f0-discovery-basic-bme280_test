@@ -462,7 +462,7 @@ void transmitBytesNRF(uint8_t * data, uint8_t data_len) {
     nrf24_write_TX_payload(data, ACK, data_len);  //write data to be transmitted into TX FIFO
     set_nrf24_SPI_CE(1);                          //enable chip to transmit data
     bme280_delay_microseconds(130, NULL);         //wait for chip to go into TX mode
-    bme280_delay_microseconds(1*10
+    bme280_delay_microseconds(1*10, NULL);
     bme280_delay_microseconds(50*1000, NULL);     //Not sure how long this delay ne
     set_nrf24_SPI_CE(0);                          //disable chip after transmission
 }
