@@ -64,6 +64,7 @@ int main(void)
   System_Clock_Init();
 
   send_stringln("Hello World!");
+  Delay(30); // Delay for 30 ms
   BME_setup();
   while(!BME_Init()); // Wait for the BME280 to be ready
   send_stringln("BME 280 setup complete");
