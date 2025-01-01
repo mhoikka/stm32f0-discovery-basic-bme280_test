@@ -80,7 +80,7 @@ int8_t BME280_I2C_bus_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t cnt, vo
 
 	//send the register address to the sensor
 	//This is essentially a partial write operation
-  uint32_t dev_addr = BME280_I2C_ADDR_SEC;
+  uint32_t dev_addr = BME280_I2C_ADDR_PRIM;
 	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (1 << 16) | (I2C_CR2_AUTOEND);
 	I2C1->TXDR = reg_addr;
   
@@ -121,7 +121,7 @@ int8_t BME280_I2C_bus_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t 
  *	\param reg_data : data to be written into the register
  *	\param cnt : The # of bytes of data to be written
  */
-  uint32_t dev_addr = BME280_I2C_ADDR_SEC;
+  uint32_t dev_addr = BME280_I2C_ADDR_PRIM;
 	I2C1->CR2 = (dev_addr << 1) | (I2C_CR2_START) | (cnt*2 << 16) | (I2C_CR2_AUTOEND);
 	// transfer cnt bytes of data one register data byte and register address byte pair at a time
 	// register address is not auto-incremented
@@ -456,7 +456,7 @@ void transmitBytesNRF(uint8_t * data, uint8_t data_len) {
     nrf24_write_register(SETUP_AW, 0x01); //set to 3 byte address width
     nrf24_multiwrite_register(TX_ADDR, write_address, ADDRESS_LEN); //set write address
     nrf24_multiwrite_register(RX_ADDR_P0, write_address, ADDRESS_LEN); //set read address
-    nrf24_write_register(RF_SETUP, 0x00); //set RF Data Rate to 1Mbps, RF output power to -18dBm
+    nrf24_write_register(RF_SETUP, 0x0E); //set RF Data Rate to 1Mbps, RF output power to -18dBm
     nrf24_write_register(RX_PW_P0, 0x01); //set payload size to 1 byte
     
     nrf24_write_register(FEATURE, 0x01); //enable W_TX_PAYLOAD_NOACK command

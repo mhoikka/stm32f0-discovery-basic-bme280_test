@@ -1,0 +1,13 @@
+NOTE: STM32F030R8 Nucleoboard cannot power NRF24L01+ and BME280 at the same time, battery power can be used instead if grounds are connected
+
+Nucleoboard	NRF24L01+	BME280
+PA6		MISO
+PA7		MOSI
+PA5		SCLK
+PA8		IRQ
+PA15		CSN
+PA1		CE
+3v3		VCC		Vin
+GND		GND		GND
+PB7				SDI
+PB6				SCK
