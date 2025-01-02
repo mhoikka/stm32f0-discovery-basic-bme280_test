@@ -445,18 +445,17 @@ uint8_t ADDRESS_LEN = 3;
 */
  //TODO make this much more functional
 void transmitBytesNRF(uint8_t * data, uint8_t data_len) {
-    uint8_t write_address [3] = {0x93, 0xBD, 0x6B};
-    //uint8_t my_data = data;
-    //Clear TX FIFO
-    nrf24_clear_TX();
+    uint8_t write_address [3] = {0x93, 0xBD, 0x6C};
+
+    nrf24_clear_TX(); //Clear TX FIFO
     nrf24_write_register(STATUS_REG, 0x30); //Clear MAX_RT and TX Data Sent bit from status register
-    nrf24_write_register(ENAA, 0x01); //enable auto ack for pipe 0 //ALL PIPES 0x3F
+    nrf24_write_register(ENAA, 0x3F); //enable auto ack for pipe 0 //ALL PIPES 0x3F
     
     //set control registers
     nrf24_write_register(SETUP_AW, 0x01); //set to 3 byte address width
     nrf24_multiwrite_register(TX_ADDR, write_address, ADDRESS_LEN); //set write address
     nrf24_multiwrite_register(RX_ADDR_P0, write_address, ADDRESS_LEN); //set read address
-    nrf24_write_register(RF_SETUP, 0x0E); //set RF Data Rate to 1Mbps, RF output power to -18dBm
+    nrf24_write_register(RF_SETUP, 0x0E); //set RF Data Rate to 2Mbps, RF output power to 0dBm
     nrf24_write_register(RX_PW_P0, 0x01); //set payload size to 1 byte
     
     nrf24_write_register(FEATURE, 0x01); //enable W_TX_PAYLOAD_NOACK command
