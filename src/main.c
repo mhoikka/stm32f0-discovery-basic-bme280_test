@@ -19,8 +19,6 @@ struct ambient_reading{
   uint32_t humidity;
   uint8_t len;
 };
-/* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 static __IO uint32_t TimingDelay;
 uint8_t __IO BlinkSpeed = 0;
@@ -28,7 +26,6 @@ uint8_t __IO BlinkSpeed = 0;
 extern struct ambient_reading return_sensor_reading(void);  // Declare the function prototype
 
 RCC_ClocksTypeDef RCC_Clocks;
-/* Private functions ---------------------------------------------------------*/
 
 /**
   * @brief   Main program
@@ -43,25 +40,12 @@ int main(void)
        To reconfigure the default setting of SystemInit() function, refer to
        system_stm32f0xx.c file
      */ 
-  /* SysTick end of count event each 1ms */
-  /*
-  for(int i = 0; i < sizeof(num_buf)/sizeof(num_buf[0]); i++)
-  {
-      num_buf[i] = 0;
-  }*/
-  /*unsigned char data[33] = {0x04, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-                            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,      
-                            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-                            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-                            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-                            0xFF, 0xFF, 0x04};  */
   unsigned char data[33] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
                             0x07, 0x08, 0x09, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
                             0x07, 0x08, 0x09, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
                             0x07, 0x08, 0x09, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06};
 
-  int readings_arr[3];
-  //unsigned char data[4] = {0x04, 0xFF, 0xFF, 0x04};  
+  int readings_arr[3];  
 
   System_Clock_Init();
   I2C_Settings_Init();
@@ -69,7 +53,7 @@ int main(void)
 
   send_stringln("Start");
 
-  BME_Init(); //Not enough current to run both NRF and BME at the same time
+  BME_Init(); 
 
   NRF24L01p_Init();
 
@@ -77,19 +61,14 @@ int main(void)
   test_nrf24_connection();
   bme280_delay_microseconds(100*1000, NULL);  //wait for NRF24L01+ to power on
 
-  transmit(data, sizeof(data)/sizeof(unsigned char));
-
-  //STM_EVAL_LEDInit(LED2);
-  //STM_EVAL_PBInit(BUTTON_USER, BUTTON_MODE_EXTI);  
+  transmit(data, sizeof(data)/sizeof(unsigned char));  
 
   BlinkSpeed = 0;
 
   while (1)
   {
     // Display new sensor readings and LED2 Toggle each 1000ms
-
     STM_EVAL_LEDToggle(LED2);
-
     
     display_sensor_reading();
     struct ambient_reading curr_read = return_sensor_reading();
@@ -98,9 +77,7 @@ int main(void)
     readings_arr[2] = (int)curr_read.humidity; // value is unsigned int
     
     transmit(readings_arr, sizeof(readings_arr)/(sizeof(unsigned char)), 1); 
-    //transmit(data, sizeof(data)/sizeof(unsigned char));
 
-    //send_stringln("Test 3");
     Delay(1000);
   }
 }
@@ -238,7 +215,7 @@ void send_stringln(char *string)
 */
 void assert_failed(uint8_t* file, uint32_t line)
 { 
-  /* User can add his own implementation to report the file name and line number,
+  /* User can add their own implementation to report the file name and line number,
   ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
   
   /* Infinite loop */
@@ -251,6 +228,5 @@ void assert_failed(uint8_t* file, uint32_t line)
 /**
 * @}
 */
-
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
