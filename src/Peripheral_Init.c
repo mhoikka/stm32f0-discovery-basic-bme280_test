@@ -343,7 +343,6 @@ void nrf24_write_TX_payload(uint8_t * value, int ack, int len) {
 
     // Prepare command to write (register address with write command prefix)
     txData[0] = ack ?  WRITE_PAYLOAD_COMMAND: WRITE_PAYLOAD_NOACK; // Write command
-    //txData[1] = value;                 // Data to write
     for (int i = 0; i < len; i++) {
         txData[i+1] = value[i];
     }
@@ -401,22 +400,6 @@ void test_nrf24_connection() {
     set_nrf24_SPI_CSN(1); //make sure these pins are at the right level
     set_nrf24_SPI_CE(0);
     Delay(100); //Let the chip power up and down
-    /*
-    uint8_t configValue = nrf24_read_register(STATUS_REG); 
-    nrf24_write_register(STATUS_REG, CONFIG_SETTINGS); 
-    
-    uint8_t configValue2 = nrf24_read_register(STATUS_REG); 
-
-    //set_nrf24_SPI_CE(1); //enables chip to receive data
-    //Delay(2);
-
-    // Check if expected bits are set
-    if ((configValue & CONFIG_SETTINGS) == CONFIG_SETTINGS) {
-        send_stringln("Successful: READ bits match WRITE bits");
-    } else {
-        send_stringln("Failure: READ bits do not match WRITE bits");
-    }
-    */
 }
 
 uint8_t ADDRESS_LEN = 3;
@@ -425,10 +408,8 @@ uint8_t ADDRESS_LEN = 3;
 * @param: data: array of data to be transmitted, up to 32 bytes long
 * @param: data_len: length of the data to be transmitted
 */
- //TODO make this much more functional
 void transmitBytesNRF(uint8_t * data, uint8_t data_len) {
     uint8_t write_address [3] = {0x93, 0xBD, 0x6B};
-    //uint8_t my_data = data;
     //Clear TX FIFO
     nrf24_clear_TX();
     nrf24_write_register(STATUS_REG, 0x30); //Clear MAX_RT and TX Data Sent bit from status register
@@ -476,7 +457,6 @@ void transmit(void * data, uint8_t data_len, uint8_t data_size){
 
     transmitBytesNRF(data_seg, len_transmit);
 
-    //while(!(SPI1->SR & ((uint16_t)(1 << 5)))); //wait for TX_DS bit to be set from ACK received// TODO don't think this is working, maybe not enough current?
     data_len = data_len*data_size > 32 ? data_len-=32/data_size : 0; 
     i+=32/data_size;
   }
